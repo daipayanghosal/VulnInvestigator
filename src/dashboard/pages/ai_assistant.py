@@ -7,6 +7,7 @@ and evidence-grounding scores.
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -23,6 +24,33 @@ if str(_PROJECT_ROOT) not in sys.path:
 def render() -> None:
     """Render the AI Assistant page."""
     ensure_data_loaded()
+
+    with st.sidebar:
+        st.subheader("🔑 Gemini API Status")
+        has_key = bool(
+            os.environ.get("GEMINI_API_KEY")
+            or os.environ.get("GOOGLE_API_KEY")
+            or (hasattr(st, "secrets") and ("GEMINI_API_KEY" in st.secrets or "GOOGLE_API_KEY" in st.secrets))
+            or st.session_state.get("gemini_api_key")
+        )
+        if has_key:
+            st.success("✅ Gemini API Key Active")
+        else:
+            st.warning("⚠️ No Gemini API Key Configured")
+            st.caption(
+                "Add `GEMINI_API_KEY` to **Streamlit Cloud Secrets** or paste it below to enable live queries."
+            )
+
+        custom_key = st.text_input(
+            "Gemini API Key Override",
+            type="password",
+            value=st.session_state.get("gemini_api_key", ""),
+            help="If not configured in Streamlit Cloud Secrets, paste your key here.",
+        )
+        if custom_key:
+            st.session_state["gemini_api_key"] = custom_key.strip()
+            os.environ["GEMINI_API_KEY"] = custom_key.strip()
+
     st.title("🤖 AI Assistant")
     st.markdown(
         "AI-generated investigation report grounded in vulnerability evidence.  "
@@ -157,7 +185,21 @@ def _run_investigation(scenario: dict) -> dict | None:
         return result
 
     except Exception as exc:  # noqa: BLE001
-        st.error(f"LLM error: {exc}")
+        err_msg = str(exc)
+        if "API key" in err_msg or "GEMINI_API_KEY" in err_msg or "api_key" in err_msg:
+            st.error(
+                "🔑 **Gemini API Key Required**\n\n"
+                "To enable live Gemini investigations on Streamlit Community Cloud:\n"
+                "1. Click **Manage app** (bottom-right) or `⋮` ➔ **Settings** ➔ **Secrets**.\n"
+                "2. Add:\n"
+                "   ```toml\n"
+                "   GEMINI_API_KEY = \"your-gemini-api-key\"\n"
+                "   ```\n"
+                "3. Click **Save**.\n\n"
+                "_You can also enter your key temporarily in the left sidebar under 'Gemini API Key Override'._"
+            )
+        else:
+            st.error(f"LLM error: {exc}")
         return None
 
 

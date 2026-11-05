@@ -19,6 +19,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Bridge Streamlit Cloud Secrets into os.environ for seamless cloud access
+try:
+    if hasattr(st, "secrets"):
+        for secret_name in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"):
+            if secret_name in st.secrets and not os.environ.get(secret_name):
+                os.environ[secret_name] = str(st.secrets[secret_name])
+except Exception:
+    pass
+
 logger = logging.getLogger(__name__)
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 

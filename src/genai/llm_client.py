@@ -231,6 +231,8 @@ class GeminiClient(LLMClient):
         try:
             import streamlit as st  # type: ignore
             st_key = str(st.secrets.get("GEMINI_API_KEY", "") or st.secrets.get("GOOGLE_API_KEY", ""))
+            if not st_key and hasattr(st, "session_state"):
+                st_key = str(st.session_state.get("gemini_api_key", ""))
         except Exception:
             pass
 
@@ -241,6 +243,11 @@ class GeminiClient(LLMClient):
             or st_key
             or ""
         )
+        if not resolved_key:
+            raise ValueError(
+                "Gemini API key is missing. Please configure GEMINI_API_KEY in "
+                "Streamlit Cloud Secrets (Settings -> Secrets) or enter it in the dashboard sidebar."
+            )
         self._client = genai.Client(api_key=resolved_key)
         self._types = types
         logger.info("GeminiClient: model=%s (google-genai)", model)
