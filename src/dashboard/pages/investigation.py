@@ -77,6 +77,7 @@ def render() -> None:
     row = vuln_df[vuln_df["cve_id"] == selected_cve].iloc[0]
 
     # ----------------------------------------------------------------
+    # ----------------------------------------------------------------
     # Automatically ensure scenario is built and cached
     # ----------------------------------------------------------------
     scenario_key = f"scenario_{selected_cve}"
@@ -86,32 +87,90 @@ def render() -> None:
     else:
         scenario = st.session_state[scenario_key]
 
+    asset = scenario.get("asset", {})
+    breakdown = _calculate_factor_breakdown(row, asset)
+
     st.divider()
 
     # ----------------------------------------------------------------
-    # CVE & Asset Profile
+    # Hero Scoreboard: CVSS vs Contextual Risk Comparison
+    # ----------------------------------------------------------------
+    st.subheader("🎯 Risk Prioritization: Baseline CVSS vs. Contextual Risk")
+
+    col_hero_cvss, col_hero_ctx, col_hero_kev, col_hero_shift = st.columns([1.1, 1.4, 1.2, 1.2])
+
+    with col_hero_cvss:
+        st.metric(
+            label="🌐 Standard CVSS Base",
+            value=f"{row.get('cvss_v3_score', 'N/A')} / 10",
+            delta=f"Severity: {row.get('cvss_v3_severity', 'N/A')}",
+            delta_color="off",
+            help="Theoretical technical severity from NVD without organizational context",
+        )
+
+    with col_hero_ctx:
+        risk_score_val = row.get("risk_score")
+        risk_str = f"{risk_score_val:.3f}" if pd.notna(risk_score_val) and isinstance(risk_score_val, (int, float)) else "N/A"
+        band_val = str(row.get("risk_band", "High"))
+        st.metric(
+            label="🎯 Contextual Risk Score",
+            value=f"{risk_str} / 1.0",
+            delta=f"Band: {band_val.upper()}",
+            delta_color="normal" if band_val in ["Critical", "High"] else "inverse",
+            help="Weighted score combining CVSS (35%) + CISA KEV (30%) + Asset Criticality (20%) + Network Exposure (15%)",
+        )
+
+    with col_hero_kev:
+        in_kev = bool(row.get("in_kev", False))
+        st.metric(
+            label="🚨 CISA KEV Exploit Status",
+            value="Actively Exploited" if in_kev else "Not In KEV",
+            delta="Threat Actor Weaponized" if in_kev else "No Wild Exploits Known",
+            delta_color="inverse" if in_kev else "off",
+            help="Whether CISA has confirmed real-world weaponization in the wild",
+        )
+
+    with col_hero_shift:
+        disp = row.get("rank_displacement")
+        if pd.notna(disp) and isinstance(disp, (int, float)):
+            disp_int = int(disp)
+            disp_sign = "+" if disp_int > 0 else ""
+            delta_label = "Escalated in Queue" if disp_int > 0 else ("De-escalated in Queue" if disp_int < 0 else "Unchanged")
+            st.metric(
+                label="📐 Priority Rank Shift",
+                value=f"{disp_sign}{disp_int} spots",
+                delta=f"Rank #{row.get('rank_contextual', 'N/A')} (CVSS #{row.get('rank_cvss', 'N/A')})",
+                delta_color="normal" if disp_int > 0 else "inverse",
+                help="Shift in remediation queue priority compared to generic CVSS rank",
+            )
+        else:
+            st.metric("📐 Contextual Rank", f"#{row.get('rank_contextual', 'N/A')}")
+
+    # ----------------------------------------------------------------
+    # Executive Justification Box (For Non-Technical Evaluators)
+    # ----------------------------------------------------------------
+    _render_justification_box(row, asset, breakdown)
+
+    st.divider()
+
+    # ----------------------------------------------------------------
+    # CVE & Asset Profile Details
     # ----------------------------------------------------------------
     col_cve, col_asset = st.columns(2)
 
     with col_cve:
-        st.subheader("📋 Vulnerability Profile")
-        c1, c2, c3 = st.columns(3)
-        c1.metric("CVSS Base", f"{row.get('cvss_v3_score', 'N/A')}")
-        c2.metric("Severity", str(row.get("cvss_v3_severity", "N/A")))
-        c3.metric("CISA KEV", "🚨 Actively Exploited" if row.get("in_kev") else "Not Listed")
+        st.subheader("📋 Vulnerability Details & Mechanics")
+        st.markdown(f"**CVE ID**: `{selected_cve}`")
+        if row.get("cvss_v3_vector"):
+            st.caption(f"**CVSS Vector**: `{row.get('cvss_v3_vector')}`")
 
-        risk_score_val = row.get("risk_score")
-        risk_str = f"{risk_score_val:.3f}" if pd.notna(risk_score_val) and isinstance(risk_score_val, (int, float)) else "N/A"
-        st.info(f"**Contextual Risk Score**: `{risk_str}` (Band: **{row.get('risk_band', 'N/A')}**)")
-
-        with st.expander("Detailed Description & Products", expanded=False):
+        with st.expander("Detailed Description & Products", expanded=True):
             st.write(str(row.get("description", "No description available.")))
             if row.get("affected_products"):
-                st.caption(f"**Affected Products**: {row.get('affected_products')}")
+                st.markdown(f"**Affected Software**: `{row.get('affected_products')}`")
 
     with col_asset:
         st.subheader("🖥️ Target Asset Environment")
-        asset = scenario.get("asset", {})
         a1, a2 = st.columns(2)
         a1.metric("Hostname", asset.get("hostname", "Unknown"))
         a2.metric("Asset ID", asset.get("asset_id", "Unknown"))
@@ -121,7 +180,11 @@ def render() -> None:
         st.markdown(f"- **Criticality Tier**: `{crit}`")
         st.markdown(f"- **Network Exposure**: `{expo}` (IP: `{asset.get('ip', 'N/A')}`)")
         if asset.get("notes"):
-            st.caption(f"**Notes**: {asset.get('notes')}")
+            st.caption(f"**Role**: {asset.get('notes')}")
+        if asset.get("software"):
+            sw_list = asset.get("software")
+            if isinstance(sw_list, list):
+                st.caption(f"**Installed Stack**: {', '.join(sw_list)}")
 
     st.divider()
 
@@ -293,6 +356,157 @@ def _build_scenario(cve_id: str, row: pd.Series) -> dict[str, Any]:
         ),
     }
     return scenario
+
+
+def _calculate_factor_breakdown(row: pd.Series, asset: dict[str, Any]) -> dict[str, Any]:
+    """Calculate the 4-factor mathematical breakdown of the contextual risk score."""
+    raw_cvss = row.get("cvss_v3_score", 0.0)
+    cvss_val = float(raw_cvss) if pd.notna(raw_cvss) and isinstance(raw_cvss, (int, float)) else 0.0
+    cvss_norm = cvss_val / 10.0
+    cvss_contrib = 0.35 * cvss_norm
+
+    in_kev = bool(row.get("in_kev", False))
+    kev_contrib = 0.30 if in_kev else 0.0
+
+    crit_tier = str(asset.get("criticality", "medium")).lower()
+    crit_map = {"critical": 1.0, "high": 0.75, "medium": 0.50, "low": 0.25, "unknown": 0.10}
+    crit_score = crit_map.get(crit_tier, 0.50)
+    asset_contrib = 0.20 * crit_score
+
+    expo_tier = str(asset.get("exposure", "internal")).lower()
+    expo_map = {
+        "internet_facing": 1.0,
+        "dmz": 0.75,
+        "internal": 0.50,
+        "restricted": 0.25,
+        "air_gapped": 0.0,
+    }
+    expo_score = expo_map.get(expo_tier, 0.50)
+    expo_contrib = 0.15 * expo_score
+
+    total_score = cvss_contrib + kev_contrib + asset_contrib + expo_contrib
+
+    return {
+        "cvss_val": cvss_val,
+        "cvss_norm": cvss_norm,
+        "cvss_contrib": cvss_contrib,
+        "in_kev": in_kev,
+        "kev_contrib": kev_contrib,
+        "crit_tier": crit_tier,
+        "crit_score": crit_score,
+        "asset_contrib": asset_contrib,
+        "expo_tier": expo_tier,
+        "expo_score": expo_score,
+        "expo_contrib": expo_contrib,
+        "total_score": total_score,
+    }
+
+
+def _render_justification_box(row: pd.Series, asset: dict[str, Any], breakdown: dict[str, Any]) -> None:
+    """Render plain-English executive justification and factor breakdown for evaluators."""
+    cvss_val = breakdown["cvss_val"]
+    total_score = breakdown["total_score"]
+    in_kev = breakdown["in_kev"]
+    crit_tier = breakdown["crit_tier"].capitalize()
+    expo_tier = breakdown["expo_tier"].replace("_", "-").capitalize()
+    hostname = asset.get("hostname", "the target server")
+    asset_id = asset.get("asset_id", "Unknown")
+    band = str(row.get("risk_band", "High"))
+
+    disp = row.get("rank_displacement", 0)
+    disp_int = int(disp) if pd.notna(disp) and isinstance(disp, (int, float)) else 0
+
+    with st.container(border=True):
+        st.markdown("### 💡 Executive Justification: Why Contextual Risk Differs from CVSS")
+        st.caption("*(Plain-English explanation designed for non-technical evaluators, examiners, and leadership)*")
+
+        # Non-Technical Analogy Card
+        st.info(
+            "🎯 **Analogy for Non-Technical Evaluators**:\n\n"
+            f"• **Standard CVSS ({cvss_val:.1f} / 10)** is like a laboratory fire-hazard rating on a boiler: it measures how violently "
+            "it could burst under theoretical test conditions in a lab.\n\n"
+            f"• **Our Contextual Risk Score ({total_score:.3f} / 1.0)** checks reality: is the boiler **actually leaking right now** (CISA KEV), "
+            f"is it placed inside your **most critical server room** (`{hostname}` - Criticality: {crit_tier}), "
+            f"and are the **doors wide open to the public street** (Exposure: {expo_tier})?"
+        )
+
+        # Plain-English Executive Verdict
+        if in_kev and "internet" in expo_tier.lower():
+            verdict_text = (
+                f"🚨 **Threat Escalation Justification**: While generic CVSS rates this flaw at a moderate **{cvss_val:.1f}**, "
+                f"standard scoring dangerously ignores active adversary campaigns. This CVE is **actively weaponized in the wild** "
+                f"(verified in CISA's KEV catalogue) and directly affects an **Internet-facing, {crit_tier} asset** (`{hostname}`). "
+                f"Our engine elevates its risk score to **{total_score:.3f} ({band})**, "
+                f"surging its priority queue rank by **{abs(disp_int)} positions** to prevent an imminent enterprise intrusion."
+            )
+        elif not in_kev:
+            verdict_text = (
+                f"🛡️ **De-escalation & Alert-Fatigue Prevention**: Generic CVSS assigns a severe score of **{cvss_val:.1f}**, "
+                f"treating this vulnerability as an emergency in a vacuum. However, in your enterprise perimeter, "
+                f"**CISA has found zero evidence of active wild exploitation (0.00 KEV contribution)**. "
+                f"Even though `{hostname}` is a **{crit_tier}** system, the absence of weaponized exploit kits "
+                f"reduces true operational urgency to **{total_score:.3f} ({band})**, moving it **{abs(disp_int)} spots down the priority queue**. "
+                f"This prevents engineering teams from wasting hours on panic patching for unexploited bugs."
+            )
+        else:
+            verdict_text = (
+                f"⚖️ **Balanced Prioritization Justification**: Standard CVSS evaluates technical severity in isolation (**{cvss_val:.1f}**). "
+                f"Factoring in its CISA KEV exploitation state, the **{crit_tier}** operational role of `{hostname}`, "
+                f"and its **{expo_tier}** network perimeter, our engine calculates a calibrated risk score of **{total_score:.3f} ({band})**."
+            )
+
+        st.markdown(verdict_text)
+        st.divider()
+
+        # The 4-Factor Mathematical Transparency Grid
+        st.markdown("**📊 Mathematical Factor Contribution Breakdown (Weights Sum to 100%)**")
+
+        f1, f2, f3, f4 = st.columns(4)
+        with f1:
+            st.metric(
+                label="1. CVSS Flaw Base (35%)",
+                value=f"+{breakdown['cvss_contrib']:.3f}",
+                delta=f"CVSS: {cvss_val:.1f} / 10",
+                delta_color="off",
+                help="Baseline technical severity (CVSS / 10 × 0.35)",
+            )
+            st.caption("Theoretical flaw severity in isolation")
+
+        with f2:
+            st.metric(
+                label="2. Real Exploits / KEV (30%)",
+                value=f"+{breakdown['kev_contrib']:.3f}",
+                delta="🚨 In KEV (+0.300)" if in_kev else "🛡️ Not Exploited (+0.000)",
+                delta_color="normal" if in_kev else "off",
+                help="Active threat actor weaponization verified by CISA KEV (1.0 × 0.30 if in KEV, else 0.0)",
+            )
+            st.caption("Observed in real-world attacks")
+
+        with f3:
+            st.metric(
+                label="3. Asset Criticality (20%)",
+                value=f"+{breakdown['asset_contrib']:.3f}",
+                delta=f"Tier: {crit_tier}",
+                delta_color="off",
+                help=f"Asset operational importance score ({breakdown['crit_score']:.2f} × 0.20)",
+            )
+            st.caption(f"Business impact on `{hostname}`")
+
+        with f4:
+            st.metric(
+                label="4. Network Exposure (15%)",
+                value=f"+{breakdown['expo_contrib']:.3f}",
+                delta=f"Tier: {expo_tier}",
+                delta_color="off",
+                help=f"Perimeter exposure score ({breakdown['expo_score']:.2f} × 0.15)",
+            )
+            st.caption("Perimeter attack surface access")
+
+        st.markdown(
+            f"""
+            $$\\text{{Contextual Risk Score}} = \\underbrace{{{breakdown['cvss_contrib']:.3f}}}_\\text{{CVSS (35\\%)}} + \\underbrace{{{breakdown['kev_contrib']:.3f}}}_\\text{{CISA KEV (30\\%)}} + \\underbrace{{{breakdown['asset_contrib']:.3f}}}_\\text{{Asset (20\\%)}} + \\underbrace{{{breakdown['expo_contrib']:.3f}}}_\\text{{Exposure (15\\%)}} = \\mathbf{{{total_score:.3f}}}$$
+            """
+        )
 
 
 render()

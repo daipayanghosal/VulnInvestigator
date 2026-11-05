@@ -115,6 +115,15 @@ def render() -> None:
         )
         st.plotly_chart(fig, use_container_width=True)
         st.caption("Green bars: CVE ranked higher by contextual score than CVSS alone. Red bars: ranked lower.")
+        st.info(
+            "💡 **Non-Technical Guide to Rank Displacement**:\n\n"
+            "• **Green (+ Bars) — Elevated Priority**: These flaws had moderate CVSS scores on paper, but because they reside "
+            "on Internet-facing critical assets or are actively weaponized by adversaries (CISA KEV), contextual scoring "
+            "escalates them to the top of the remediation queue.\n\n"
+            "• **Red (− Bars) — Prevented False Alarms**: These flaws had high theoretical CVSS scores, but have zero observed "
+            "wild exploits or sit safely on isolated internal servers. Contextual scoring de-escalates them so teams "
+            "avoid burning critical engineering hours on false alarms."
+        )
 
 
 # ---------------------------------------------------------------------------
