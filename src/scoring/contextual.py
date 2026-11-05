@@ -197,11 +197,15 @@ class ContextualRiskScorer:
             )
 
         result = pd.DataFrame(scored_rows)
+        # Drop any existing/duplicated rank_contextual column cleanly
+        clean_ctx_cols = [c for c in result.columns if c != "rank_contextual"]
+        result = result.loc[:, clean_ctx_cols]
         result = result.sort_values("risk_score", ascending=False, na_position="last")
         result = result.reset_index(drop=True)
-        if "rank_contextual" in result.columns:
-            result = result.drop(columns=["rank_contextual"])
-        result.insert(0, "rank_contextual", range(1, len(result) + 1))
+        result["rank_contextual"] = list(range(1, len(result) + 1))
+        # Re-order so rank_contextual is the leading column
+        ordered_ctx_cols = ["rank_contextual"] + [c for c in result.columns if c != "rank_contextual"]
+        result = result[ordered_ctx_cols]
 
         logger.info(
             "ContextualRiskScorer: scored %d CVEs; top risk_score=%.3f",

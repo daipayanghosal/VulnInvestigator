@@ -91,7 +91,16 @@ In any academic dissertation, security audit, or executive review, claims must b
 
         try:
             with st.spinner("Executing full quantitative evaluation suite…"):
-                new_results = run_evaluation_pipeline(
+                import importlib
+                import src.scoring.baseline
+                import src.scoring.contextual
+                import src.evaluation.pipeline_runner
+                importlib.reload(src.scoring.baseline)
+                importlib.reload(src.scoring.contextual)
+                importlib.reload(src.evaluation.pipeline_runner)
+                from src.evaluation.pipeline_runner import run_evaluation_pipeline as _run_pipeline
+
+                new_results = _run_pipeline(
                     vuln_df=st.session_state.get("vuln_df"),
                     progress_callback=_update_ui,
                 )
