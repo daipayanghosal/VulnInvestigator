@@ -280,4 +280,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-*Developed as a dissertation research prototype for WIMS 2022.*
+*Developed as a dissertation research prototype.*
