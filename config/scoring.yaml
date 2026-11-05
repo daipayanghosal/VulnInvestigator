@@ -1,0 +1,32 @@
+# ── Contextual Risk Score weights ───────────────────────────────────────────
+# Weights must sum to 1.0
+# Formula: score = w_cvss*cvss_norm + w_kev*kev_flag + w_asset*asset_crit + w_exp*exposure
+weights:
+  cvss: 0.35
+  kev: 0.30
+  asset_criticality: 0.20
+  exposure: 0.15
+
+# ── Asset criticality tiers (0.0 – 1.0) ─────────────────────────────────────
+asset_criticality:
+  critical: 1.0
+  high: 0.75
+  medium: 0.50
+  low: 0.25
+  unknown: 0.10
+
+# ── Network exposure tiers (0.0 – 1.0) ──────────────────────────────────────
+exposure:
+  internet_facing: 1.0
+  dmz: 0.75
+  internal: 0.50
+  restricted: 0.25
+  air_gapped: 0.0
+
+# ── Score bands for display ──────────────────────────────────────────────────
+# A score >= threshold maps to that band label
+bands:
+  critical: 0.80
+  high: 0.60
+  medium: 0.40
+  low: 0.0

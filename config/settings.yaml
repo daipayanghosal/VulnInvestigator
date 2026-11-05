@@ -1,0 +1,29 @@
+project:
+  name: "VulnInvestigator"
+  version: "0.1.0"
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  assets_file: "data/assets/asset_inventory.json"
+  logs_dir: "data/logs"
+  db_path: "data/processed/vulninvestigator.db"
+
+pipeline:
+  nvd_base_url: "https://services.nvd.nist.gov/rest/json/cves/2.0"
+  kev_url: "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+  attack_url: "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
+  nvd_results_per_page: 2000
+  request_delay_seconds: 6
+
+llm:
+  backend: "gemini"       # openai | ollama | gemini
+  model: "gemini-3.5-flash"
+  temperature: 0.2
+  max_tokens: 2048
+  max_evidence_chars: 8000
+
+dashboard:
+  title: "VulnInvestigator"
+  page_icon: "🔍"
+  theme: "dark"
