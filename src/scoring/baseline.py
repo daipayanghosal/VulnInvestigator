@@ -70,6 +70,8 @@ class CVSSBaselineScorer:
             raise ValueError(f"CVSSBaselineScorer: DataFrame missing columns: {missing}")
 
         ranked = vuln_df.copy()
+        if "rank_cvss" in ranked.columns:
+            ranked = ranked.drop(columns=["rank_cvss"])
         ranked["cvss_v3_score"] = pd.to_numeric(ranked["cvss_v3_score"], errors="coerce")
         ranked = ranked.sort_values("cvss_v3_score", ascending=False, na_position="last")
         ranked = ranked.reset_index(drop=True)

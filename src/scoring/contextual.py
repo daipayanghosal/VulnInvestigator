@@ -199,6 +199,8 @@ class ContextualRiskScorer:
         result = pd.DataFrame(scored_rows)
         result = result.sort_values("risk_score", ascending=False, na_position="last")
         result = result.reset_index(drop=True)
+        if "rank_contextual" in result.columns:
+            result = result.drop(columns=["rank_contextual"])
         result.insert(0, "rank_contextual", range(1, len(result) + 1))
 
         logger.info(

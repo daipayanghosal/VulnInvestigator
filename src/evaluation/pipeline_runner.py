@@ -86,6 +86,11 @@ def run_evaluation_pipeline(
     if "cvss_severity" in df.columns and "cvss_v3_severity" not in df.columns:
         df["cvss_v3_severity"] = df["cvss_severity"]
 
+    # Strip existing rank/displacement columns so re-ranking is idempotent
+    for col in ("rank_cvss", "rank_contextual", "rank_displacement"):
+        if col in df.columns:
+            df = df.drop(columns=[col])
+
     # ------------------------------------------------------------------
     # Step 2: Compute baseline & contextual rankings
     # ------------------------------------------------------------------
