@@ -19,6 +19,9 @@ import sys
 from pathlib import Path
 
 import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Ensure the project root is on sys.path when running directly
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]

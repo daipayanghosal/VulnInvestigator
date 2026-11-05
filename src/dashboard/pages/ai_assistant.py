@@ -139,7 +139,7 @@ def _run_investigation(scenario: dict) -> dict | None:
 
         client = get_llm_client(
             backend=llm_cfg.get("backend", "gemini"),
-            model=llm_cfg.get("model", "gemini-2.0-flash"),
+            model=llm_cfg.get("model", "gemini-3.5-flash"),
             temperature=llm_cfg.get("temperature", 0.2),
             max_tokens=llm_cfg.get("max_tokens", 2048),
         )

@@ -40,6 +40,60 @@ _TECHNIQUE_KEYWORDS: dict[str, list[str]] = {
 }
 
 
+_TECHNIQUE_METADATA: dict[str, dict[str, str]] = {
+    "T1190": {
+        "name": "Exploit Public-Facing Application",
+        "tactics": "Initial Access",
+        "description": "Adversaries may attempt to exploit a weakness in an Internet-facing host or system with software that contains vulnerabilities such as SQL injection, buffer overflows, or remote code execution to gain initial access.",
+    },
+    "T1078": {
+        "name": "Valid Accounts",
+        "tactics": "Defense Evasion, Persistence, Privilege Escalation, Initial Access",
+        "description": "Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion.",
+    },
+    "T1059": {
+        "name": "Command and Scripting Interpreter",
+        "tactics": "Execution",
+        "description": "Adversaries may abuse command and script interpreters to execute commands, scripts, or binaries.",
+    },
+    "T1486": {
+        "name": "Data Encrypted for Impact",
+        "tactics": "Impact",
+        "description": "Adversaries may encrypt data on target systems or within networks to disrupt access to systems and services.",
+    },
+    "T1021": {
+        "name": "Remote Services",
+        "tactics": "Lateral Movement",
+        "description": "Adversaries may use Valid Accounts to log into a service specifically designed to accept remote connections, such as RDP, SSH, or SMB.",
+    },
+    "T1055": {
+        "name": "Process Injection",
+        "tactics": "Defense Evasion, Privilege Escalation",
+        "description": "Adversaries may inject code into processes in order to evade process-based defenses as well as possibly elevate privileges.",
+    },
+    "T1083": {
+        "name": "File and Directory Discovery",
+        "tactics": "Discovery",
+        "description": "Adversaries may enumerate files and directories or search in specific locations of a host or network share.",
+    },
+    "T1110": {
+        "name": "Brute Force",
+        "tactics": "Credential Access",
+        "description": "Adversaries may use brute force techniques to attempt to access accounts when passwords are unknown.",
+    },
+    "T1566": {
+        "name": "Phishing",
+        "tactics": "Initial Access",
+        "description": "Adversaries may send phishing messages with malicious attachments or links to induce targets into executing malicious code or credential harvesting.",
+    },
+    "T1071": {
+        "name": "Application Layer Protocol",
+        "tactics": "Command and Control",
+        "description": "Adversaries may communicate using application layer protocols to avoid detection/network filtering by blending in with existing traffic.",
+    },
+}
+
+
 class ThreatCorrelator:
     """Correlates CVEs and log events with MITRE ATT&CK techniques.
 
@@ -99,35 +153,58 @@ class ThreatCorrelator:
             if any(kw in products_lower for kw in keywords):
                 matched_ids.add(tech_id)
 
-        # Pass 2 — full-text scan of ATT&CK descriptions
-        if not self.attack_df.empty:
+        # Pass 2 — only fallback to scan if no curated match found
+        if not matched_ids and not self.attack_df.empty and "id" in self.attack_df.columns:
+            stop_words = {"vulnerability", "remote", "server", "system", "allows", "attack", "software", "product"}
             product_tokens = {
                 tok.strip()
-                for tok in products_lower.replace(";", " ").split()
-                if len(tok.strip()) > 3
+                for tok in products_lower.replace(";", " ").replace(",", " ").split()
+                if len(tok.strip()) > 4 and tok.strip() not in stop_words
             }
-            for _, row in self.attack_df.iterrows():
-                desc_lower = str(row.get("description", "")).lower()
+            for _, r_tech in self.attack_df.iterrows():
+                desc_lower = str(r_tech.get("description", "")).lower()
                 if any(tok in desc_lower for tok in product_tokens):
-                    matched_ids.add(str(row["id"]))
+                    matched_ids.add(str(r_tech["id"]))
+                    if len(matched_ids) >= 4:
+                        break
+
+        # Fallback if no technique matched
+        if not matched_ids:
+            if any(term in products_lower for term in ["auth", "login", "password", "token", "session", "credential"]):
+                matched_ids.add("T1078")
+            elif any(term in products_lower for term in ["command", "exec", "shell", "script"]):
+                matched_ids.add("T1059")
+            else:
+                matched_ids.add("T1190")
 
         # Resolve IDs to full technique dicts
         results: list[dict[str, Any]] = []
-        for tech_id in matched_ids:
-            match = self.attack_df[self.attack_df["id"] == tech_id]
+        for tech_id in list(matched_ids)[:4]:
+            match = (
+                self.attack_df[self.attack_df["id"] == tech_id]
+                if not self.attack_df.empty and "id" in self.attack_df.columns
+                else pd.DataFrame()
+            )
+            fallback = _TECHNIQUE_METADATA.get(tech_id, {})
             if not match.empty:
                 r = match.iloc[0]
                 results.append(
                     {
                         "id": r["id"],
-                        "name": r.get("name", ""),
-                        "description": str(r.get("description", ""))[:500],
-                        "tactics": r.get("tactics", ""),
+                        "name": r.get("name") or fallback.get("name", tech_id),
+                        "description": str(r.get("description") or fallback.get("description", ""))[:500],
+                        "tactics": r.get("tactics") or fallback.get("tactics", "N/A"),
                     }
                 )
             else:
-                # Technique exists in hint table but not in loaded ATT&CK dump
-                results.append({"id": tech_id, "name": "", "description": "", "tactics": ""})
+                results.append(
+                    {
+                        "id": tech_id,
+                        "name": fallback.get("name", tech_id),
+                        "description": fallback.get("description", "Technique identified via threat heuristics."),
+                        "tactics": fallback.get("tactics", "N/A"),
+                    }
+                )
 
         logger.info(
             "ThreatCorrelator: CVE %s → %d matched techniques", cve_id, len(results)
