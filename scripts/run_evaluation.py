@@ -48,6 +48,7 @@ from src.scoring.baseline import CVSSBaselineScorer
 from src.scoring.contextual import ContextualRiskScorer
 from src.evaluation.ranking_metrics import kendall_tau, rank_displacement, ndcg
 from src.evaluation.grounding_metrics import generate_evaluation_report
+from src.evaluation.pipeline_runner import run_evaluation_pipeline
 
 load_dotenv()
 
@@ -175,19 +176,10 @@ def main() -> None:
     console.print(table)
 
     # ------------------------------------------------------------------
-    # Save results
+    # Save results (using unified pipeline runner for complete metrics)
     # ------------------------------------------------------------------
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    results = {
-        "kendall_tau": tau,
-        "ndcg_at_10": ndcg_at_10,
-        "ndcg_at_20": ndcg_at_20,
-        "rank_displacement": disp_df.to_dict(orient="records"),
-        "total_cves": len(df),
-        "grounding_metrics": generate_evaluation_report([]),  # populate when LLM results exist
-    }
-    with output_path.open("w", encoding="utf-8") as fh:
-        json.dump(results, fh, indent=2, default=str)
+    console.print("\n[bold]Finalizing grounding benchmarks & stress tests…[/bold]")
+    results = run_evaluation_pipeline(vuln_df=df, db_path=db_path, output_path=output_path)
 
     console.print(f"\n[green]✓ Evaluation results saved → {output_path}[/green]")
     console.rule("[bold green]Evaluation Complete[/bold green]")
