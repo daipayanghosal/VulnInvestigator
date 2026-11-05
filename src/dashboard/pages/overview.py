@@ -10,9 +10,12 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+from src.dashboard.data_loader import ensure_data_loaded
+
 
 def render() -> None:
     """Render the Overview dashboard page."""
+    ensure_data_loaded()
     st.title("🏠 Overview")
     st.markdown(
         "High-level snapshot of the vulnerability dataset and contextual risk landscape."
@@ -109,3 +112,6 @@ def _render_placeholder_chart() -> None:
     fig.update_layout(xaxis_tickangle=-45, yaxis_range=[0, 1])
     st.plotly_chart(fig, use_container_width=True)
     st.caption("This chart uses placeholder data. Run the pipeline to populate with real CVEs.")
+
+
+render()

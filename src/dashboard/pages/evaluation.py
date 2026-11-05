@@ -11,9 +11,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+from src.dashboard.data_loader import ensure_data_loaded
+
 
 def render() -> None:
     """Render the Evaluation metrics page."""
+    ensure_data_loaded()
     st.title("📈 Evaluation")
     st.markdown(
         "Quantitative evaluation of the ranking methodology and AI output quality.  "
@@ -147,3 +150,6 @@ def _gauge_chart(value: float, title: str, low: float = 0.0, high: float = 1.0) 
     )
     fig.update_layout(height=300)
     st.plotly_chart(fig, use_container_width=True)
+
+
+render()

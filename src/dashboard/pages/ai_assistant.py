@@ -13,6 +13,8 @@ from pathlib import Path
 
 import streamlit as st
 
+from src.dashboard.data_loader import ensure_data_loaded
+
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
@@ -20,6 +22,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 def render() -> None:
     """Render the AI Assistant page."""
+    ensure_data_loaded()
     st.title("🤖 AI Assistant")
     st.markdown(
         "AI-generated investigation report grounded in vulnerability evidence.  "
@@ -202,3 +205,6 @@ The exploit aligns with **T1190** (Exploit Public-Facing Application).
 found; full filesystem audit required to confirm web shell persistence.
 """
     )
+
+
+render()

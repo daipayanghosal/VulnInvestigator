@@ -14,11 +14,14 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from src.dashboard.data_loader import ensure_data_loaded
+
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
 def render() -> None:
     """Render the Threat Investigation page."""
+    ensure_data_loaded()
     st.title("🔎 Threat Investigation & Evidence Correlation")
     st.markdown(
         "Correlate vulnerability findings with organizational asset context, "
@@ -168,8 +171,11 @@ def render() -> None:
     if st.button("🚀 Run AI Investigation with Gemini", key="run_ai", type="primary", use_container_width=True):
         st.session_state["pending_investigation"] = scenario
         st.session_state["llm_result"] = None  # reset previous result
-        st.session_state["current_page"] = "ai_assistant"
-        st.rerun()
+        try:
+            st.switch_page("pages/ai_assistant.py")
+        except Exception:
+            st.session_state["current_page"] = "ai_assistant"
+            st.rerun()
 
 
 # ---------------------------------------------------------------------------
@@ -275,3 +281,6 @@ def _build_scenario(cve_id: str, row: pd.Series) -> dict[str, Any]:
         ),
     }
     return scenario
+
+
+render()

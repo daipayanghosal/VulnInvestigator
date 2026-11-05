@@ -10,9 +10,12 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+from src.dashboard.data_loader import ensure_data_loaded
+
 
 def render() -> None:
     """Render the Vulnerability Rankings comparison page."""
+    ensure_data_loaded()
     st.title("📊 Vulnerability Rankings")
     st.markdown(
         "Compare **CVSS-only baseline** rankings against **contextual risk** rankings.  "
@@ -121,3 +124,6 @@ def _colour_risk_band(series: pd.Series) -> list[str]:
         "Low": "background-color: #d4edda",
     }
     return [colour_map.get(v, "") for v in series]
+
+
+render()
