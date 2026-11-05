@@ -30,6 +30,31 @@ def render() -> None:
     )
 
     # ----------------------------------------------------------------
+    # Non-Technical & Executive Guide
+    # ----------------------------------------------------------------
+    with st.expander("💡 Executive & Non-Technical Guide: How Threat Investigation Works", expanded=False):
+        st.markdown(
+            """
+### 🕵️ Plain-English Guide to Threat Investigation
+
+**What is happening on this page?**  
+Traditional vulnerability scanners just hand IT teams a list of CVE numbers with no context. This page reconstructs a **complete cyber investigation scenario** by connecting four critical puzzle pieces:
+
+1. **📋 The Vulnerability Profile**: The technical weakness identified in the software.
+2. **🖥️ The Target Asset Environment**: The actual corporate machine hosting that software (its business criticality, network IP, and whether it faces the public internet).
+3. **🎯 MITRE ATT&CK Techniques**: The global dictionary of tactics cybercriminals use (e.g., *Exploit Public-Facing Application* or *Privilege Escalation*).
+4. **🗒️ SIEM Security Log Evidence**: The digital "security camera footage" of your network (logs), showing whether suspicious traffic has touched the target asset.
+
+---
+### 🚀 How to Conduct an Investigation:
+1. **Choose a CVE**: Select a vulnerability from the dropdown (or use the expander to type your own custom CVE).
+2. **Review the Scoreboard & Justification Box**: Understand why our contextual score differs from generic vendor scores.
+3. **Examine Security Telemetry**: Inspect correlated attack logs and benign background noise.
+4. **Invoke the AI Assistant**: Click the purple button **'Run AI Investigation with Gemini'** at the bottom to have Google Gemini synthesize a verified, evidence-grounded investigation hypothesis!
+            """
+        )
+
+    # ----------------------------------------------------------------
     # Custom / Manual CVE Ingestion
     # ----------------------------------------------------------------
     render_custom_cve_form(title="➕ Ingest Custom / Unlisted CVE (Manual Entry or NIST NVD Live Fetch)")

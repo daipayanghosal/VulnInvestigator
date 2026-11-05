@@ -24,6 +24,26 @@ def render() -> None:
     )
 
     # ----------------------------------------------------------------
+    # Non-Technical & Executive Guide
+    # ----------------------------------------------------------------
+    with st.expander("💡 Executive & Non-Technical Guide: How to Understand These Rankings", expanded=False):
+        st.markdown(
+            """
+### ⚖️ Plain-English Guide to Vulnerability Prioritization
+
+**Why Two Different Ranking Tables?**
+* **🔵 Left Table (CVSS Baseline)**: The *Traditional Industry Standard*. It ranks bugs based purely on theoretical laboratory severity scores (0.0 to 10.0) from software vendors. It assumes worst-case conditions on every machine.
+* **🔴 Right Table (Contextual Risk)**: Our *Enterprise-Calibrated Methodology*. It evaluates the exact same flaws through the lens of your actual enterprise environment (combining CVSS, active CISA KEV exploitation, asset criticality, and internet exposure).
+
+---
+### 📐 What is "Rank Displacement"?
+Rank displacement measures the **difference between where a bug sits on paper vs. where it actually belongs in your fix queue**:
+* **🟢 Green (+ Shift) — The Hidden Landmines**: Vulnerabilities with moderate scores (e.g., CVSS 7.2) that traditional tools ignore. Because threat actors are **actively weaponizing them** on your **Internet-facing servers**, our system elevates them to the top of your queue to prevent an immediate breach.
+* **🔴 Red (− Shift) — The False Alarms**: Vulnerabilities with scary-looking scores (e.g., CVSS 9.8) that trigger emergency weekend firefighting. Because CISA confirms **zero wild exploits** and the flaw sits on an isolated internal machine, our system de-escalates them so teams can fix them during regular maintenance.
+            """
+        )
+
+    # ----------------------------------------------------------------
     # Custom / Manual CVE Ingestion
     # ----------------------------------------------------------------
     render_custom_cve_form(title="➕ Ingest Custom / Unlisted CVE into Rankings")

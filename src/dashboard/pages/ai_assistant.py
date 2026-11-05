@@ -51,11 +51,37 @@ def render() -> None:
             st.session_state["gemini_api_key"] = custom_key.strip()
             os.environ["GEMINI_API_KEY"] = custom_key.strip()
 
-    st.title("🤖 AI Assistant")
+    st.title("🤖 AI Assistant — Evidence-Grounded Threat Investigation")
     st.markdown(
         "AI-generated investigation report grounded in vulnerability evidence.  "
         "Citations are highlighted; unsupported claims are flagged in yellow."
     )
+
+    # ----------------------------------------------------------------
+    # Non-Technical & Executive Guide
+    # ----------------------------------------------------------------
+    with st.expander("💡 Executive & Non-Technical Guide: What is Evidence-Grounded GenAI?", expanded=False):
+        st.markdown(
+            """
+### 🧠 Plain-English Guide to Evidence-Grounded AI
+
+**Why Generic AI Can Be Dangerous in Cybersecurity**:  
+Standard large language models (like basic chatbots) have a well-known flaw: **hallucination**. They frequently generate confident, convincing explanations that are completely fabricated. In cyber defense, acting on a hallucinated IP address or made-up attack vector wastes hundreds of hours and leaves systems exposed.
+
+**How VulnInvestigator Solves This**:  
+This system implements **Evidence-Grounded Generative AI** using Google Gemini combined with automated deterministic output verification:
+
+1. **Strict Evidence Ingestion**: The AI is fed only concrete facts: the specific CVE record, affected software stack, verified asset attributes, and raw SIEM log events.
+2. **Automated Citation Badging (Blue Badges)**: The validator scans every sentence to ensure the AI explicitly cites tangible evidence tokens (such as `CVE-2024-XXXX`, `T1190`, or specific log event IDs).
+3. **Automated Hallucination Detection (Yellow Highlight)**: Any sentence that contains speculative claims or ungrounded assertions is highlighted in <mark style="background:#fff3cd;padding:2px 4px;border-radius:3px;">yellow</mark>, alerting human analysts to verify the claim before taking action.
+
+---
+### 📊 Understanding the Quality Metrics:
+* **Evidence Grounding Score**: A composite confidence score (0%–100%) measuring how strictly the report is supported by verifiable log and threat evidence.
+* **Citations Found**: The count of verifiable evidence items quoted by the AI.
+* **Unsupported Claims**: The count of unverified assertions flagged for human review.
+            """
+        )
 
     # ----------------------------------------------------------------
     # Check for pending investigation scenario
