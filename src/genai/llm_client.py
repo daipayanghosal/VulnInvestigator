@@ -223,10 +223,19 @@ class GeminiClient(LLMClient):
         self.temperature = temperature
         self.max_tokens = max_tokens
 
+        st_key = ""
+        try:
+            import streamlit as st  # type: ignore
+            st_key = str(st.secrets.get("GEMINI_API_KEY", "") or st.secrets.get("GOOGLE_API_KEY", ""))
+        except Exception:
+            pass
+
         resolved_key = (
             api_key
             or os.environ.get("GEMINI_API_KEY")
-            or os.environ.get("GOOGLE_API_KEY", "")
+            or os.environ.get("GOOGLE_API_KEY")
+            or st_key
+            or ""
         )
         self._client = genai.Client(api_key=resolved_key)
         self._types = types

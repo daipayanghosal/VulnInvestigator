@@ -1,0 +1,112 @@
+{
+  "total_cves": 8328,
+  "total_in_kev": 1768,
+  "kendall_tau": 0.5791,
+  "ndcg_at_10": 0.4657,
+  "cvss_top_5": [
+    "CVE-2024-42450",
+    "CVE-2026-111812",
+    "CVE-2026-44182",
+    "CVE-2026-52887",
+    "CVE-2026-49257"
+  ],
+  "contextual_top_5": [
+    "CVE-2021-44228",
+    "CVE-2026-21962",
+    "CVE-2016-3088",
+    "CVE-2013-2251",
+    "CVE-2021-42013"
+  ],
+  "top_displacement": [
+    {
+      "item": "CVE-2025-61624",
+      "rank_a": 5160,
+      "rank_b": 69,
+      "displacement": 5091
+    },
+    {
+      "item": "CVE-2021-36186",
+      "rank_a": 131,
+      "rank_b": 4995,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2026-3960",
+      "rank_a": 132,
+      "rank_b": 4996,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2026-34977",
+      "rank_a": 133,
+      "rank_b": 4997,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2023-36553",
+      "rank_a": 127,
+      "rank_b": 4991,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2024-26011",
+      "rank_a": 126,
+      "rank_b": 4990,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2023-34990",
+      "rank_a": 125,
+      "rank_b": 4989,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2023-34992",
+      "rank_a": 124,
+      "rank_b": 4988,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2024-48887",
+      "rank_a": 130,
+      "rank_b": 4994,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2025-56157",
+      "rank_a": 134,
+      "rank_b": 4998,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2024-27782",
+      "rank_a": 123,
+      "rank_b": 4987,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2024-55594",
+      "rank_a": 129,
+      "rank_b": 4993,
+      "displacement": -4864
+    },
+    {
+      "item": "CVE-2019-0193",
+      "rank_a": 4893,
+      "rank_b": 40,
+      "displacement": 4853
+    },
+    {
+      "item": "CVE-2026-44180",
+      "rank_a": 149,
+      "rank_b": 4985,
+      "displacement": -4836
+    },
+    {
+      "item": "CVE-2026-108709",
+      "rank_a": 142,
+      "rank_b": 4978,
+      "displacement": -4836
+    }
+  ]
+}

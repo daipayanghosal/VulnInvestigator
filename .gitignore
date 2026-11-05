@@ -22,14 +22,15 @@ MANIFEST
 .env
 *.env.local
 
-# ── Data directories (raw & processed data should not be committed) ──────────
+# ── Data directories ─────────────────────────────────────────────────────────
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/processed/vulninvestigator.db
+!data/processed/evaluation_results.json
 
 # ── Database files ───────────────────────────────────────────────────────────
-*.db
 *.sqlite
 *.sqlite3
 
