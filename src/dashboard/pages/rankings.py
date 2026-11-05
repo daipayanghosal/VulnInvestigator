@@ -10,6 +10,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+from src.dashboard.custom_cve_form import render_custom_cve_form
 from src.dashboard.data_loader import ensure_data_loaded
 
 
@@ -21,6 +22,11 @@ def render() -> None:
         "Compare **CVSS-only baseline** rankings against **contextual risk** rankings.  "
         "The rank displacement table shows how much each CVE moved."
     )
+
+    # ----------------------------------------------------------------
+    # Custom / Manual CVE Ingestion
+    # ----------------------------------------------------------------
+    render_custom_cve_form(title="➕ Ingest Custom / Unlisted CVE into Rankings")
 
     vuln_df: pd.DataFrame | None = st.session_state.get("vuln_df")
 

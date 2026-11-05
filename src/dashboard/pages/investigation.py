@@ -14,6 +14,7 @@ from typing import Any
 import pandas as pd
 import streamlit as st
 
+from src.dashboard.custom_cve_form import render_custom_cve_form
 from src.dashboard.data_loader import ensure_data_loaded
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -27,6 +28,11 @@ def render() -> None:
         "Correlate vulnerability findings with organizational asset context, "
         "MITRE ATT&CK threat techniques, and SIEM security log evidence."
     )
+
+    # ----------------------------------------------------------------
+    # Custom / Manual CVE Ingestion
+    # ----------------------------------------------------------------
+    render_custom_cve_form(title="➕ Ingest Custom / Unlisted CVE (Manual Entry or NIST NVD Live Fetch)")
 
     vuln_df: pd.DataFrame | None = st.session_state.get("vuln_df")
 
@@ -47,13 +53,19 @@ def render() -> None:
         st.warning("No CVE IDs found in the dataset.")
         return
 
+    default_idx = 0
+    if "selected_cve" in st.session_state and st.session_state["selected_cve"] in cve_options:
+        default_idx = cve_options.index(st.session_state["selected_cve"])
+
     col_sel1, col_sel2 = st.columns([3, 1])
     with col_sel1:
         selected_cve = st.selectbox(
             "Select CVE to Investigate",
             cve_options,
+            index=default_idx,
             help="Ranked by contextual risk score (highest risk first)",
         )
+        st.session_state["selected_cve"] = selected_cve
     with col_sel2:
         st.write("")
         st.write("")
