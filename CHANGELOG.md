@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - *Fortinet FortiOS SSL-VPN (`CVE-2024-21762`)*: Displays `INBOUND T1190:8443`, `OUT-OF-BOUNDS RCE`, `SSL-VPN Worker Subshell`, and `CREDENTIAL EXFIL`.
   - *Dynamic Fallback Engine*: Heuristically extracts software libraries from CPE strings and classifies CWE flaw mechanics across all other cataloged vulnerabilities.
 - **Dynamic Telemetry Correlation**: Wired live SIEM telemetry log source IPs and event streams directly into SVG topology coordinates and global geoplot origins.
+- **Streamlined AI Assistant Focus**: Replaced legacy static target dropdown in AI Assistant with a unified Active Target status indicator, surfacing real-time contextual risk scores, CVSS base ratings, and CISA KEV exploitation flags synchronized with the active investigation.
 
 ---
 

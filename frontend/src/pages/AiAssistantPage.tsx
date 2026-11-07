@@ -29,7 +29,7 @@ interface AiAssistantPageProps {
   techniques: Technique[];
   logs: SecurityLog[];
   selectedCveId: string;
-  onSelectCve: (cveId: string) => void;
+  onSelectCve?: (cveId: string) => void;
   onOpenKeyModal: () => void;
   hasApiKey: boolean;
 }
@@ -40,7 +40,6 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
   techniques,
   logs,
   selectedCveId,
-  onSelectCve,
   onOpenKeyModal,
   hasApiKey,
 }) => {
@@ -156,32 +155,33 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
         </div>
       </ExecutiveGuide>
 
-      {/* Target CVE Selection Header */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-2">
+      {/* Target CVE Active Target Banner */}
+      <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-xs font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6]">
             Active Target:
           </span>
-          <span className="font-mono font-semibold text-sm text-[#0071E3]">
+          <span className="font-mono font-bold text-sm text-[#0071E3] dark:text-[#389BF2]">
             {activeVuln.cve_id}
           </span>
           <span className="text-xs text-neutral-500">
-            on {activeAsset.hostname} ({activeAsset.asset_id})
+            on <span className="font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">{activeAsset.hostname}</span> ({activeAsset.asset_id})
           </span>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <select
-            value={activeVuln.cve_id}
-            onChange={(e) => onSelectCve(e.target.value)}
-            className="px-3 py-1.5 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none"
-          >
-            {vulnerabilities.slice(0, 30).map((v) => (
-              <option key={v.cve_id} value={v.cve_id}>
-                {v.cve_id} (Risk: {v.risk_score.toFixed(3)})
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center space-x-2 flex-wrap">
+          <span className="px-2.5 py-1 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] font-mono text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Risk: {activeVuln.risk_score.toFixed(3)}
+          </span>
+          <span className="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 font-mono text-[11px] text-neutral-600 dark:text-neutral-400">
+            CVSS {activeVuln.cvss_score.toFixed(1)}
+          </span>
+          {activeVuln.in_kev && (
+            <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[10px]">
+              CISA KEV Listed
+            </span>
+          )}
         </div>
       </div>
 
