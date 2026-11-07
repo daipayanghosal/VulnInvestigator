@@ -9,6 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="VulnInvestigator — Evidence-Grounded Generative AI for Vulnerability-to-Threat Investigation and Risk Prioritization by Daipayan Ghosal" />
     <title>VulnInvestigator — Contextual Threat Intelligence &amp; Prioritization</title>
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('theme');
+          var isDark = t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

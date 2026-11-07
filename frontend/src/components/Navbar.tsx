@@ -113,13 +113,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </button>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle Button */}
           <button
             onClick={onToggleTheme}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] hover:bg-black/[0.04] dark:hover:bg-white/[0.08] transition-colors"
-            aria-label="Toggle theme"
+            className="h-8 px-2.5 rounded-full flex items-center space-x-1.5 text-xs font-medium border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.05] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] text-[#1D1D1F] dark:text-[#F5F5F7] transition-all cursor-pointer shadow-2xs"
+            aria-label={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
           >
-            {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            {isDark ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline text-[11px] text-[#A1A1A6]">Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-[#0071E3]" />
+                <span className="hidden sm:inline text-[11px] text-[#86868B]">Dark</span>
+              </>
+            )}
           </button>
 
           {/* GitHub Repo */}

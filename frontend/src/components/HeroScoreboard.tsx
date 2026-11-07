@@ -328,7 +328,7 @@ export const HeroScoreboard: React.FC<HeroScoreboardProps> = ({ vuln, asset, bre
           </div>
 
           {/* Mathematical Equation Card */}
-          <div className="mt-3 p-3 rounded-xl bg-neutral-900 text-neutral-100 font-mono text-[11px] flex items-center justify-between overflow-x-auto">
+          <div className="mt-3 p-3 rounded-xl bg-black/[0.03] dark:bg-neutral-900 border border-black/5 dark:border-white/10 text-[#1D1D1F] dark:text-neutral-100 font-mono text-[11px] flex items-center justify-between overflow-x-auto">
             <span>
               Risk_Score = ({breakdown.cvss_contrib.toFixed(3)} [CVSS]) + ({breakdown.kev_contrib.toFixed(3)} [KEV]) + ({breakdown.asset_contrib.toFixed(3)} [Asset]) + ({breakdown.expo_contrib.toFixed(3)} [Exposure]) = <strong className="text-[#34C759]">{breakdown.total_score.toFixed(3)}</strong>
             </span>

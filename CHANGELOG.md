@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - *Dynamic Fallback Engine*: Heuristically extracts software libraries from CPE strings and classifies CWE flaw mechanics across all other cataloged vulnerabilities.
 - **Dynamic Telemetry Correlation**: Wired live SIEM telemetry log source IPs and event streams directly into SVG topology coordinates and global geoplot origins.
 - **Streamlined AI Assistant Focus**: Replaced legacy static target dropdown in AI Assistant with a unified Active Target status indicator, surfacing real-time contextual risk scores, CVSS base ratings, and CISA KEV exploitation flags synchronized with the active investigation.
+- **Dual-Mode Theme Architecture**: Configured explicit class-based dark variant compilation in Tailwind v4, decoupling theme rendering from OS-level media queries so the Apple HIG Light Theme renders cleanly with crisp high-contrast off-black typography, soft gray canvas backgrounds (#F5F5F7), translucent frosted-glass navigation bars, and an interactive theme switcher pill control.
 
 ---
 
