@@ -19,6 +19,7 @@ import {
   Terminal,
 } from 'lucide-react';
 import { ExecutiveGuide } from '../components/ExecutiveGuide';
+import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { Asset, InvestigationReport, SecurityLog, Technique, Vulnerability } from '../types';
 import { getStoredApiKey, runGeminiInvestigation } from '../utils/gemini';
 
@@ -306,80 +307,18 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
             </div>
 
             {report.sections.map((sec, secIdx) => {
-              const isQuerySection = sec.title.toLowerCase().includes('query');
-
               return (
-                <div key={secIdx} className="space-y-2">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-[#0071E3] dark:text-[#0A84FF] flex items-center space-x-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3]" />
-                    <span>{sec.title}</span>
-                  </h4>
+                <div key={secIdx} className="space-y-3 pt-1">
+                  <div className="flex items-center space-x-2 pb-1.5 border-b border-black/[0.04] dark:border-white/[0.06]">
+                    <span className="w-5 h-5 rounded-full bg-[#0071E3]/10 dark:bg-[#0071E3]/20 text-[#0071E3] flex items-center justify-center text-[10px] font-bold">
+                      {secIdx + 1}
+                    </span>
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[#0071E3] dark:text-[#389BF2]">
+                      {sec.title.replace(/^\d+\.\s*/, '')}
+                    </h4>
+                  </div>
 
-                  {isQuerySection ? (
-                    <div className="space-y-3 pt-1">
-                      {sec.content.split('```').map((part, pIdx) => {
-                        if (pIdx % 2 === 1) {
-                          const lines = part.trim().split('\n');
-                          const lang = lines[0].trim();
-                          const code = lines.slice(1).join('\n');
-                          const queryId = secIdx * 10 + pIdx;
-
-                          return (
-                            <div
-                              key={pIdx}
-                              className="rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-neutral-900 text-neutral-100 text-xs font-mono"
-                            >
-                              <div className="px-3 py-1.5 bg-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400">
-                                <span>{lang ? lang.toUpperCase() : 'QUERY'}</span>
-                                <button
-                                  onClick={() => handleCopyCode(code, queryId)}
-                                  className="flex items-center space-x-1 hover:text-white transition-colors"
-                                >
-                                  {copiedQueryIdx === queryId ? (
-                                    <>
-                                      <Check className="w-3 h-3 text-emerald-400" />
-                                      <span className="text-emerald-400">Copied</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Copy className="w-3 h-3" />
-                                      <span>Copy</span>
-                                    </>
-                                  )}
-                                </button>
-                              </div>
-                              <pre className="p-3 overflow-x-auto text-[11px] leading-relaxed">
-                                {code}
-                              </pre>
-                            </div>
-                          );
-                        }
-                        return part.trim() ? (
-                          <p key={pIdx} className="text-xs text-neutral-600 dark:text-neutral-400">
-                            {part.trim()}
-                          </p>
-                        ) : null;
-                      })}
-                    </div>
-                  ) : (
-                    <div className="text-xs text-[#1D1D1F] dark:text-[#E5E5EA] leading-relaxed whitespace-pre-line">
-                      {sec.content.split('\n').map((line, lIdx) => {
-                        const isUnsupported = line.includes('[UNSUPPORTED]');
-                        if (isUnsupported) {
-                          return (
-                            <div
-                              key={lIdx}
-                              className="my-1.5 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 flex items-start space-x-1.5"
-                            >
-                              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                              <span>{line.replace(/\[UNSUPPORTED\]/g, '').trim()}</span>
-                            </div>
-                          );
-                        }
-                        return <p key={lIdx} className="mb-1">{line}</p>;
-                      })}
-                    </div>
-                  )}
+                  <MarkdownRenderer content={sec.content} />
                 </div>
               );
             })}
