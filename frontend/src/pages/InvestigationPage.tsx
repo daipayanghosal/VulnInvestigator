@@ -1,8 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowRight,
+  Check,
+  CheckCircle2,
   Code2,
+  Compass,
   Crosshair,
   Database,
   ExternalLink,
@@ -10,19 +14,24 @@ import {
   Flame,
   Globe,
   Layers,
+  Loader2,
+  Plus,
   RefreshCw,
   Search,
   Server,
+  Settings2,
   Shield,
   ShieldAlert,
+  ShieldCheck,
+  Sliders,
   Sparkles,
   Terminal,
 } from 'lucide-react';
 import { HeroScoreboard } from '../components/HeroScoreboard';
 import { ExecutiveGuide } from '../components/ExecutiveGuide';
 import { VulnerabilityPropagationMap } from '../components/VulnerabilityPropagationMap';
-import { Asset, SecurityLog, Technique, Vulnerability } from '../types';
-import { calculateFactorBreakdown } from '../utils/scoring';
+import { Asset, RiskBand, SecurityLog, Severity, Technique, Vulnerability } from '../types';
+import { calculateFactorBreakdown, getRiskBand } from '../utils/scoring';
 
 interface InvestigationPageProps {
   vulnerabilities: Vulnerability[];
@@ -33,7 +42,17 @@ interface InvestigationPageProps {
   onSelectCve: (cveId: string) => void;
   onRunAiInvestigation: (cveId: string) => void;
   onOpenCustomCveModal: () => void;
+  onAddCustomCve?: (vuln: Vulnerability) => void;
 }
+
+const PRESET_BENCHMARKS = [
+  { id: 'CVE-2021-44228', name: 'Log4Shell', cvss: 10.0, assetId: 'SRV-WEB-001', kev: true },
+  { id: 'CVE-2023-4966', name: 'Citrix Bleed', cvss: 9.4, assetId: 'SRV-VPN-001', kev: true },
+  { id: 'CVE-2024-3400', name: 'PAN-OS Command Injection', cvss: 10.0, assetId: 'SRV-VPN-001', kev: true },
+  { id: 'CVE-2023-3519', name: 'Citrix ADC RCE', cvss: 9.8, assetId: 'SRV-VPN-001', kev: true },
+  { id: 'CVE-2020-1938', name: 'Tomcat Ghostcat', cvss: 9.8, assetId: 'SRV-WEB-001', kev: true },
+  { id: 'CVE-2024-21762', name: 'Fortinet Out-of-Bounds', cvss: 9.8, assetId: 'SRV-VPN-001', kev: true },
+];
 
 export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   vulnerabilities,
@@ -44,8 +63,25 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   onSelectCve,
   onRunAiInvestigation,
   onOpenCustomCveModal,
+  onAddCustomCve,
 }) => {
-  const [cveSearch, setCveSearch] = useState('');
+  const [cveInput, setCveInput] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [statusFeedback, setStatusFeedback] = useState<{
+    type: 'success' | 'info' | 'error';
+    text: string;
+  } | null>(null);
+
+  // Fine-tuning drawer controls
+  const [showTuning, setShowTuning] = useState(false);
+  const [overrideAssetId, setOverrideAssetId] = useState<string>(assets[0]?.asset_id || 'SRV-WEB-001');
+  const [overrideCvss, setOverrideCvss] = useState<number>(9.5);
+  const [overrideInKev, setOverrideInKev] = useState<boolean>(true);
+
+  // History of investigated targets in this session
+  const [investigatedHistory, setInvestigatedHistory] = useState<string[]>(() => {
+    return selectedCveId ? [selectedCveId] : ['CVE-2021-44228'];
+  });
 
   // Find active vulnerability
   const activeVuln = useMemo(() => {
@@ -98,21 +134,129 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       (l) => l.asset_id === activeAsset.asset_id || l.cve_id === activeVuln.cve_id
     );
     if (assetLogs.length > 0) return assetLogs;
-    // Fallback simulation logs if unmapped
     return logs.slice(0, 5);
   }, [logs, activeAsset, activeVuln]);
 
   const signalLogs = relevantLogs.filter((l) => !l.is_noise);
   const noiseLogs = relevantLogs.filter((l) => Boolean(l.is_noise));
 
-  // Search filtered CVE options for dropdown
-  const filteredCves = useMemo(() => {
-    if (!cveSearch.trim()) return vulnerabilities.slice(0, 50);
-    const q = cveSearch.toLowerCase();
-    return vulnerabilities
-      .filter((v) => v.cve_id.toLowerCase().includes(q) || v.description.toLowerCase().includes(q))
-      .slice(0, 50);
-  }, [vulnerabilities, cveSearch]);
+  // Core handler: Input any CVE -> Analyze and ingest
+  const handleAnalyzeCve = async (rawTarget?: string) => {
+    const query = (rawTarget || cveInput).trim().toUpperCase();
+
+    if (!query) {
+      setStatusFeedback({
+        type: 'error',
+        text: 'Please enter a CVE ID (e.g. CVE-2024-3400).',
+      });
+      return;
+    }
+
+    const formattedCve = query.startsWith('CVE-') ? query : `CVE-${query}`;
+
+    // 1. Check if already present in loaded corpus
+    const existing = vulnerabilities.find((v) => v.cve_id === formattedCve);
+    if (existing) {
+      onSelectCve(existing.cve_id);
+      if (!investigatedHistory.includes(existing.cve_id)) {
+        setInvestigatedHistory((prev) => [existing.cve_id, ...prev.slice(0, 6)]);
+      }
+      setCveInput('');
+      setStatusFeedback({
+        type: 'success',
+        text: `Loaded ${existing.cve_id} from database. Correlated with ${activeAsset.hostname} (Risk: ${existing.risk_score.toFixed(3)}).`,
+      });
+      return;
+    }
+
+    // 2. Custom CVE not in local list -> Ingest on the fly
+    setIsAnalyzing(true);
+    setStatusFeedback({
+      type: 'info',
+      text: `Querying NIST NVD & synthesizing contextual asset correlation for ${formattedCve}...`,
+    });
+
+    try {
+      let fetchedScore = overrideCvss;
+      let fetchedSeverity: Severity = 'CRITICAL';
+      let fetchedDesc = `Custom security investigation target for ${formattedCve}. Requires immediate triage and telemetry correlation.`;
+      let fetchedProducts = 'Enterprise Network Software';
+
+      // Live NIST NVD API v2 attempt
+      try {
+        const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${formattedCve}`);
+        if (res.ok) {
+          const data = await res.json();
+          const item = data.vulnerabilities?.[0]?.cve;
+          if (item) {
+            const metrics =
+              item.metrics?.cvssMetricV31?.[0]?.cvssData ||
+              item.metrics?.cvssMetricV30?.[0]?.cvssData;
+            if (metrics) {
+              fetchedScore = metrics.baseScore;
+              fetchedSeverity = (metrics.baseSeverity || 'HIGH').toUpperCase() as Severity;
+            }
+            const desc = item.descriptions?.find((d: any) => d.lang === 'en')?.value;
+            if (desc) fetchedDesc = desc;
+          }
+        }
+      } catch (nvdErr) {
+        console.warn('NVD live query fallback:', nvdErr);
+      }
+
+      // Auto-correlate with asset based on keywords
+      let targetAssetId = overrideAssetId;
+      const descLower = fetchedDesc.toLowerCase();
+      if (descLower.includes('vpn') || descLower.includes('gateway') || descLower.includes('citrix') || descLower.includes('palo alto')) {
+        targetAssetId = 'SRV-VPN-001';
+      } else if (descLower.includes('database') || descLower.includes('sql') || descLower.includes('oracle') || descLower.includes('postgres')) {
+        targetAssetId = 'SRV-DB-001';
+      } else if (descLower.includes('web') || descLower.includes('apache') || descLower.includes('nginx') || descLower.includes('http')) {
+        targetAssetId = 'SRV-WEB-001';
+      }
+
+      const assignedAsset = assets.find((a) => a.asset_id === targetAssetId) || assets[0];
+      const customBreakdown = calculateFactorBreakdown(fetchedScore, overrideInKev, assignedAsset);
+      const riskBand = getRiskBand(customBreakdown.total_score);
+
+      const newVuln: Vulnerability = {
+        cve_id: formattedCve,
+        cvss_score: fetchedScore,
+        cvss_severity: fetchedSeverity,
+        cvss_vector: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H',
+        in_kev: overrideInKev,
+        risk_score: customBreakdown.total_score,
+        risk_band: riskBand,
+        matched_asset_id: assignedAsset.asset_id,
+        rank_cvss: 1,
+        rank_contextual: 1,
+        rank_displacement: 0,
+        description: fetchedDesc,
+        affected_products: fetchedProducts,
+        published_date: new Date().toISOString().slice(0, 10),
+      };
+
+      if (onAddCustomCve) {
+        onAddCustomCve(newVuln);
+      } else {
+        onSelectCve(newVuln.cve_id);
+      }
+
+      setInvestigatedHistory((prev) => [newVuln.cve_id, ...prev.filter((id) => id !== newVuln.cve_id).slice(0, 6)]);
+      setCveInput('');
+      setStatusFeedback({
+        type: 'success',
+        text: `Successfully analyzed ${formattedCve}! Mapped to ${assignedAsset.hostname} (${assignedAsset.ip}) with Contextual Risk ${newVuln.risk_score.toFixed(3)}.`,
+      });
+    } catch (err: any) {
+      setStatusFeedback({
+        type: 'error',
+        text: `Analysis error for ${formattedCve}: ${err.message || 'Check connection'}`,
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -122,7 +266,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
           Threat Investigation &amp; Evidence Correlation
         </h1>
         <p className="text-xs sm:text-sm text-[#86868B] dark:text-[#A1A1A6] mt-1">
-          Synthesize vulnerability mechanics with organizational asset coordinates, MITRE ATT&amp;CK adversary techniques, and SIEM security logs.
+          Input any CVE to synthesize vulnerability mechanics with organizational coordinates, 2D plotted attack vectors, and SIEM security logs.
         </p>
       </div>
 
@@ -161,39 +305,210 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
         </div>
       </ExecutiveGuide>
 
-      {/* CVE Selector Bar */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] whitespace-nowrap">
-            Investigate CVE:
-          </label>
-          <div className="relative flex-1">
-            <select
-              value={activeVuln.cve_id}
-              onChange={(e) => onSelectCve(e.target.value)}
-              className="w-full px-3 py-2 text-xs font-mono font-medium rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-[#0071E3]"
-            >
-              {vulnerabilities.slice(0, 100).map((v) => (
-                <option key={v.cve_id} value={v.cve_id}>
-                  {v.cve_id} &mdash; Risk: {v.risk_score.toFixed(3)} ({v.risk_band}) &bull; CVSS: {v.cvss_score.toFixed(1)} {v.in_kev ? '[KEV]' : ''}
-                </option>
-              ))}
-            </select>
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* CORE CVE INVESTIGATION & CUSTOM INGESTION ENGINE               */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center space-x-2">
+            <Crosshair className="w-4 h-4 text-[#0071E3]" />
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#1D1D1F] dark:text-[#F5F5F7]">
+              Investigate Target CVE
+            </h3>
           </div>
+          <span className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
+            Enter any CVE ID &bull; Instant multi-factor risk synthesis &amp; architecture plotting
+          </span>
         </div>
 
-        <button
-          onClick={onOpenCustomCveModal}
-          className="px-3.5 py-2 text-xs font-medium rounded-xl bg-black/[0.04] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-[#1D1D1F] dark:text-[#F5F5F7] border border-black/10 dark:border-white/10 flex items-center justify-center space-x-1.5 transition-colors whitespace-nowrap"
+        {/* Apple-style Command Input Bar */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleAnalyzeCve();
+          }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
         >
-          <span>Lookup Another CVE</span>
-        </button>
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={cveInput}
+              onChange={(e) => setCveInput(e.target.value.toUpperCase())}
+              placeholder="Enter CVE ID to investigate (e.g. CVE-2024-3400, CVE-2023-3519, CVE-2021-44228)..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-xs font-mono font-medium text-[#1D1D1F] dark:text-[#F5F5F7] placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0071E3] transition-all"
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2">
+            <button
+              type="submit"
+              disabled={isAnalyzing}
+              className="px-5 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-xs flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Analyzing...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Analyze &amp; Investigate</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowTuning(!showTuning)}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                showTuning
+                  ? 'bg-black/10 dark:bg-white/15 border-black/20 dark:border-white/20 text-[#0071E3]'
+                  : 'bg-black/[0.04] dark:bg-white/[0.08] border-black/10 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:bg-black/[0.08] dark:hover:bg-white/[0.12]'
+              }`}
+              title="Fine-Tune Context & Asset Mapping"
+            >
+              <Sliders className="w-4 h-4" />
+            </button>
+          </div>
+        </form>
+
+        {/* Collapsible Context & Parameter Fine-Tuning Drawer */}
+        {showTuning && (
+          <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/8 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
+                Target Enterprise Asset
+              </label>
+              <select
+                value={overrideAssetId}
+                onChange={(e) => setOverrideAssetId(e.target.value)}
+                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/10 text-xs font-mono"
+              >
+                {assets.map((a) => (
+                  <option key={a.asset_id} value={a.asset_id}>
+                    {a.hostname} ({a.asset_id} - {a.criticality})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
+                CVSS v3.1 Baseline Score ({overrideCvss})
+              </label>
+              <input
+                type="range"
+                min="1.0"
+                max="10.0"
+                step="0.1"
+                value={overrideCvss}
+                onChange={(e) => setOverrideCvss(parseFloat(e.target.value))}
+                className="w-full accent-[#0071E3]"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
+                CISA KEV Wild Exploitation
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer mt-1">
+                <input
+                  type="checkbox"
+                  checked={overrideInKev}
+                  onChange={(e) => setOverrideInKev(e.target.checked)}
+                  className="rounded text-[#0071E3] focus:ring-0"
+                />
+                <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                  Actively Exploited (KEV Listed)
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Benchmark Presets Row */}
+        <div className="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mr-1">
+            Quick Benchmarks:
+          </span>
+          {PRESET_BENCHMARKS.map((preset) => {
+            const isActive = activeVuln.cve_id === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => handleAnalyzeCve(preset.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center space-x-1 border ${
+                  isActive
+                    ? 'bg-[#0071E3] text-white border-[#0071E3] shadow-xs'
+                    : 'bg-black/[0.03] dark:bg-white/[0.05] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] text-neutral-700 dark:text-neutral-300 border-black/5 dark:border-white/10'
+                }`}
+              >
+                <span>{preset.name}</span>
+                <span className="font-mono text-[10px] opacity-75">({preset.id})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Feedback / Notification Banner */}
+        {statusFeedback && (
+          <div
+            className={`p-3 rounded-xl border text-xs flex items-center space-x-2 ${
+              statusFeedback.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
+                : statusFeedback.type === 'info'
+                ? 'bg-blue-500/10 border-blue-500/20 text-blue-800 dark:text-blue-300'
+                : 'bg-red-500/10 border-red-500/20 text-red-800 dark:text-red-300'
+            }`}
+          >
+            {statusFeedback.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            ) : statusFeedback.type === 'info' ? (
+              <Loader2 className="w-4 h-4 shrink-0 animate-spin text-[#0071E3]" />
+            ) : (
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
+            )}
+            <span>{statusFeedback.text}</span>
+          </div>
+        )}
+
+        {/* Active Target Banner — Only showing the single investigated CVE */}
+        <div className="p-3.5 rounded-2xl bg-[#0071E3]/5 dark:bg-[#0071E3]/10 border border-[#0071E3]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-neutral-500 dark:text-neutral-400">
+              Active Investigation:
+            </span>
+            <span className="font-mono font-bold text-sm text-[#0071E3] dark:text-[#389BF2]">
+              {activeVuln.cve_id}
+            </span>
+            <span className="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 font-mono text-[10px] text-neutral-600 dark:text-neutral-300">
+              Risk: {activeVuln.risk_score.toFixed(3)} ({activeVuln.risk_band})
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-2 text-[11px] text-neutral-600 dark:text-neutral-400">
+            <span>Target Host:</span>
+            <span className="font-mono font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
+              {activeAsset.hostname} ({activeAsset.ip})
+            </span>
+            {activeVuln.in_kev && (
+              <span className="px-1.5 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[9px]">
+                KEV
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Hero Scoreboard Component */}
       <HeroScoreboard vuln={activeVuln} asset={activeAsset} breakdown={breakdown} />
 
-      {/* Vulnerability Mechanics & Attack Propagation Map (Dual Executive & Technical Perspectives) */}
+      {/* Vulnerability Mechanics & Plotted Attack Architecture Map */}
       <VulnerabilityPropagationMap vuln={activeVuln} asset={activeAsset} allAssets={assets} />
 
       {/* Two-Column Details: Vulnerability Mechanics vs. Target Asset Coordinates */}
@@ -423,7 +738,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
 
         <button
           onClick={() => onRunAiInvestigation(activeVuln.cve_id)}
-          className="px-5 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-md flex items-center space-x-2 transition-all duration-150 whitespace-nowrap"
+          className="px-5 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-md flex items-center space-x-2 transition-all duration-150 whitespace-nowrap cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
           <span>Run AI Investigation with Gemini</span>

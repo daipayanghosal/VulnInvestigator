@@ -154,6 +154,7 @@ export const App: React.FC = () => {
             onSelectCve={(id) => setSelectedCveId(id)}
             onRunAiInvestigation={handleRunAiInvestigation}
             onOpenCustomCveModal={() => setIsCustomCveOpen(true)}
+            onAddCustomCve={handleAddCustomCve}
           />
         )}
 
