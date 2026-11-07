@@ -43,20 +43,20 @@ export const EvaluationPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#EAB308] neo-shadow">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-mono text-xs font-bold uppercase bg-black text-[#00F0FF] px-2 py-0.5 border border-black">
+            <span className="font-mono text-xs font-bold uppercase bg-black text-[#00F0FF] dark:bg-[#FACC15] dark:text-black px-2 py-0.5 border border-black">
               EMPIRICAL BENCHMARKS
             </span>
             <Badge variant="cyan" size="sm">
               N = 8,328 CVES
             </Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1 text-black dark:text-white">
             Quantitative Evaluation &amp; Empirical Validation
           </h1>
-          <p className="text-xs sm:text-sm font-semibold opacity-90 mt-0.5">
+          <p className="text-xs sm:text-sm font-semibold opacity-90 mt-0.5 text-black/80 dark:text-neutral-400">
             Empirical validation of contextual ranking engine vs. CVSS baseline, evidence citation rates, and failure-mode stress tests.
           </p>
         </div>
@@ -80,14 +80,14 @@ export const EvaluationPage: React.FC = () => {
 
       {/* Progress Bar when running */}
       {isRunning && (
-        <div className="p-4 border-2 border-black dark:border-white bg-white dark:bg-[#121217] neo-shadow space-y-2">
+        <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] neo-shadow space-y-2">
           <div className="flex items-center justify-between text-xs font-mono font-bold text-black dark:text-white">
             <span>Computing Kendall&rsquo;s &tau;, nDCG@10, and evidence citation compliance across 8,328 CVEs...</span>
-            <span className="bg-[#FFE600] text-black px-2 py-0.5 border border-black">{progress}%</span>
+            <span className="bg-[#FFE600] dark:bg-[#FACC15] text-black px-2 py-0.5 border border-black">{progress}%</span>
           </div>
-          <div className="w-full h-4 border-2 border-black bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+          <div className="w-full h-4 border-2 border-black dark:border-[#2D3448] bg-neutral-200 dark:bg-[#11141D] overflow-hidden">
             <div
-              className="h-full bg-[#00F0FF] border-r-2 border-black transition-all duration-300"
+              className="h-full bg-[#00F0FF] dark:bg-[#0284C7] border-r-2 border-black transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -97,31 +97,31 @@ export const EvaluationPage: React.FC = () => {
       {/* Non-Technical Guide */}
       <ExecutiveGuide title="Evaluation Guide: How to Interpret Quantitative Metrics">
         <div className="space-y-3 font-sans">
-          <p className="text-xs sm:text-sm text-black dark:text-neutral-200">
+          <p className="text-xs sm:text-sm text-black dark:text-neutral-300">
             The metrics below empirically validate that VulnInvestigator systematically outperforms traditional single-dimension scoring:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-1 font-mono">
-            <div className="p-3 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">KENDALL&rsquo;S &tau; (0.5791)</span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 Values near 1.0 indicate identical rankings; 0 indicates total randomness. A score of 0.5791 proves significant, non-random restructuring (~42% discordant pairs).
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#FF5376] text-white neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FF5376] text-white dark:bg-[#2A1620] dark:text-[#FB7185] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">nDCG@10 (0.4657)</span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-white/95 dark:text-neutral-300">
                 CVSS achieves only 0.4657 top-10 relevance gain&mdash;meaning traditional tools miss over half of the most urgent threats in your queue.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#00F0FF] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#00F0FF] text-black dark:bg-[#162030] dark:text-[#38BDF8] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">100% CITATION RATE</span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 Every generated AI threat dossier explicitly cites verifiable CVE IDs, asset hostnames, and SIEM event UUIDs.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#B8FF00] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#B8FF00] text-black dark:bg-[#1A281A] dark:text-[#A3E635] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">4/4 STRESS TESTS PASSED</span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 100% resilience against corrupted data, missing CVSS scores, unmapped assets, and contradictory security telemetry logs.
               </p>
             </div>
@@ -132,7 +132,7 @@ export const EvaluationPage: React.FC = () => {
       {/* 4 Ranking Quality Metrics */}
       <div>
         <div className="flex items-center space-x-2 mb-3">
-          <span className="font-mono text-xs font-black uppercase tracking-wider px-2 py-0.5 bg-black text-white dark:bg-white dark:text-black">
+          <span className="font-mono text-xs font-black uppercase tracking-wider px-2 py-0.5 bg-black text-white dark:bg-[#1E2536] dark:text-[#FACC15] dark:border dark:border-[#38425C]">
             STATISTICAL CORRELATION
           </span>
           <span className="text-xs font-mono font-bold text-neutral-500">
@@ -202,8 +202,8 @@ export const EvaluationPage: React.FC = () => {
         accentColor="lime"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
-          <div className="p-4 border-2 border-black dark:border-white bg-[#B8FF00] dark:bg-[#1E2E10] text-black dark:text-[#B8FF00] neo-shadow-sm font-mono">
-            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1">
+          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#B8FF00] dark:bg-[#1A281A] text-black dark:text-[#BEF264] neo-shadow-sm font-mono">
+            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1 opacity-80">
               EVIDENCE CITATION RATE
             </span>
             <div className="text-3xl font-black">
@@ -214,8 +214,8 @@ export const EvaluationPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 border-2 border-black dark:border-white bg-[#00F0FF] dark:bg-[#0D2630] text-black dark:text-[#00F0FF] neo-shadow-sm font-mono">
-            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1">
+          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#00F0FF] dark:bg-[#162030] text-black dark:text-[#38BDF8] neo-shadow-sm font-mono">
+            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1 opacity-80">
               EMPIRICAL CLAIM SUPPORT
             </span>
             <div className="text-3xl font-black">
@@ -226,8 +226,8 @@ export const EvaluationPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 border-2 border-black dark:border-white bg-[#FFE600] dark:bg-[#2B270A] text-black dark:text-[#FFE600] neo-shadow-sm font-mono">
-            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1">
+          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#1A1F2C] text-black dark:text-[#FACC15] neo-shadow-sm font-mono">
+            <span className="text-[10px] uppercase font-bold tracking-wider block mb-1 opacity-80">
               CONTROLLED SPECULATION RATE
             </span>
             <div className="text-3xl font-black">
@@ -238,7 +238,7 @@ export const EvaluationPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A22] text-black dark:text-white neo-shadow-sm font-mono">
+          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] text-black dark:text-white neo-shadow-sm font-mono">
             <span className="text-[10px] uppercase font-bold tracking-wider block mb-1 text-neutral-500">
               MEAN GROUNDING CONFIDENCE
             </span>
@@ -263,10 +263,10 @@ export const EvaluationPage: React.FC = () => {
           </Badge>
         }
       >
-        <div className="overflow-x-auto border-2 border-black dark:border-white neo-shadow-sm mt-2">
+        <div className="overflow-x-auto border-2 border-black dark:border-[#2D3448] neo-shadow-sm mt-2">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b-2 border-black dark:border-white bg-[#00F0FF] text-black text-[11px] font-black uppercase">
+              <tr className="border-b-2 border-black dark:border-[#2D3448] bg-[#00F0FF] dark:bg-[#1E2536] text-black dark:text-[#38BDF8] text-[11px] font-black uppercase">
                 <th className="py-2.5 px-3">Stress Test Scenario</th>
                 <th className="py-2.5 px-3">Test Input Condition</th>
                 <th className="py-2.5 px-3">Expected Behavior</th>
@@ -274,24 +274,24 @@ export const EvaluationPage: React.FC = () => {
                 <th className="py-2.5 px-3 text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-black dark:divide-white bg-white dark:bg-[#121217]">
+            <tbody className="divide-y-2 divide-black dark:divide-[#2D3448] bg-white dark:bg-[#141824]">
               {data.failure_modes.map((fm, i) => (
                 <tr
                   key={i}
-                  className="hover:bg-[#FFFBEB] dark:hover:bg-[#1C1C24] transition-colors"
+                  className="hover:bg-[#FFFBEB] dark:hover:bg-[#181D2A] transition-colors"
                 >
                   <td className="py-3 px-3 font-bold text-black dark:text-white">
                     {fm.mode}
                   </td>
                   <td className="py-3 px-3 text-neutral-700 dark:text-neutral-300">
-                    <span className="px-1.5 py-0.5 border border-black dark:border-white bg-neutral-100 dark:bg-neutral-800">
+                    <span className="px-1.5 py-0.5 border border-black dark:border-[#2D3448] bg-neutral-100 dark:bg-[#181D2A]">
                       {fm.test_input}
                     </span>
                   </td>
                   <td className="py-3 px-3 text-neutral-600 dark:text-neutral-400">
                     {fm.expected}
                   </td>
-                  <td className="py-3 px-3 font-bold text-[#00AA44] dark:text-[#55FF88]">
+                  <td className="py-3 px-3 font-bold text-[#00AA44] dark:text-[#34D399]">
                     {fm.actual}
                   </td>
                   <td className="py-3 px-3 text-right">
@@ -308,3 +308,5 @@ export const EvaluationPage: React.FC = () => {
     </div>
   );
 };
+
+export default EvaluationPage;

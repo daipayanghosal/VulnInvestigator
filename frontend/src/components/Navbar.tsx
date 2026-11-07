@@ -5,7 +5,6 @@ import {
   RiGithubFill,
   RiPulseLine,
   RiSearchEyeLine,
-  RiShieldFlashLine,
   RiTerminalBoxLine,
 } from 'react-icons/ri';
 import {
@@ -60,11 +59,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#F7F6F2] dark:bg-[#0E0E11] border-b-2 sm:border-b-[3px] border-black dark:border-white transition-colors">
+    <header className="sticky top-0 z-50 w-full bg-[#F7F6F2] dark:bg-[#0B0E14] border-b-2 sm:border-b-[3px] border-black dark:border-[#2D3448] transition-colors">
       {/* Top Banner Ribbon */}
-      <div className="bg-[#FFE600] text-black border-b-2 border-black px-4 py-1 text-[11px] font-mono font-bold flex items-center justify-between overflow-x-auto whitespace-nowrap">
+      <div className="bg-[#FFE600] text-black dark:bg-[#0E121B] dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#222838] px-4 py-1 text-[11px] font-mono font-bold flex items-center justify-between overflow-x-auto whitespace-nowrap">
         <div className="flex items-center space-x-3">
-          <span className="bg-black text-[#FFE600] px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
+          <span className="bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
             EVIDENCE-GROUNDED CTI
           </span>
           <span className="hidden sm:inline">
@@ -75,9 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center space-x-3 text-[10px]">
           <span className="hidden md:inline">8,328 CVES INGESTED</span>
           <span>•</span>
-          <span className="text-rose-900 font-extrabold">1,350 CISA KEVS</span>
+          <span className="text-rose-900 dark:text-[#FB7185] font-extrabold">1,350 CISA KEVS</span>
           <span>•</span>
-          <span className="text-emerald-900 font-extrabold">94.0% GROUNDED</span>
+          <span className="text-emerald-900 dark:text-[#34D399] font-extrabold">94.0% GROUNDED</span>
         </div>
       </div>
 
@@ -88,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => handleNavClick('overview')}
           className="flex items-center space-x-2.5 cursor-pointer select-none group"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#FFE600] border-2 border-black dark:border-white flex items-center justify-center font-mono font-black text-black text-base neo-shadow-sm group-hover:-translate-y-0.5 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#FFE600] dark:bg-[#FACC15] border-2 border-black dark:border-[#2D3448] flex items-center justify-center font-mono font-black text-black text-base neo-shadow-sm group-hover:-translate-y-0.5 transition-transform">
             VI
           </div>
           <div>
@@ -96,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="font-mono font-extrabold text-sm sm:text-base tracking-tight text-black dark:text-white uppercase">
                 VulnInvestigator
               </span>
-              <span className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono font-extrabold bg-[#B8FF00] text-black border border-black uppercase tracking-wider">
+              <span className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono font-extrabold bg-[#B8FF00] dark:bg-[#65A30D] text-black dark:text-white border border-black dark:border-transparent uppercase tracking-wider">
                 PROD
               </span>
             </div>
@@ -107,7 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Desktop Navigation Segmented Buttons */}
-        <nav className="hidden lg:flex items-center p-1 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] neo-shadow-sm gap-1">
+        <nav className="hidden lg:flex items-center p-1 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#121622] neo-shadow-sm gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePage === item.id;
@@ -118,8 +117,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick(item.id)}
                 className={`neo-btn flex items-center space-x-1.5 px-3 py-1.5 text-xs font-mono font-bold tracking-tight select-none border-2 transition-all ${
                   isActive
-                    ? `border-black dark:border-white ${item.accent} text-black neo-shadow-sm`
-                    : 'border-transparent text-neutral-700 dark:text-neutral-300 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5'
+                    ? `border-black dark:border-[#3E4964] ${item.accent} text-black dark:bg-[#1E2536] dark:text-[#FACC15] neo-shadow-sm`
+                    : 'border-transparent text-neutral-700 dark:text-neutral-300 hover:border-black/30 dark:hover:border-[#38415A] hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -135,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={onOpenCustomCveModal}
-            className="neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold bg-[#00F0FF] text-black border-2 border-black dark:border-white neo-shadow-sm hover:bg-[#38F4FF]"
+            className="neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold bg-[#00F0FF] dark:bg-[#0284C7] text-black dark:text-white border-2 border-black dark:border-[#2D3448] neo-shadow-sm hover:bg-[#38F4FF] dark:hover:bg-[#0369A1]"
             title="Ingest custom or unlisted CVE into risk engine"
           >
             <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
@@ -147,10 +146,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={onOpenKeyModal}
-            className={`neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold border-2 border-black dark:border-white neo-shadow-sm ${
+            className={`neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold border-2 border-black dark:border-[#2D3448] neo-shadow-sm ${
               hasApiKey
-                ? 'bg-[#B8FF00] text-black hover:bg-[#C9FF38]'
-                : 'bg-white dark:bg-[#1C1C21] text-black dark:text-white hover:bg-neutral-100'
+                ? 'bg-[#B8FF00] dark:bg-[#1A2E1A] text-black dark:text-[#BEF264] hover:bg-[#C9FF38] dark:border-[#305228]'
+                : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#202737]'
             }`}
             title={hasApiKey ? 'Gemini API Key Configured' : 'Configure Gemini API Key'}
           >
@@ -159,12 +158,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               {hasApiKey ? 'API READY' : 'SET KEY'}
             </span>
             {hasApiKey && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 inline-block animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 dark:bg-emerald-400 inline-block animate-pulse" />
             )}
           </button>
 
           {/* 3-Way Theme Toggle: Light, Dark, System */}
-          <div className="flex items-center border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] p-0.5 neo-shadow-sm">
+          <div className="flex items-center border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#121622] p-0.5 neo-shadow-sm">
             <button
               type="button"
               onClick={() => onThemeModeChange('light')}
@@ -182,7 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onThemeModeChange('dark')}
               className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'dark'
-                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
                   : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               title="Dark Mode"
@@ -194,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onThemeModeChange('system')}
               className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'system'
-                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
                   : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               title="System Theme"
@@ -208,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             href="https://github.com/daipayanghosal/VulnInvestigator"
             target="_blank"
             rel="noopener noreferrer"
-            className="neo-btn p-1.5 sm:p-2 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] text-black dark:text-white neo-shadow-sm hover:bg-neutral-100 hidden sm:flex items-center justify-center"
+            className="neo-btn p-1.5 sm:p-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#181D29] text-black dark:text-white neo-shadow-sm hover:bg-neutral-100 dark:hover:bg-[#202737] hidden sm:flex items-center justify-center"
             title="View Source on GitHub"
           >
             <RiGithubFill className="w-4 h-4" />
@@ -218,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden neo-btn p-1.5 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] text-black dark:text-white neo-shadow-sm"
+            className="lg:hidden neo-btn p-1.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#181D29] text-black dark:text-white neo-shadow-sm"
             aria-label="Toggle Navigation"
           >
             {mobileMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
@@ -228,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Navigation Dropdown Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t-2 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#0E0E11] p-3 space-y-2 animate-in slide-in-from-top-2">
+        <div className="lg:hidden border-t-2 border-black dark:border-[#2D3448] bg-[#F7F6F2] dark:bg-[#0B0E14] p-3 space-y-2 animate-in slide-in-from-top-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -238,10 +237,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.id}
                   type="button"
                   onClick={() => handleNavClick(item.id)}
-                  className={`neo-btn flex items-center space-x-2 px-3 py-2 text-xs font-mono font-bold tracking-tight border-2 border-black dark:border-white ${
+                  className={`neo-btn flex items-center space-x-2 px-3 py-2 text-xs font-mono font-bold tracking-tight border-2 border-black dark:border-[#2D3448] ${
                     isActive
-                      ? `${item.accent} text-black neo-shadow-sm`
-                      : 'bg-white dark:bg-[#1A1A20] text-black dark:text-white'
+                      ? `${item.accent} text-black dark:bg-[#1E2536] dark:text-[#FACC15] neo-shadow-sm`
+                      : 'bg-white dark:bg-[#141824] text-black dark:text-white'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -267,3 +266,5 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export default Navbar;

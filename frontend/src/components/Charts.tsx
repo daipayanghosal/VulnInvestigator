@@ -25,8 +25,8 @@ export const Top10BarChart: React.FC<Top10BarChartProps> = ({
   };
 
   return (
-    <div className="border-2 sm:border-[2.5px] border-black dark:border-white bg-white dark:bg-[#141418] p-4 sm:p-5 neo-shadow">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b-2 border-black dark:border-white mb-4 gap-2">
+    <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] p-4 sm:p-5 neo-shadow">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b-2 border-black dark:border-[#2D3448] mb-4 gap-2">
         <div>
           <h4 className="font-mono font-black text-xs sm:text-sm uppercase tracking-tight text-black dark:text-white">
             Top 10 Vulnerabilities by Contextual Risk
@@ -122,8 +122,8 @@ export const DisplacementHistogram: React.FC<DisplacementHistogramProps> = ({ hi
   const maxCount = Math.max(...dataList.map((h) => h.count), 1);
 
   return (
-    <div className="border-2 sm:border-[2.5px] border-black dark:border-white bg-white dark:bg-[#141418] p-4 sm:p-5 neo-shadow">
-      <div className="pb-3 border-b-2 border-black dark:border-white mb-4">
+    <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] p-4 sm:p-5 neo-shadow">
+      <div className="pb-3 border-b-2 border-black dark:border-[#2D3448] mb-4">
         <h4 className="font-mono font-black text-xs sm:text-sm uppercase tracking-tight text-black dark:text-white">
           Rank Displacement Distribution (N = 8,328 CVEs)
         </h4>
@@ -198,8 +198,8 @@ export const KendallTauGauge: React.FC<KendallTauGaugeProps> = ({ tau, value, p_
   const angle = Math.min(180, Math.max(0, currentTau * 180));
 
   return (
-    <div className="border-2 sm:border-[2.5px] border-black dark:border-white bg-white dark:bg-[#141418] p-4 sm:p-5 neo-shadow flex flex-col justify-between">
-      <div className="pb-3 border-b-2 border-black dark:border-white mb-3">
+    <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] p-4 sm:p-5 neo-shadow flex flex-col justify-between">
+      <div className="pb-3 border-b-2 border-black dark:border-[#2D3448] mb-3">
         <h4 className="font-mono font-black text-xs sm:text-sm uppercase tracking-tight text-black dark:text-white">
           Kendall&rsquo;s Tau (&tau;) Rank Correlation
         </h4>
@@ -251,7 +251,7 @@ export const KendallTauGauge: React.FC<KendallTauGaugeProps> = ({ tau, value, p_
         </div>
       </div>
 
-      <div className="p-3 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#1A1A22] neo-shadow-sm font-mono text-xs space-y-1 mt-2">
+      <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FDFBF7] dark:bg-[#181D2A] neo-shadow-sm font-mono text-xs space-y-1 mt-2">
         <div className="flex items-center justify-between">
           <span className="text-neutral-600 dark:text-neutral-400">Statistical Significance:</span>
           <span className="font-bold text-emerald-600 dark:text-emerald-400">

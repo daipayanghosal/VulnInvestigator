@@ -39,11 +39,11 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-all">
-      <div className="w-full max-w-md border-3 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#141418] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100">
+      <div className="w-full max-w-md border-3 border-black dark:border-[#2D3448] bg-[#F7F6F2] dark:bg-[#141824] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100">
         {/* Title Bar */}
-        <div className="px-4 py-3 bg-[#FFE600] text-black border-b-2 border-black flex items-center justify-between">
+        <div className="px-4 py-3 bg-[#FFE600] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#2D3448] flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-black text-[#FFE600] border border-black flex items-center justify-center neo-shadow-sm">
+            <div className="w-6 h-6 bg-black dark:bg-[#FACC15] text-[#FFE600] dark:text-black border border-black flex items-center justify-center neo-shadow-sm">
               <FiKey className="w-3.5 h-3.5" />
             </div>
             <span className="font-mono font-black text-sm uppercase tracking-tight">
@@ -53,7 +53,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="neo-btn w-6 h-6 border-2 border-black bg-white text-black flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
+            className="neo-btn w-6 h-6 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#202738] text-black dark:text-white flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
           >
             <FiX className="w-3.5 h-3.5" />
           </button>
@@ -70,14 +70,14 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full px-3 py-2 text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1C1C22]"
+              className="w-full px-3 py-2 text-xs font-mono border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
             />
             <p className="mt-2 text-[11px] font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
               Stored 100% locally in your browser (<code className="text-black dark:text-white font-bold">localStorage</code>). Sent directly to Google&rsquo;s official API endpoint; zero server storage.
             </p>
           </div>
 
-          <div className="p-3 border-2 border-dashed border-black dark:border-white bg-neutral-100 dark:bg-[#1C1C22] text-xs font-mono">
+          <div className="p-3 border-2 border-dashed border-black dark:border-[#2D3448] bg-neutral-100 dark:bg-[#181D2A] text-xs font-mono">
             <span className="font-bold text-black dark:text-white block mb-1">
               Need a free API key?
             </span>

@@ -126,7 +126,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0a0a0f] text-black dark:text-neutral-100 font-sans antialiased transition-colors flex flex-col selection:bg-[#FFE600] selection:text-black">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0B0E14] text-black dark:text-[#E2E8F0] font-sans antialiased transition-colors flex flex-col selection:bg-[#FFE600] selection:text-black">
       <Navbar
         activePage={activePage}
         onPageChange={(page) => {
@@ -189,13 +189,13 @@ export const App: React.FC = () => {
         {activePage === 'evaluation' && <EvaluationPage />}
       </main>
 
-      <footer className="mt-auto border-t-4 border-black dark:border-white bg-[#FFE600] text-black font-mono py-4 px-4 sm:px-8">
+      <footer className="mt-auto border-t-4 border-black dark:border-t-[#EAB308] bg-[#FFE600] dark:bg-[#0E121B] text-black dark:text-[#E2E8F0] font-mono py-4 px-4 sm:px-8">
         <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-xs font-bold">
           <div className="flex items-center space-x-2 flex-wrap justify-center sm:justify-start">
-            <span className="px-1.5 py-0.5 bg-black text-white border border-black">[VI]</span>
+            <span className="px-1.5 py-0.5 bg-black text-white dark:bg-[#FACC15] dark:text-black border border-black">[VI]</span>
             <span className="uppercase tracking-wider">VulnInvestigator</span>
             <span>&bull;</span>
-            <span className="text-black/80">Contextual Threat Prioritization &amp; Verifiable Telemetry</span>
+            <span className="text-black/80 dark:text-neutral-400">Contextual Threat Prioritization &amp; Verifiable Telemetry</span>
           </div>
           <div className="flex items-center space-x-3 text-[11px]">
             <span>ENGINEERED BY <strong className="underline">DAIPAYAN GHOSAL</strong></span>
@@ -204,7 +204,7 @@ export const App: React.FC = () => {
               href="https://daipayanghosal.github.io/VulnInvestigator/"
               target="_blank"
               rel="noreferrer"
-              className="neo-btn px-2 py-0.5 border-2 border-black bg-white text-black hover:bg-neutral-100 uppercase"
+              className="neo-btn px-2 py-0.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#181D29] text-black dark:text-white hover:bg-neutral-100 uppercase"
             >
               GitHub Live Demo
             </a>

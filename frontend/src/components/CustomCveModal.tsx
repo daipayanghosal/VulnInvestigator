@@ -108,11 +108,11 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-all overflow-y-auto">
-      <div className="w-full max-w-2xl border-3 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#141418] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100 my-8">
+      <div className="w-full max-w-2xl border-3 border-black dark:border-[#2D3448] bg-[#F7F6F2] dark:bg-[#141824] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100 my-8">
         {/* Title Bar */}
-        <div className="px-4 py-3 bg-[#00F0FF] text-black border-b-2 border-black flex items-center justify-between">
+        <div className="px-4 py-3 bg-[#00F0FF] dark:bg-[#181E2C] text-black dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#2D3448] flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-black text-[#00F0FF] border border-black flex items-center justify-center neo-shadow-sm font-mono font-bold text-xs">
+            <div className="w-6 h-6 bg-black dark:bg-[#38BDF8] text-[#00F0FF] dark:text-black border border-black flex items-center justify-center neo-shadow-sm font-mono font-bold text-xs">
               <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
             </div>
             <span className="font-mono font-black text-sm uppercase tracking-tight">
@@ -122,7 +122,7 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="neo-btn w-6 h-6 border-2 border-black bg-white text-black flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
+            className="neo-btn w-6 h-6 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#202738] text-black dark:text-white flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
           >
             <FiX className="w-3.5 h-3.5" />
           </button>
@@ -141,7 +141,7 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
                 value={cveId}
                 onChange={(e) => setCveId(e.target.value)}
                 placeholder="CVE-2024-XXXX"
-                className="flex-1 px-3 py-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white uppercase font-bold neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1C1C22]"
+                className="flex-1 px-3 py-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase font-bold neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
                 required
               />
               <Button
@@ -202,10 +202,10 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setInKev(!inKev)}
-                  className={`neo-btn flex-1 py-2 px-3 border-2 border-black dark:border-white font-bold flex items-center justify-center space-x-2 ${
+                  className={`neo-btn flex-1 py-2 px-3 border-2 border-black dark:border-[#2D3448] font-bold flex items-center justify-center space-x-2 ${
                     inKev
-                      ? 'bg-[#FF5376] text-white neo-shadow-sm'
-                      : 'bg-white dark:bg-black text-black dark:text-white hover:bg-neutral-100'
+                      ? 'bg-[#FF5376] dark:bg-[#E11D48] text-white neo-shadow-sm'
+                      : 'bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#181D29]'
                   }`}
                 >
                   <FiShield className="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
             <select
               value={selectedAssetId}
               onChange={(e) => setSelectedAssetId(e.target.value)}
-              className="w-full px-3 py-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold neo-shadow-sm focus:outline-none"
+              className="w-full px-3 py-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] font-bold neo-shadow-sm focus:outline-none"
             >
               {assets.map((a) => (
                 <option key={a.asset_id} value={a.asset_id}>
@@ -234,20 +234,20 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
           </div>
 
           {/* Live Contextual Math Calculation Preview Strip */}
-          <div className="p-3 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow-sm space-y-1">
+          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] neo-shadow-sm space-y-1">
             <div className="flex items-center justify-between font-bold">
               <span>REAL-TIME VULNINVESTIGATOR SCORE:</span>
-              <span className="text-base font-black px-2 py-0.5 bg-black text-[#FFE600] border border-black">
+              <span className="text-base font-black px-2 py-0.5 bg-black dark:bg-[#FACC15] text-[#FFE600] dark:text-black border border-black">
                 {breakdown.total_score.toFixed(3)} [{calculatedBand.toUpperCase()}]
               </span>
             </div>
-            <p className="text-[11px] text-black/80 font-medium">
+            <p className="text-[11px] text-black/80 dark:text-neutral-400 font-medium">
               S_ctx = (0.35 &times; {breakdown.cvss_val.toFixed(1)}/10) + (0.30 &times; {inKev ? '1.0' : '0.0'}) + (0.20 &times; {breakdown.crit_score.toFixed(2)}) + (0.15 &times; {breakdown.expo_score.toFixed(2)})
             </p>
           </div>
 
           {/* Form Actions */}
-          <div className="flex items-center justify-end space-x-2 pt-3 border-t-2 border-black dark:border-white">
+          <div className="flex items-center justify-end space-x-2 pt-3 border-t-2 border-black dark:border-[#2D3448]">
             <Button type="button" variant="secondary" size="md" onClick={onClose}>
               CANCEL
             </Button>

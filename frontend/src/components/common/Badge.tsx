@@ -38,24 +38,24 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const colorClasses: Record<BadgeColor, string> = {
-    yellow: 'bg-[#FFE600] text-black border-black dark:border-white',
-    pink: 'bg-[#FF5376] text-white border-black dark:border-white',
-    cyan: 'bg-[#00F0FF] text-black border-black dark:border-white',
-    lime: 'bg-[#B8FF00] text-black border-black dark:border-white',
-    orange: 'bg-[#FB923C] text-black border-black dark:border-white',
-    purple: 'bg-[#A78BFA] text-black border-black dark:border-white',
-    zinc: 'bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border-black dark:border-zinc-500',
-    white: 'bg-white dark:bg-black text-black dark:text-white border-black dark:border-white',
+    yellow: 'bg-[#FFE600] text-black border-black dark:bg-[#EAB308]/20 dark:text-[#FDE047] dark:border-[#EAB308]/60',
+    pink: 'bg-[#FF5376] text-white border-black dark:bg-[#E11D48]/25 dark:text-[#FDA4AF] dark:border-[#FB7185]/60',
+    cyan: 'bg-[#00F0FF] text-black border-black dark:bg-[#0284C7]/25 dark:text-[#7DD3FC] dark:border-[#38BDF8]/60',
+    lime: 'bg-[#B8FF00] text-black border-black dark:bg-[#65A30D]/25 dark:text-[#BEF264] dark:border-[#A3E635]/60',
+    orange: 'bg-[#FB923C] text-black border-black dark:bg-[#EA580C]/25 dark:text-[#FDBA74] dark:border-[#FB923C]/60',
+    purple: 'bg-[#A78BFA] text-black border-black dark:bg-[#7C3AED]/25 dark:text-[#DDD6FE] dark:border-[#A78BFA]/60',
+    zinc: 'bg-zinc-200 text-zinc-900 border-black dark:bg-[#1E2434] dark:text-zinc-200 dark:border-[#333C52]',
+    white: 'bg-white text-black border-black dark:bg-[#1A202E] dark:text-white dark:border-[#333C52]',
   };
 
   const dotColorClasses: Record<BadgeColor, string> = {
-    yellow: 'bg-black',
-    pink: 'bg-white',
-    cyan: 'bg-black',
-    lime: 'bg-black',
-    orange: 'bg-black',
-    purple: 'bg-black',
-    zinc: 'bg-black dark:bg-white',
+    yellow: 'bg-black dark:bg-[#FDE047]',
+    pink: 'bg-white dark:bg-[#FDA4AF]',
+    cyan: 'bg-black dark:bg-[#7DD3FC]',
+    lime: 'bg-black dark:bg-[#BEF264]',
+    orange: 'bg-black dark:bg-[#FDBA74]',
+    purple: 'bg-black dark:bg-[#DDD6FE]',
+    zinc: 'bg-black dark:bg-zinc-200',
     white: 'bg-black dark:bg-white',
   };
 
@@ -70,7 +70,7 @@ export const Badge: React.FC<BadgeProps> = ({
     >
       {dot && (
         <span
-          className={`w-1.5 h-1.5 rounded-none border border-black ${dotColorClasses[activeColor]}`}
+          className={`w-1.5 h-1.5 rounded-none border border-black/40 dark:border-white/30 ${dotColorClasses[activeColor]}`}
         />
       )}
       {children}

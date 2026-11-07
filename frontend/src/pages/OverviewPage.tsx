@@ -125,7 +125,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
               <button
                 type="button"
                 onClick={onNavigateToRankings}
-                className="neo-btn px-2.5 py-1 text-xs font-mono font-bold bg-white text-black border-2 border-black flex items-center space-x-1 hover:bg-[#FFE600]"
+                className="neo-btn px-2.5 py-1 text-xs font-mono font-bold bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] border-2 border-black dark:border-[#2D3448] flex items-center space-x-1 hover:bg-[#FFE600] dark:hover:bg-[#202738]"
               >
                 <span>VIEW ALL {totalCves.toLocaleString()}</span>
                 <FiArrowRight className="w-3 h-3 stroke-[3]" />
@@ -136,7 +136,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs font-mono">
                 <thead>
-                  <tr className="bg-neutral-100 dark:bg-[#1C1C24] border-b-2 border-black dark:border-white text-black dark:text-white uppercase text-[10px]">
+                  <tr className="bg-neutral-100 dark:bg-[#181D2A] border-b-2 border-black dark:border-[#2D3448] text-black dark:text-white uppercase text-[10px]">
                     <th className="py-2.5 px-3 font-black">Rank</th>
                     <th className="py-2.5 px-3 font-black">Vulnerability</th>
                     <th className="py-2.5 px-3 font-black">CVSS Base</th>
@@ -145,14 +145,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     <th className="py-2.5 px-3 font-black text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y-2 divide-black/10 dark:divide-white/10">
+                <tbody className="divide-y-2 divide-black/10 dark:divide-[#2D3448]">
                   {top5.map((v, i) => (
                     <tr
                       key={v.cve_id}
-                      className="hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26] transition-colors"
+                      className="hover:bg-[#FFFBEB] dark:hover:bg-[#181E2E] transition-colors"
                     >
                       <td className="py-3 px-3 font-black text-neutral-500">
-                        <span className="px-1.5 py-0.5 bg-black text-white text-[10px] border border-black inline-block">
+                        <span className="px-1.5 py-0.5 bg-black text-white dark:bg-[#1C2230] dark:text-[#E2E8F0] text-[10px] border border-black dark:border-[#2D3448] inline-block">
                           #{i + 1}
                         </span>
                       </td>
@@ -181,7 +181,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                       </td>
                       <td className="py-3 px-3">
                         <div className="font-black text-xs text-black dark:text-white">
-                          <span className="px-1.5 py-0.5 bg-[#FFE600] text-black border border-black inline-block">
+                          <span className="px-1.5 py-0.5 bg-[#FFE600] dark:bg-[#FACC15] text-black border border-black inline-block">
                             {v.risk_score.toFixed(3)}
                           </span>
                         </div>
@@ -193,7 +193,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectCve(v.cve_id)}
-                          className="neo-btn px-2.5 py-1 text-[11px] font-bold bg-[#00F0FF] text-black border-2 border-black neo-shadow-sm hover:bg-[#38F4FF]"
+                          className="neo-btn px-2.5 py-1 text-[11px] font-bold bg-[#00F0FF] dark:bg-[#0284C7] text-black dark:text-white border-2 border-black dark:border-[#2D3448] neo-shadow-sm hover:bg-[#38F4FF] dark:hover:bg-[#0369A1]"
                         >
                           INVESTIGATE
                         </button>

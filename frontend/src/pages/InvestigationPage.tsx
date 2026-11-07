@@ -279,7 +279,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-150 font-mono">
       {/* Page Header */}
-      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-white pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
+      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-[#2D3448] pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
           <div className="flex items-center space-x-2 flex-wrap gap-y-1 mb-1">
             <span className="font-bold text-xs uppercase bg-[#B8FF00] text-black px-2 py-0.5 border border-black neo-shadow-sm">
@@ -312,26 +312,26 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
             Traditional vulnerability reports present isolated CVE numbers. This workbench reconstructs a <strong>complete digital threat scenario</strong> by fusing four indispensable data streams:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="p-3 border-2 border-black dark:border-white bg-[#FFFBEB] dark:bg-[#1E1B13] neo-shadow-sm">
-              <span className="font-bold text-black dark:text-white block uppercase">1. Flaw Profile</span>
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFFBEB] dark:bg-[#141824] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-[#FACC15] block uppercase">1. Flaw Profile</span>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
                 Vendor-rated technical vulnerability mechanics, CVSS vector &amp; affected CPE libraries.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#EFF6FF] dark:bg-[#111928] neo-shadow-sm">
-              <span className="font-bold text-black dark:text-white block uppercase">2. Target Host</span>
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#EFF6FF] dark:bg-[#141824] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-[#38BDF8] block uppercase">2. Target Host</span>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
                 Specific enterprise node hosting the service, network IP, and perimeter exposure tier.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#FEF2F2] dark:bg-[#221516] neo-shadow-sm">
-              <span className="font-bold text-black dark:text-white block uppercase">3. MITRE ATT&amp;CK</span>
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FEF2F2] dark:bg-[#141824] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-[#FB7185] block uppercase">3. MITRE ATT&amp;CK</span>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
                 Standard adversary tactics and techniques used to weaponize this weakness in campaigns.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#ECFDF5] dark:bg-[#102319] neo-shadow-sm">
-              <span className="font-bold text-black dark:text-white block uppercase">4. SIEM Telemetry</span>
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#ECFDF5] dark:bg-[#141824] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-[#A3E635] block uppercase">4. SIEM Telemetry</span>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
                 Live security log events confirming whether suspicious probes or exploits touched the host.
               </p>
@@ -363,7 +363,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 value={cveInput}
                 onChange={(e) => setCveInput(e.target.value.toUpperCase())}
                 placeholder="ENTER CVE ID (e.g. CVE-2024-3400, CVE-2023-3519, CVE-2021-44228)..."
-                className="w-full pl-9 pr-3 py-2.5 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1A1A22]"
+                className="w-full pl-9 pr-3 py-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] text-xs font-bold uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
               />
             </div>
 
@@ -382,10 +382,10 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowTuning(!showTuning)}
-                className={`neo-btn p-2.5 border-2 border-black dark:border-white font-bold text-xs ${
+                className={`neo-btn p-2.5 border-2 border-black dark:border-[#2D3448] font-bold text-xs ${
                   showTuning
-                    ? 'bg-[#FFE600] text-black neo-shadow-sm'
-                    : 'bg-white dark:bg-black text-black dark:text-white hover:bg-neutral-100'
+                    ? 'bg-[#FFE600] dark:bg-[#FACC15] text-black neo-shadow-sm'
+                    : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#202737]'
                 }`}
                 title="Fine-Tune Context &amp; Simulation Parameters"
               >
@@ -396,7 +396,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
 
           {/* Context & Parameter Fine-Tuning Drawer */}
           {showTuning && (
-            <div className="p-3.5 sm:p-4 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs neo-shadow-sm">
+            <div className="p-3.5 sm:p-4 border-2 border-black dark:border-[#2D3448] bg-[#FDFBF7] dark:bg-[#181D2A] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs neo-shadow-sm">
               <div>
                 <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
                   Target Enterprise Host Override
@@ -407,7 +407,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                     setOverrideAssetId(e.target.value);
                     setSelectedAssetOverride(e.target.value);
                   }}
-                  className="w-full px-2.5 py-1.5 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold"
+                  className="w-full px-2.5 py-1.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] text-xs font-bold"
                 >
                   {assets.map((a) => (
                     <option key={a.asset_id} value={a.asset_id}>
@@ -419,7 +419,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
 
               <div>
                 <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
-                  CVSS v3.1 Base Score: <span className="bg-[#FFE600] text-black px-1.5 py-0.2 border border-black">{overrideCvss.toFixed(1)}</span>
+                  CVSS v3.1 Base Score: <span className="bg-[#FFE600] dark:bg-[#FACC15] text-black px-1.5 py-0.2 border border-black">{overrideCvss.toFixed(1)}</span>
                 </label>
                 <input
                   type="range"
@@ -428,7 +428,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                   step="0.1"
                   value={overrideCvss}
                   onChange={(e) => setOverrideCvss(parseFloat(e.target.value))}
-                  className="w-full accent-black dark:accent-white cursor-pointer mt-1"
+                  className="w-full accent-black dark:accent-[#FACC15] cursor-pointer mt-1"
                 />
               </div>
 
@@ -439,10 +439,10 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setOverrideInKev(!overrideInKev)}
-                  className={`neo-btn py-1.5 px-3 border-2 border-black dark:border-white font-bold text-xs ${
+                  className={`neo-btn py-1.5 px-3 border-2 border-black dark:border-[#2D3448] font-bold text-xs ${
                     overrideInKev
-                      ? 'bg-[#FF5376] text-white neo-shadow-sm'
-                      : 'bg-white dark:bg-black text-black dark:text-white'
+                      ? 'bg-[#FF5376] dark:bg-[#E11D48] text-white neo-shadow-sm'
+                      : 'bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0]'
                   }`}
                 >
                   {overrideInKev ? 'WEAPONIZED IN WILD (+0.30)' : 'NO EXPLOIT IN WILD (0.0)'}
@@ -463,10 +463,10 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                   key={preset.id}
                   type="button"
                   onClick={() => handleAnalyzeCve(preset.id, preset.assetId)}
-                  className={`neo-btn px-2.5 py-1 border-2 border-black dark:border-white text-xs font-bold transition-all ${
+                  className={`neo-btn px-2.5 py-1 border-2 border-black dark:border-[#2D3448] text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-[#FFE600] text-black neo-shadow-sm'
-                      : 'bg-white dark:bg-black text-black dark:text-white hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26]'
+                      ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] dark:border-[#38425C] neo-shadow-sm'
+                      : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-[#FFFBEB] dark:hover:bg-[#202737]'
                   }`}
                 >
                   <span>{preset.name}</span>
@@ -499,12 +499,12 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
           )}
 
           {/* Active Target Banner */}
-          <div className="p-3 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs neo-shadow-sm">
+          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FDFBF7] dark:bg-[#141824] text-black dark:text-[#E2E8F0] flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs neo-shadow-sm">
             <div className="flex items-center space-x-2 flex-wrap gap-y-1">
               <span className="font-bold text-neutral-500 uppercase">
                 Active Target:
               </span>
-              <span className="font-black text-black dark:text-white px-2 py-0.5 bg-[#FFE600] text-black border border-black text-sm">
+              <span className="font-black text-black dark:text-[#FFE600] px-2 py-0.5 bg-[#FFE600] dark:bg-[#FFE600]/20 border border-black dark:border-[#FFE600]/50 text-sm">
                 {activeVuln.cve_id}
               </span>
               <Badge color="yellow" size="xs">
@@ -518,14 +518,14 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              <FiServer className="w-3.5 h-3.5 text-black dark:text-white shrink-0" />
+              <FiServer className="w-3.5 h-3.5 text-black dark:text-neutral-300 shrink-0" />
               <span className="font-bold text-neutral-600 dark:text-neutral-400 shrink-0">
                 Target Host:
               </span>
               <select
                 value={activeAsset.asset_id}
                 onChange={(e) => setSelectedAssetOverride(e.target.value)}
-                className="px-2.5 py-1 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold neo-shadow-sm focus:outline-none cursor-pointer"
+                className="px-2.5 py-1 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] text-xs font-bold neo-shadow-sm focus:outline-none cursor-pointer"
                 title="Switch target enterprise host to test contextual risk impact"
               >
                 {assets.map((a) => (
@@ -564,7 +564,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
                 Description &amp; Weakness Mechanism
               </span>
-              <div className="p-3 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] text-neutral-800 dark:text-neutral-200 leading-relaxed font-sans neo-shadow-sm">
+              <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FDFBF7] dark:bg-[#11141D] text-neutral-800 dark:text-neutral-200 leading-relaxed font-sans neo-shadow-sm">
                 {activeVuln.description || 'No description recorded in database.'}
               </div>
             </div>
@@ -574,7 +574,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
                   CVSS v3.1 Vector String
                 </span>
-                <div className="p-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold overflow-x-auto text-[11px] neo-shadow-sm">
+                <div className="p-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] font-bold overflow-x-auto text-[11px] neo-shadow-sm">
                   {activeVuln.cvss_vector}
                 </div>
               </div>
@@ -585,7 +585,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
                   Affected Products / CPE Identifier
                 </span>
-                <div className="p-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold truncate text-[11px] neo-shadow-sm">
+                <div className="p-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] font-bold truncate text-[11px] neo-shadow-sm">
                   {activeVuln.affected_products}
                 </div>
               </div>
@@ -601,7 +601,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
           accent="zinc"
         >
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+            <div className="p-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] neo-shadow-sm">
               <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Hostname
               </span>
@@ -610,7 +610,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               </span>
             </div>
 
-            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+            <div className="p-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] neo-shadow-sm">
               <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Asset ID / IP
               </span>
@@ -619,7 +619,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               </span>
             </div>
 
-            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+            <div className="p-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] neo-shadow-sm">
               <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Criticality Tier
               </span>
@@ -628,7 +628,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               </span>
             </div>
 
-            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+            <div className="p-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] neo-shadow-sm">
               <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Network Exposure
               </span>
@@ -638,7 +638,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
             </div>
           </div>
 
-          <div className="text-xs space-y-1.5 pt-3 border-t-2 border-black/10 dark:border-white/10 mt-3">
+          <div className="text-xs space-y-1.5 pt-3 border-t-2 border-black/10 dark:border-[#2D3448] mt-3">
             <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block">
               Operational Role &amp; Software Stack
             </span>
@@ -671,10 +671,10 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
           {techniques.slice(0, 4).map((tech) => (
             <div
               key={tech.id}
-              className="p-3 border-2 border-black dark:border-white bg-white dark:bg-[#18181E] neo-shadow-sm space-y-1.5"
+              className="p-3 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] neo-shadow-sm space-y-1.5"
             >
               <div className="flex items-center justify-between">
-                <span className="font-bold text-xs bg-[#00F0FF] text-black px-1.5 py-0.2 border border-black">
+                <span className="font-bold text-xs bg-[#00F0FF] dark:bg-[#0284C7]/30 text-black dark:text-[#7DD3FC] px-1.5 py-0.2 border border-black dark:border-[#38BDF8]/60">
                   {tech.id}
                 </span>
                 <span className="text-[10px] uppercase font-bold text-neutral-500">
@@ -696,11 +696,11 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       <Panel
         title="Correlated SIEM Security Telemetry Logs"
         subtitle={`${signalLogs.length} attack events &bull; ${noiseLogs.length} benign noise probes`}
-        icon={<FiTerminal className="w-4 h-4 text-black" />}
+        icon={<FiTerminal className="w-4 h-4 text-black dark:text-white" />}
         accent="lime"
         noPadding
       >
-        <div className="overflow-x-auto bg-black text-emerald-400 p-2 font-mono text-xs">
+        <div className="overflow-x-auto bg-[#0B0E14] text-emerald-400 p-2 font-mono text-xs">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-zinc-800 text-[10px] uppercase text-zinc-400">
@@ -724,7 +724,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                     {log.source_ip}
                   </td>
                   <td className="py-2 px-3">
-                    <span className="px-1.5 py-0.2 bg-[#00F0FF] text-black text-[10px] font-bold">
+                    <span className="px-1.5 py-0.2 bg-[#00F0FF] dark:bg-[#0284C7]/40 text-black dark:text-[#7DD3FC] text-[10px] font-bold border border-black dark:border-[#38BDF8]/60">
                       {log.technique_id}
                     </span>
                   </td>
@@ -739,15 +739,15 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       </Panel>
 
       {/* Action Footer: Generate Evidence Dossier */}
-      <div className="p-4 sm:p-5 border-2 sm:border-[2.5px] border-black dark:border-white bg-[#FFE600] text-black neo-shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] dark:border-t-8 dark:border-t-[#EAB308] bg-[#FFE600] dark:bg-[#141824] text-black dark:text-[#E2E8F0] neo-shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <RiTerminalBoxLine className="w-5 h-5" />
-            <h3 className="font-mono font-black text-sm sm:text-base uppercase tracking-tight">
+            <RiTerminalBoxLine className="w-5 h-5 text-black dark:text-[#EAB308]" />
+            <h3 className="font-mono font-black text-sm sm:text-base uppercase tracking-tight text-black dark:text-white">
               Evidence-Grounded Threat Dossier &amp; SIEM Hunting Queries
             </h3>
           </div>
-          <p className="text-xs font-mono text-black/80 mt-0.5">
+          <p className="text-xs font-mono text-black/80 dark:text-neutral-400 mt-0.5">
             Execute constrained Gemini synthesis to generate verified hypotheses, signal discrimination &amp; Splunk/Elastic verification code.
           </p>
         </div>

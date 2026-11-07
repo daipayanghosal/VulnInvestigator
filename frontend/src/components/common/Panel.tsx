@@ -55,43 +55,43 @@ export const Panel: React.FC<PanelProps> = ({
 
   const accentTopBorders: Record<PanelAccent, string> = {
     none: '',
-    yellow: 'border-t-8 border-t-[#FFE600]',
-    cyan: 'border-t-8 border-t-[#00F0FF]',
-    pink: 'border-t-8 border-t-[#FF5376]',
-    lime: 'border-t-8 border-t-[#B8FF00]',
-    purple: 'border-t-8 border-t-[#A78BFA]',
-    orange: 'border-t-8 border-t-[#FB923C]',
-    dark: 'border-t-8 border-t-black dark:border-t-white',
-    zinc: 'border-t-8 border-t-zinc-400',
+    yellow: 'border-t-8 border-t-[#FFE600] dark:border-t-[#EAB308]',
+    cyan: 'border-t-8 border-t-[#00F0FF] dark:border-t-[#0284C7]',
+    pink: 'border-t-8 border-t-[#FF5376] dark:border-t-[#E11D48]',
+    lime: 'border-t-8 border-t-[#B8FF00] dark:border-t-[#65A30D]',
+    purple: 'border-t-8 border-t-[#A78BFA] dark:border-t-[#7C3AED]',
+    orange: 'border-t-8 border-t-[#FB923C] dark:border-t-[#EA580C]',
+    dark: 'border-t-8 border-t-black dark:border-t-[#38415A]',
+    zinc: 'border-t-8 border-t-zinc-400 dark:border-t-zinc-600',
   };
 
   const accentPills: Record<PanelAccent, string> = {
-    none: 'bg-black text-white dark:bg-white dark:text-black',
-    yellow: 'bg-[#FFE600] text-black',
-    cyan: 'bg-[#00F0FF] text-black',
-    pink: 'bg-[#FF5376] text-white',
-    lime: 'bg-[#B8FF00] text-black',
-    purple: 'bg-[#A78BFA] text-black',
-    orange: 'bg-[#FB923C] text-black',
-    dark: 'bg-black text-white dark:bg-white dark:text-black',
-    zinc: 'bg-zinc-300 text-black',
+    none: 'bg-black text-white dark:bg-[#202636] dark:text-white',
+    yellow: 'bg-[#FFE600] text-black dark:bg-[#FACC15] dark:text-black',
+    cyan: 'bg-[#00F0FF] text-black dark:bg-[#0284C7] dark:text-white',
+    pink: 'bg-[#FF5376] text-white dark:bg-[#E11D48] dark:text-white',
+    lime: 'bg-[#B8FF00] text-black dark:bg-[#65A30D] dark:text-white',
+    purple: 'bg-[#A78BFA] text-black dark:bg-[#7C3AED] dark:text-white',
+    orange: 'bg-[#FB923C] text-black dark:bg-[#EA580C] dark:text-white',
+    dark: 'bg-black text-white dark:bg-[#202636] dark:text-white',
+    zinc: 'bg-zinc-300 text-black dark:bg-[#202636] dark:text-zinc-200',
   };
 
   const hasHeader = Boolean(title || subtitle || icon || badge || actions);
 
   return (
     <div
-      className={`border-2 sm:border-[2.5px] border-black dark:border-white bg-white dark:bg-[#141418] text-black dark:text-neutral-100 ${
+      className={`border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] text-black dark:text-[#E2E8F0] ${
         shadowClasses[shadow]
       } ${accentTopBorders[activeAccent]} ${className}`}
     >
       {/* Neobrutalist Header Bar */}
       {hasHeader && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-4 sm:px-5 py-3 border-b-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#1A1A22]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-4 sm:px-5 py-3 border-b-2 border-black dark:border-[#2D3448] bg-[#FDFBF7] dark:bg-[#181D2A]">
           <div className="flex items-center space-x-2.5 min-w-0">
             {icon && (
               <div
-                className={`p-1.5 border border-black dark:border-white ${accentPills[activeAccent]} shrink-0`}
+                className={`p-1.5 border border-black dark:border-[#2D3448] ${accentPills[activeAccent]} shrink-0`}
               >
                 {icon}
               </div>
@@ -120,7 +120,7 @@ export const Panel: React.FC<PanelProps> = ({
 
       {/* Optional Footer Bar */}
       {footer && (
-        <div className="px-4 sm:px-5 py-2.5 border-t-2 border-black dark:border-white bg-[#F4F4F5] dark:bg-[#181820] text-xs font-mono">
+        <div className="px-4 sm:px-5 py-2.5 border-t-2 border-black dark:border-[#2D3448] bg-[#F4F4F5] dark:bg-[#111520] text-xs font-mono">
           {footer}
         </div>
       )}

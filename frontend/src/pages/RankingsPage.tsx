@@ -79,10 +79,10 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-150 font-mono">
       {/* Page Title & Ingest Button */}
-      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-[#2D3448] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <div className="flex items-center space-x-2 flex-wrap gap-y-1 mb-1">
-            <span className="font-bold text-xs uppercase bg-[#00F0FF] text-black px-2 py-0.5 border border-black neo-shadow-sm">
+            <span className="font-bold text-xs uppercase bg-[#00F0FF] dark:bg-[#0284C7] text-black dark:text-white px-2 py-0.5 border border-black dark:border-[#2D3448] neo-shadow-sm">
               COMPARATIVE MATRIX
             </span>
             <span className="text-xs text-neutral-500">// CVSS vs VULNINVESTIGATOR</span>
@@ -145,7 +145,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
       </ExecutiveGuide>
 
       {/* Neobrutalist Tactical Filter & Search Ribbon */}
-      <div className="border-2 sm:border-[2.5px] border-black dark:border-white bg-white dark:bg-[#141418] p-3 sm:p-4 neo-shadow flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] p-3 sm:p-4 neo-shadow flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative flex-1">
           <FiSearch className="w-4 h-4 absolute left-3 top-3 text-neutral-500" />
@@ -154,7 +154,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="FILTER BY CVE ID, ASSET NAME, OR TECH KEYWORD..."
-            className="w-full pl-9 pr-3 py-2 text-xs font-bold border-2 border-black dark:border-white bg-neutral-50 dark:bg-black text-black dark:text-white uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1A1A22]"
+            className="w-full pl-9 pr-3 py-2 text-xs font-bold border-2 border-black dark:border-[#2D3448] bg-neutral-50 dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
           />
         </div>
 
@@ -166,7 +166,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
             <select
               value={selectedBand}
               onChange={(e) => setSelectedBand(e.target.value)}
-              className="px-2.5 py-1.5 text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white neo-shadow-sm focus:outline-none"
+              className="px-2.5 py-1.5 text-xs font-bold border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] neo-shadow-sm focus:outline-none"
             >
               <option value="All">ALL BANDS</option>
               <option value="Critical">CRITICAL ONLY</option>
@@ -177,13 +177,13 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
           </div>
 
           {/* KEV Filter Segmented Buttons */}
-          <div className="flex items-center p-0.5 border-2 border-black dark:border-white bg-neutral-100 dark:bg-[#1A1A22] neo-shadow-sm gap-1">
+          <div className="flex items-center p-0.5 border-2 border-black dark:border-[#2D3448] bg-neutral-100 dark:bg-[#121622] neo-shadow-sm gap-1">
             <button
               type="button"
               onClick={() => setKevFilter('all')}
               className={`neo-btn px-2.5 py-1 text-[11px] font-bold border transition-all ${
                 kevFilter === 'all'
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black neo-shadow-sm'
+                  ? 'bg-black text-white dark:bg-[#202738] dark:text-[#E2E8F0] dark:border-[#38425C] border-black neo-shadow-sm'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
               }`}
             >
@@ -194,7 +194,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
               onClick={() => setKevFilter('in_kev')}
               className={`neo-btn px-2.5 py-1 text-[11px] font-bold border transition-all ${
                 kevFilter === 'in_kev'
-                  ? 'bg-[#FF5376] text-white border-black neo-shadow-sm'
+                  ? 'bg-[#FF5376] dark:bg-[#E11D48] text-white border-black dark:border-transparent neo-shadow-sm'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
               }`}
             >
@@ -205,7 +205,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
               onClick={() => setKevFilter('not_in_kev')}
               className={`neo-btn px-2.5 py-1 text-[11px] font-bold border transition-all ${
                 kevFilter === 'not_in_kev'
-                  ? 'bg-[#B8FF00] text-black border-black neo-shadow-sm'
+                  ? 'bg-[#B8FF00] dark:bg-[#65A30D] text-black dark:text-white border-black dark:border-transparent neo-shadow-sm'
                   : 'border-transparent text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
               }`}
             >

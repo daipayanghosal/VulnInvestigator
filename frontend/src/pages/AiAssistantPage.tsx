@@ -97,20 +97,20 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-white bg-[#00F0FF] text-black neo-shadow">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-[#2D3448] bg-[#00F0FF] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#0284C7] neo-shadow">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-mono text-xs font-bold uppercase bg-black text-[#FFE600] px-2 py-0.5 border border-black">
+            <span className="font-mono text-xs font-bold uppercase bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black px-2 py-0.5 border border-black">
               EVIDENCE-GROUNDED FORENSICS
             </span>
             <Badge variant="pink" size="sm">
               ZERO-HALLUCINATION
             </Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1 text-black dark:text-white">
             Telemetry Forensics &amp; Evidence Dossier
           </h1>
-          <p className="text-xs sm:text-sm font-semibold opacity-90 mt-0.5">
+          <p className="text-xs sm:text-sm font-semibold opacity-90 mt-0.5 text-black/80 dark:text-neutral-400">
             Deterministic threat hypothesis formulation, empirical signal discrimination, and verifiable SIEM detection query synthesis.
           </p>
         </div>
@@ -146,31 +146,31 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
       {/* Non-Technical Guide */}
       <ExecutiveGuide title="Forensics Guide: How Empirical Telemetry Mitigates Generative Hallucinations">
         <div className="space-y-3 font-sans">
-          <p className="text-xs sm:text-sm text-black dark:text-neutral-200">
+          <p className="text-xs sm:text-sm text-black dark:text-neutral-300">
             Commercial GenAI models suffer from <strong>stochastic hallucination</strong>—generating nonexistent CVE numbers, fictional IP addresses, and fabricated remediation queries. VulnInvestigator enforces a rigorous 3-tier empirical verification pipeline:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1 font-mono">
-            <div className="p-3 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">
                 [01] STRICT EVIDENCE ISOLATION
               </span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 The model is isolated from open-ended web prompts; only verified facts from the asset inventory and ingested SIEM telemetry logs are provided in the Evidence Bundle.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#00F0FF] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#00F0FF] text-black dark:bg-[#162030] dark:text-[#38BDF8] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">
                 [02] MANDATORY CITATION INTERLOCK
               </span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 Every investigative claim must explicitly cite CVE identifiers, MITRE ATT&amp;CK technique codes, and immutable SIEM telemetry event UUIDs.
               </p>
             </div>
-            <div className="p-3 border-2 border-black dark:border-white bg-[#B8FF00] text-black neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#B8FF00] text-black dark:bg-[#1A281A] dark:text-[#A3E635] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">
                 [03] HEURISTIC SPECULATION TRAP
               </span>
-              <p className="text-[11px] leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 Any speculative claim lacking direct empirical backing is intercepted and tagged with a high-visibility warning badge to protect operational SOC triage.
               </p>
             </div>
@@ -179,10 +179,10 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
       </ExecutiveGuide>
 
       {/* Active Target Banner & Target Selector Console */}
-      <div className="p-4 border-2 border-black dark:border-white bg-white dark:bg-[#121217] neo-shadow flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] neo-shadow flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Left: Active Target Details */}
         <div className="flex items-center space-x-3 flex-wrap gap-y-2">
-          <div className="w-3.5 h-3.5 border-2 border-black bg-[#B8FF00] animate-pulse" />
+          <div className="w-3.5 h-3.5 border-2 border-black dark:border-[#2D3448] bg-[#B8FF00] dark:bg-[#65A30D] animate-pulse" />
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
             TARGET HOST:
           </span>
@@ -194,7 +194,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
             <span>{activeAsset.hostname}</span>
             <span className="text-neutral-500">[{activeAsset.asset_id}]</span>
             <span className="text-neutral-400">&bull;</span>
-            <span className="text-[#00F0FF]">{activeAsset.ip}</span>
+            <span className="text-[#0071E3] dark:text-[#38BDF8]">{activeAsset.ip}</span>
           </div>
         </div>
 
@@ -213,14 +213,14 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
           )}
 
           {/* Synchronized Target CVE Switcher Dropdown */}
-          <div className="flex items-center space-x-1.5 pl-2 border-l-2 border-black/20 dark:border-white/20">
+          <div className="flex items-center space-x-1.5 pl-2 border-l-2 border-black/20 dark:border-white/10">
             <span className="text-[10px] font-mono font-bold uppercase text-neutral-500 hidden sm:inline">
               SWITCH TARGET:
             </span>
             <select
               value={activeVuln.cve_id}
               onChange={(e) => onSelectCve?.(e.target.value)}
-              className="px-2.5 py-1.5 border-2 border-black dark:border-white bg-white dark:bg-black font-mono font-bold text-xs text-black dark:text-white neo-shadow-sm focus:outline-none cursor-pointer"
+              className="px-2.5 py-1.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#181D29] font-mono font-bold text-xs text-black dark:text-[#E2E8F0] neo-shadow-sm focus:outline-none cursor-pointer"
             >
               {vulnerabilities.slice(0, 30).map((v) => (
                 <option key={v.cve_id} value={v.cve_id}>
@@ -234,15 +234,15 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
 
       {/* Loading Terminal Indicator */}
       {isLoading && (
-        <div className="p-8 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow text-center space-y-3 font-mono">
-          <div className="inline-flex items-center justify-center p-3 border-2 border-black bg-white neo-shadow-sm">
-            <FiLoader className="w-8 h-8 animate-spin" />
+        <div className="p-8 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#181D29] text-black dark:text-[#FACC15] neo-shadow text-center space-y-3 font-mono">
+          <div className="inline-flex items-center justify-center p-3 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#121622] neo-shadow-sm">
+            <FiLoader className="w-8 h-8 animate-spin text-black dark:text-white" />
           </div>
           <div>
             <h4 className="text-base font-black uppercase tracking-tight">
               SYNTHESIZING EVIDENCE BUNDLE &amp; QUERYING MODEL...
             </h4>
-            <p className="text-xs font-bold opacity-80 mt-1">
+            <p className="text-xs font-bold opacity-80 mt-1 text-black/80 dark:text-neutral-400">
               Validating token provenance, cross-referencing SIEM telemetry &amp; isolating uncorroborated claims.
             </p>
           </div>
@@ -251,7 +251,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
 
       {/* Error Message */}
       {errorMsg && (
-        <div className="p-4 border-2 border-black dark:border-white bg-[#FF5376] text-white neo-shadow text-xs font-mono font-bold flex items-center space-x-2">
+        <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#FF5376] dark:bg-[#3D141E] text-white dark:text-[#FDA4AF] neo-shadow text-xs font-mono font-bold flex items-center space-x-2">
           <FiAlertCircle className="w-5 h-5 shrink-0 stroke-[2.5]" />
           <span>INVESTIGATION ERROR: {errorMsg}</span>
         </div>
@@ -295,7 +295,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
               {report.citations.map((c, i) => (
                 <div
                   key={i}
-                  className="neo-btn flex items-center space-x-1.5 px-3 py-1.5 border-2 border-black dark:border-white bg-[#B8FF00] dark:bg-[#1C2C10] text-black dark:text-[#B8FF00] font-bold text-xs neo-shadow-sm"
+                  className="neo-btn flex items-center space-x-1.5 px-3 py-1.5 border-2 border-black dark:border-[#2D3448] bg-[#B8FF00] dark:bg-[#1A281A] text-black dark:text-[#BEF264] font-bold text-xs neo-shadow-sm"
                 >
                   <RiShieldCheckLine className="w-3.5 h-3.5" />
                   <span>{c}</span>
@@ -334,7 +334,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
             footer={
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400">
                 <div className="flex items-center space-x-2">
-                  <FiZap className="w-4 h-4 text-[#FFE600]" />
+                  <FiZap className="w-4 h-4 text-[#FFE600] dark:text-[#FACC15]" />
                   <span>
                     PROVENANCE AUDIT: 100% CLAIMS TRACEABLE TO ASSET INVENTORY &amp; SIEM LOG DB
                   </span>
@@ -353,12 +353,12 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
                 return (
                   <div
                     key={secIdx}
-                    className="border-2 border-black dark:border-white bg-white dark:bg-[#141419] neo-shadow-sm overflow-hidden"
+                    className="border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] neo-shadow-sm overflow-hidden"
                   >
                     {/* Section Ribbon */}
-                    <div className="px-4 py-2 border-b-2 border-black dark:border-white bg-[#F4F4F5] dark:bg-[#1E1E26] flex items-center justify-between">
+                    <div className="px-4 py-2 border-b-2 border-black dark:border-[#2D3448] bg-[#F4F4F5] dark:bg-[#181D2A] flex items-center justify-between">
                       <div className="flex items-center space-x-2.5">
-                        <span className="font-mono text-xs font-black px-2 py-0.5 bg-black text-[#FFE600] border border-black">
+                        <span className="font-mono text-xs font-black px-2 py-0.5 bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black border border-black dark:border-transparent">
                           [{sectionNumber}]
                         </span>
                         <h3 className="font-mono text-xs sm:text-sm font-black uppercase tracking-wider text-black dark:text-white">
@@ -384,3 +384,5 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
     </div>
   );
 };
+
+export default AiAssistantPage;

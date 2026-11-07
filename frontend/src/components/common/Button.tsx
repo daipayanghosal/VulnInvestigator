@@ -2,12 +2,12 @@ import React from 'react';
 
 export type ButtonVariant =
   | 'primary'   // Bold vibrant yellow
-  | 'secondary' // White / neutral
-  | 'accent'    // Electric cyan
-  | 'danger'    // Punchy coral/red
-  | 'success'   // Bright lime
+  | 'secondary' // Neutral slate/surface
+  | 'accent'    // Electric cyan / azure
+  | 'danger'    // Punchy coral/rose
+  | 'success'   // Bright lime / emerald
   | 'purple'    // Electric violet
-  | 'dark'      // Solid black / inverted
+  | 'dark'      // Solid dark slate
   | 'ghost';    // Minimal border
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -34,7 +34,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'neo-btn inline-flex items-center justify-center font-mono font-bold tracking-tight border-2 border-black dark:border-white transition-all select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none';
+    'neo-btn inline-flex items-center justify-center font-mono font-bold tracking-tight border-2 border-black dark:border-[#2D3448] transition-all select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none';
 
   const sizeClasses: Record<ButtonSize, string> = {
     xs: 'px-2 py-0.5 text-[11px] gap-1 neo-shadow-sm',
@@ -45,21 +45,21 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:
-      'bg-[#FFE600] text-black hover:bg-[#FFF04D] active:bg-[#FFE600]',
+      'bg-[#FFE600] text-black hover:bg-[#FFF04D] active:bg-[#FFE600] dark:bg-[#FACC15] dark:text-black dark:hover:bg-[#FDE047]',
     secondary:
-      'bg-white dark:bg-[#1C1C21] text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-[#2A2A32]',
+      'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#202737] dark:border-[#38415A]',
     accent:
-      'bg-[#00F0FF] text-black hover:bg-[#38F4FF] active:bg-[#00F0FF]',
+      'bg-[#00F0FF] text-black hover:bg-[#38F4FF] active:bg-[#00F0FF] dark:bg-[#0284C7] dark:text-white dark:hover:bg-[#0369A1] dark:border-[#38BDF8]/60',
     danger:
-      'bg-[#FF5376] text-white hover:bg-[#FF6B8B] active:bg-[#FF5376]',
+      'bg-[#FF5376] text-white hover:bg-[#FF6B8B] active:bg-[#FF5376] dark:bg-[#E11D48] dark:hover:bg-[#BE123C] dark:text-white',
     success:
-      'bg-[#B8FF00] text-black hover:bg-[#C9FF38] active:bg-[#B8FF00]',
+      'bg-[#B8FF00] text-black hover:bg-[#C9FF38] active:bg-[#B8FF00] dark:bg-[#65A30D] dark:text-white dark:hover:bg-[#4D7C0F]',
     purple:
-      'bg-[#A78BFA] text-black hover:bg-[#C4B5FD] active:bg-[#A78BFA]',
+      'bg-[#A78BFA] text-black hover:bg-[#C4B5FD] active:bg-[#A78BFA] dark:bg-[#7C3AED] dark:text-white dark:hover:bg-[#6D28D9]',
     dark:
-      'bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200',
+      'bg-black text-white hover:bg-neutral-800 dark:bg-[#202636] dark:text-white dark:border-[#38415A] dark:hover:bg-[#283044]',
     ghost:
-      'bg-transparent text-black dark:text-white border-dashed hover:bg-black/5 dark:hover:bg-white/10 neo-shadow-none',
+      'bg-transparent text-black dark:text-neutral-300 border-dashed hover:bg-black/5 dark:hover:bg-white/5 neo-shadow-none',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';
@@ -80,3 +80,5 @@ export const Button: React.FC<ButtonProps> = ({
     </button>
   );
 };
+
+export default Button;
