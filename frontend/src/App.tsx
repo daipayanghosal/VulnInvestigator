@@ -178,12 +178,10 @@ export const App: React.FC = () => {
           <div>
             <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">VulnInvestigator</span>
             <span className="mx-2">&bull;</span>
-            <span>M.Tech Dissertation &bull; BITS Pilani (WILP)</span>
+            <span>Contextual Threat Intelligence &amp; Prioritization</span>
           </div>
           <div>
-            <span>Daipayan Ghosal (BITS ID: 2022wa86002)</span>
-            <span className="mx-2">&bull;</span>
-            <span>Supervisor: Ms. Nidhi Kashyap (Wipro Limited)</span>
+            <span>Developed by Daipayan Ghosal</span>
           </div>
         </div>
       </footer>

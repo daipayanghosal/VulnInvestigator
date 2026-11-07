@@ -210,7 +210,7 @@ export const HeroScoreboard: React.FC<HeroScoreboardProps> = ({ vuln, asset, bre
                 Executive Justification: Why Contextual Risk Differs from CVSS
               </h4>
               <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-                Plain-English explanation designed for non-technical leadership and academic evaluators
+                Plain-English explanation designed for security leadership and technical evaluators
               </p>
             </div>
           </div>

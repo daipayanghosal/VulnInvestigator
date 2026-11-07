@@ -82,10 +82,10 @@ export const EvaluationPage: React.FC = () => {
       )}
 
       {/* Non-Technical Guide */}
-      <ExecutiveGuide title="Executive Guide: How to Interpret Academic Evaluation Metrics">
+      <ExecutiveGuide title="Executive Guide: How to Interpret Quantitative Evaluation Metrics">
         <div className="space-y-3">
           <p className="text-neutral-600 dark:text-neutral-300">
-            For master&rsquo;s thesis examiners and evaluators, the metrics on this page empirically validate that VulnInvestigator systematically outperforms traditional single-dimension scoring:
+            The metrics on this page empirically validate that VulnInvestigator systematically outperforms traditional single-dimension scoring:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-1">
             <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">

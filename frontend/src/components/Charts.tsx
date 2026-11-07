@@ -197,7 +197,7 @@ export const KendallTauGauge: React.FC<GaugeChartProps> = ({
         <span>1.0 (Identical to CVSS)</span>
       </div>
       <p className="mt-2 text-[11px] text-neutral-600 dark:text-neutral-300 max-w-sm">
-        <strong>Academic Finding</strong>: &tau; = 0.5791 proves that contextual scoring substantially reshuffles ~42% of pair comparisons, directly correcting CVSS severity inflation without producing random chaos.
+        <strong>Key Benchmark Finding</strong>: &tau; = 0.5791 proves that contextual scoring substantially reshuffles ~42% of pair comparisons, directly correcting CVSS severity inflation without producing random chaos.
       </p>
     </div>
   );
