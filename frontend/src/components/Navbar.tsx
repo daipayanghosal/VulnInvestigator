@@ -4,6 +4,7 @@ import {
   BarChart3,
   Key,
   LayoutDashboard,
+  Monitor,
   Moon,
   Plus,
   Search,
@@ -12,12 +13,14 @@ import {
 } from 'lucide-react';
 
 export type ActivePage = 'overview' | 'rankings' | 'investigation' | 'ai_assistant' | 'evaluation';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 interface NavbarProps {
   activePage: ActivePage;
   onPageChange: (page: ActivePage) => void;
+  themeMode: ThemeMode;
+  onThemeModeChange: (mode: ThemeMode) => void;
   isDark: boolean;
-  onToggleTheme: () => void;
   onOpenKeyModal: () => void;
   onOpenCustomCveModal: () => void;
   hasApiKey: boolean;
@@ -26,8 +29,9 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   activePage,
   onPageChange,
+  themeMode,
+  onThemeModeChange,
   isDark,
-  onToggleTheme,
   onOpenKeyModal,
   onOpenCustomCveModal,
   hasApiKey,
@@ -113,25 +117,54 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </button>
 
-          {/* Theme Toggle Button */}
-          <button
-            onClick={onToggleTheme}
-            className="h-8 px-2.5 rounded-full flex items-center space-x-1.5 text-xs font-medium border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.05] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] text-[#1D1D1F] dark:text-[#F5F5F7] transition-all cursor-pointer shadow-2xs"
-            aria-label={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-            title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          {/* 3-State Theme Toggle (Light / Dark / System) */}
+          <div
+            className="flex items-center p-0.5 rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/10 dark:border-white/10"
+            role="group"
+            aria-label="Theme appearance switcher"
           >
-            {isDark ? (
-              <>
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden sm:inline text-[11px] text-[#A1A1A6]">Light</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5 text-[#0071E3]" />
-                <span className="hidden sm:inline text-[11px] text-[#86868B]">Dark</span>
-              </>
-            )}
-          </button>
+            <button
+              onClick={() => onThemeModeChange('light')}
+              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                themeMode === 'light'
+                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
+                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+              }`}
+              title="Force Light Theme"
+              aria-pressed={themeMode === 'light'}
+            >
+              <Sun className={`w-3.5 h-3.5 ${themeMode === 'light' ? 'text-amber-500' : ''}`} />
+              <span className="hidden sm:inline text-[11px]">Light</span>
+            </button>
+
+            <button
+              onClick={() => onThemeModeChange('dark')}
+              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                themeMode === 'dark'
+                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
+                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+              }`}
+              title="Force Dark Theme"
+              aria-pressed={themeMode === 'dark'}
+            >
+              <Moon className={`w-3.5 h-3.5 ${themeMode === 'dark' ? 'text-[#0071E3]' : ''}`} />
+              <span className="hidden sm:inline text-[11px]">Dark</span>
+            </button>
+
+            <button
+              onClick={() => onThemeModeChange('system')}
+              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                themeMode === 'system'
+                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
+                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+              }`}
+              title={`Match System Appearance (${isDark ? 'Dark' : 'Light'})`}
+              aria-pressed={themeMode === 'system'}
+            >
+              <Monitor className={`w-3.5 h-3.5 ${themeMode === 'system' ? 'text-emerald-500 dark:text-emerald-400' : ''}`} />
+              <span className="hidden sm:inline text-[11px]">System</span>
+            </button>
+          </div>
 
           {/* GitHub Repo */}
           <a

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivePage, Navbar } from './components/Navbar';
+import { ActivePage, Navbar, ThemeMode } from './components/Navbar';
 import { CustomCveModal } from './components/CustomCveModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { OverviewPage } from './pages/OverviewPage';
@@ -19,16 +19,32 @@ import { getStoredApiKey } from './utils/gemini';
 
 export const App: React.FC = () => {
   const [activePage, setActivePage] = useState<ActivePage>('overview');
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      return (
-        localStorage.getItem('theme') === 'dark' ||
-        (!localStorage.getItem('theme') &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
+      const saved = localStorage.getItem('theme_mode') || localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark' || saved === 'system') {
+        return saved as ThemeMode;
+      }
     }
-    return false;
+    return 'system';
   });
+
+  const [systemPrefersDark, setSystemPrefersDark] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => setSystemPrefersDark(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  const isDark = themeMode === 'system' ? systemPrefersDark : themeMode === 'dark';
 
   const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>(() => {
     const topMap = new Map((initialVulns as Vulnerability[]).map((v) => [v.cve_id, v]));
@@ -70,17 +86,13 @@ export const App: React.FC = () => {
     if (isDark) {
       root.classList.add('dark');
       root.style.colorScheme = 'dark';
-      localStorage.setItem('theme', 'dark');
     } else {
       root.classList.remove('dark');
       root.style.colorScheme = 'light';
-      localStorage.setItem('theme', 'light');
     }
-  }, [isDark]);
-
-  const handleToggleTheme = () => {
-    setIsDark(!isDark);
-  };
+    localStorage.setItem('theme_mode', themeMode);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [themeMode, isDark]);
 
   const handleSelectCve = (cveId: string) => {
     setSelectedCveId(cveId);
@@ -121,8 +133,9 @@ export const App: React.FC = () => {
           setActivePage(page);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+        themeMode={themeMode}
+        onThemeModeChange={setThemeMode}
         isDark={isDark}
-        onToggleTheme={handleToggleTheme}
         onOpenKeyModal={() => setIsKeyModalOpen(true)}
         onOpenCustomCveModal={() => setIsCustomCveOpen(true)}
         hasApiKey={hasApiKey}
