@@ -1,19 +1,20 @@
 import React from 'react';
 import {
-  ArrowRight,
-  Database,
-  FileCheck,
-  Flame,
-  Globe,
-  Layers,
-  Server,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
-import { OverviewExecutiveGuide } from '../components/ExecutiveGuide';
+  FiAlertTriangle,
+  FiArrowRight,
+  FiCheckCircle,
+  FiDatabase,
+  FiLayers,
+  FiSearch,
+  FiShield,
+} from 'react-icons/fi';
+import { RiFireLine } from 'react-icons/ri';
+import { Badge } from '../components/common/Badge';
+import { Button } from '../components/common/Button';
+import { KpiTile } from '../components/common/KpiTile';
+import { Panel } from '../components/common/Panel';
 import { Top10BarChart } from '../components/Charts';
+import { OverviewExecutiveGuide } from '../components/ExecutiveGuide';
 import { Vulnerability } from '../types';
 
 interface OverviewPageProps {
@@ -39,188 +40,177 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
     .slice(0, 5);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
-          Enterprise Vulnerability Landscape
-        </h1>
-        <p className="text-xs sm:text-sm text-[#86868B] dark:text-[#A1A1A6] mt-1">
-          High-level operational snapshot of NIST NVD vulnerability corpus and contextual threat intelligence.
-        </p>
+    <div className="space-y-6 animate-in fade-in duration-150">
+      {/* Page Title & Operational Badge Ribbon */}
+      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-white pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
+        <div>
+          <div className="flex items-center space-x-2 flex-wrap gap-y-1 mb-1">
+            <span className="font-mono font-bold text-xs uppercase bg-[#FFE600] text-black px-2 py-0.5 border border-black neo-shadow-sm">
+              TELEMETRY DASHBOARD
+            </span>
+            <span className="font-mono text-xs text-neutral-500">// GLOBAL VULNERABILITY STATE</span>
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-mono font-black tracking-tight text-black dark:text-white uppercase">
+            Enterprise Threat Landscape
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-neutral-600 dark:text-neutral-400 mt-1">
+            Live multi-factor prioritization synthesizing NIST NVD, CISA KEV active exploits, and corporate perimeter topology.
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<FiSearch className="w-3.5 h-3.5 stroke-[3]" />}
+            onClick={onNavigateToRankings}
+          >
+            EXPLORE ALL RANKINGS
+          </Button>
+        </div>
       </div>
 
       {/* Non-Technical Executive Guide */}
       <OverviewExecutiveGuide />
 
-      {/* 4 Primary Metric Tiles */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Tile 1 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6]">
-              Total CVE Corpus
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-600 dark:text-neutral-400">
-              <Database className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7] mb-1">
-            {totalCves.toLocaleString()}
-          </div>
-          <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            Ingested from NIST National Vulnerability Database (NVD)
-          </p>
-        </div>
+      {/* 4 Primary Brutalist KPI Blocks */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <KpiTile
+          label="Total CVE Corpus"
+          value={totalCves.toLocaleString()}
+          sublabel="NIST NVD 2.0 Ingested"
+          accent="cyan"
+          icon={<FiDatabase className="w-3.5 h-3.5" />}
+          badge={<Badge color="cyan" size="xs">NVD</Badge>}
+        />
 
-        {/* Tile 2 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
-              In CISA KEV Catalog
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center">
-              <Flame className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-semibold tracking-tight text-red-600 dark:text-red-400 mb-1">
-            {inKevCount.toLocaleString()}
-          </div>
-          <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            Actively weaponized in the wild by threat actors
-          </p>
-        </div>
+        <KpiTile
+          label="In CISA KEV Catalog"
+          value={inKevCount.toLocaleString()}
+          sublabel="Weaponized in the wild"
+          accent="pink"
+          icon={<RiFireLine className="w-3.5 h-3.5 text-white" />}
+          badge={<Badge color="pink" size="xs">ACTIVE</Badge>}
+        />
 
-        {/* Tile 3 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#FF9500]">
-              Critical Risk Band
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-[#FF9500]/10 text-[#FF9500] flex items-center justify-center">
-              <ShieldAlert className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7] mb-1">
-            {criticalCount.toLocaleString()}
-          </div>
-          <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            Multi-factor score &ge; 0.80 requiring immediate remediation
-          </p>
-        </div>
+        <KpiTile
+          label="Critical Risk Band"
+          value={criticalCount.toLocaleString()}
+          sublabel="Score >= 0.80 Immediate Triage"
+          accent="orange"
+          icon={<FiAlertTriangle className="w-3.5 h-3.5" />}
+          badge={<Badge color="orange" size="xs">TIER 1</Badge>}
+        />
 
-        {/* Tile 4 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0071E3] dark:text-[#0A84FF]">
-              Evaluated with CVSS v3
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-[#0071E3]/10 text-[#0071E3] dark:text-[#0A84FF] flex items-center justify-center">
-              <FileCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7] mb-1">
-            {hasCvssCount.toLocaleString()}
-          </div>
-          <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            100% vector completeness across normalized dataset
-          </p>
-        </div>
+        <KpiTile
+          label="Evaluated with CVSS v3"
+          value={hasCvssCount.toLocaleString()}
+          sublabel="100% Vector Completeness"
+          accent="lime"
+          icon={<FiCheckCircle className="w-3.5 h-3.5" />}
+          badge={<Badge color="lime" size="xs">BOUNDED</Badge>}
+        />
       </div>
 
-      {/* Top 5 Contextual Risk Table */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Highest Priority Vulnerabilities in Enterprise Queue
-            </h3>
-            <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-              Ranked by contextual risk score incorporating live weaponization and perimeter exposure
-            </p>
-          </div>
-          <button
-            onClick={onNavigateToRankings}
-            className="text-xs font-medium text-[#0071E3] hover:underline flex items-center space-x-1"
+      {/* Main Split Workbench: Top Priority Queue Table & Top 10 Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left: Top 5 Highest Priority Table (7 Cols) */}
+        <div className="lg:col-span-7">
+          <Panel
+            title="Highest Priority Queue Targets"
+            subtitle="Sorted by multi-factor contextual risk score"
+            icon={<FiLayers className="w-4 h-4 text-black" />}
+            accent="yellow"
+            actions={
+              <button
+                type="button"
+                onClick={onNavigateToRankings}
+                className="neo-btn px-2.5 py-1 text-xs font-mono font-bold bg-white text-black border-2 border-black flex items-center space-x-1 hover:bg-[#FFE600]"
+              >
+                <span>VIEW ALL {totalCves.toLocaleString()}</span>
+                <FiArrowRight className="w-3 h-3 stroke-[3]" />
+              </button>
+            }
+            noPadding
           >
-            <span>View All Rankings</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs font-mono">
+                <thead>
+                  <tr className="bg-neutral-100 dark:bg-[#1C1C24] border-b-2 border-black dark:border-white text-black dark:text-white uppercase text-[10px]">
+                    <th className="py-2.5 px-3 font-black">Rank</th>
+                    <th className="py-2.5 px-3 font-black">Vulnerability</th>
+                    <th className="py-2.5 px-3 font-black">CVSS Base</th>
+                    <th className="py-2.5 px-3 font-black">CISA KEV</th>
+                    <th className="py-2.5 px-3 font-black">Contextual Risk</th>
+                    <th className="py-2.5 px-3 font-black text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y-2 divide-black/10 dark:divide-white/10">
+                  {top5.map((v, i) => (
+                    <tr
+                      key={v.cve_id}
+                      className="hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26] transition-colors"
+                    >
+                      <td className="py-3 px-3 font-black text-neutral-500">
+                        <span className="px-1.5 py-0.5 bg-black text-white text-[10px] border border-black inline-block">
+                          #{i + 1}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-black dark:text-white">
+                          {v.cve_id}
+                        </div>
+                        <div className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate max-w-[180px] sm:max-w-xs">
+                          {v.description.slice(0, 55)}...
+                        </div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="font-bold">{v.cvss_score.toFixed(1)}</span>
+                        <span className="text-[10px] text-neutral-500 ml-1">({v.cvss_severity})</span>
+                      </td>
+                      <td className="py-3 px-3">
+                        {v.in_kev ? (
+                          <Badge color="pink" size="xs">
+                            IN KEV
+                          </Badge>
+                        ) : (
+                          <Badge color="zinc" size="xs">
+                            NO
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-black text-xs text-black dark:text-white">
+                          <span className="px-1.5 py-0.5 bg-[#FFE600] text-black border border-black inline-block">
+                            {v.risk_score.toFixed(3)}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-neutral-500">
+                          {v.risk_band}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => onSelectCve(v.cve_id)}
+                          className="neo-btn px-2.5 py-1 text-[11px] font-bold bg-[#00F0FF] text-black border-2 border-black neo-shadow-sm hover:bg-[#38F4FF]"
+                        >
+                          INVESTIGATE
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-black/5 dark:border-white/5 text-[#86868B] dark:text-[#A1A1A6] uppercase tracking-wider text-[10px]">
-                <th className="py-2.5 px-3 font-semibold">Priority Rank</th>
-                <th className="py-2.5 px-3 font-semibold">CVE Identifier</th>
-                <th className="py-2.5 px-3 font-semibold">CVSS Base</th>
-                <th className="py-2.5 px-3 font-semibold">CISA KEV</th>
-                <th className="py-2.5 px-3 font-semibold">Contextual Risk</th>
-                <th className="py-2.5 px-3 font-semibold">Target Asset</th>
-                <th className="py-2.5 px-3 font-semibold text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
-              {top5.map((v, i) => (
-                <tr
-                  key={v.cve_id}
-                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
-                >
-                  <td className="py-3 px-3 font-mono font-medium text-neutral-500">
-                    #{i + 1}
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="font-mono font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                      {v.cve_id}
-                    </div>
-                    <div className="text-[10px] text-[#86868B] dark:text-[#A1A1A6] truncate max-w-xs">
-                      {v.description.slice(0, 65)}...
-                    </div>
-                  </td>
-                  <td className="py-3 px-3">
-                    <span className="font-mono font-medium">{v.cvss_score.toFixed(1)}</span>
-                    <span className="text-[10px] text-neutral-500 ml-1">({v.cvss_severity})</span>
-                  </td>
-                  <td className="py-3 px-3">
-                    {v.in_kev ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-600 dark:text-red-400">
-                        In KEV
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                        Not in KEV
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="font-mono font-semibold text-[#0071E3]">
-                      {v.risk_score.toFixed(3)}
-                    </div>
-                    <span className="text-[10px] font-medium text-neutral-500">
-                      Band: {v.risk_band}
-                    </span>
-                  </td>
-                  <td className="py-3 px-3 font-mono text-[11px] text-neutral-600 dark:text-neutral-400">
-                    {v.matched_asset_id}
-                  </td>
-                  <td className="py-3 px-3 text-right">
-                    <button
-                      onClick={() => onSelectCve(v.cve_id)}
-                      className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#0071E3]/10 text-[#0071E3] hover:bg-[#0071E3]/20 transition-colors"
-                    >
-                      Investigate
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Right: Top 10 Contextual Bar Chart (5 Cols) */}
+        <div className="lg:col-span-5">
+          <Top10BarChart vulnerabilities={vulnerabilities} onSelectCve={onSelectCve} />
         </div>
       </div>
-
-      {/* Top 10 Chart */}
-      <Top10BarChart vulnerabilities={vulnerabilities} onSelectCve={onSelectCve} />
     </div>
   );
 };

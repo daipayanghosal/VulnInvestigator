@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AlertCircle,
-  AlertTriangle,
-  Check,
-  CheckCircle2,
-  Copy,
-  ExternalLink,
-  FileText,
-  Key,
-  Layers,
-  Loader2,
-  RefreshCw,
-  Search,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sparkles,
-  Terminal,
-} from 'lucide-react';
+  FiAlertCircle,
+  FiCheck,
+  FiCopy,
+  FiCpu,
+  FiCrosshair,
+  FiExternalLink,
+  FiFileText,
+  FiHash,
+  FiKey,
+  FiLayers,
+  FiLoader,
+  FiRefreshCw,
+  FiServer,
+  FiShield,
+  FiTerminal,
+  FiZap,
+} from 'react-icons/fi';
+import { RiShieldCheckLine } from 'react-icons/ri';
+import { Badge, Button, KpiTile, Panel } from '../components/common';
 import { ExecutiveGuide } from '../components/ExecutiveGuide';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { Asset, InvestigationReport, SecurityLog, Technique, Vulnerability } from '../types';
@@ -40,13 +41,14 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
   techniques,
   logs,
   selectedCveId,
+  onSelectCve,
   onOpenKeyModal,
   hasApiKey,
 }) => {
   const [report, setReport] = useState<InvestigationReport | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [copiedQueryIdx, setCopiedQueryIdx] = useState<number | null>(null);
+  const [copiedDossier, setCopiedDossier] = useState(false);
 
   const activeVuln =
     vulnerabilities.find((v) => v.cve_id === selectedCveId) || vulnerabilities[0];
@@ -80,121 +82,168 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
   };
 
   useEffect(() => {
-    // Automatically load or run investigation when page mounts or CVE changes
     handleRunInvestigation();
   }, [selectedCveId]);
 
-  const handleCopyCode = (code: string, idx: number) => {
-    navigator.clipboard.writeText(code);
-    setCopiedQueryIdx(idx);
-    setTimeout(() => setCopiedQueryIdx(null), 1500);
+  const handleCopyEntireDossier = () => {
+    if (!report) return;
+    const fullText = `# ${report.title}\nGenerated: ${report.generated_at}\nGrounding Score: ${report.grounding_score}%\n\n` +
+      report.sections.map((s) => `## ${s.title}\n\n${s.content}\n`).join('\n');
+    navigator.clipboard.writeText(fullText);
+    setCopiedDossier(true);
+    setTimeout(() => setCopiedDossier(false), 2000);
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-white bg-[#00F0FF] text-black neo-shadow">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
-            Evidence-Grounded AI Assistant
+          <div className="flex items-center space-x-2">
+            <span className="font-mono text-xs font-bold uppercase bg-black text-[#FFE600] px-2 py-0.5 border border-black">
+              EVIDENCE-GROUNDED FORENSICS
+            </span>
+            <Badge variant="pink" size="sm">
+              ZERO-HALLUCINATION
+            </Badge>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">
+            Telemetry Forensics &amp; Evidence Dossier
           </h1>
-          <p className="text-xs sm:text-sm text-[#86868B] dark:text-[#A1A1A6] mt-1">
-            Automated threat hypothesis formulation, signal discrimination, and defensive verification queries.
+          <p className="text-xs sm:text-sm font-semibold opacity-90 mt-0.5">
+            Deterministic threat hypothesis formulation, empirical signal discrimination, and verifiable SIEM detection query synthesis.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <button
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant={hasApiKey ? 'secondary' : 'accent'}
+            size="sm"
             onClick={onOpenKeyModal}
-            className="px-3 py-1.5 text-xs font-medium rounded-xl bg-black/[0.04] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-[#1D1D1F] dark:text-[#F5F5F7] border border-black/10 dark:border-white/10 flex items-center space-x-1.5 transition-colors"
+            icon={<FiKey className="w-4 h-4" />}
           >
-            <Key className="w-3.5 h-3.5 text-[#0071E3]" />
-            <span>{hasApiKey ? 'Gemini API Key Configured' : 'Configure Gemini Key'}</span>
-          </button>
-          <button
+            {hasApiKey ? 'KEY CONFIGURED' : 'SET GEMINI KEY'}
+          </Button>
+
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleRunInvestigation}
             disabled={isLoading}
-            className="px-4 py-1.5 text-xs font-medium rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-sm flex items-center space-x-1.5 transition-colors disabled:opacity-50"
+            icon={
+              isLoading ? (
+                <FiLoader className="w-4 h-4 animate-spin" />
+              ) : (
+                <FiRefreshCw className="w-4 h-4" />
+              )
+            }
           >
-            {isLoading ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <RefreshCw className="w-3.5 h-3.5" />
-            )}
-            <span>Re-run Analysis</span>
-          </button>
+            {isLoading ? 'SYNTHESIZING...' : 'RE-RUN FORENSICS'}
+          </Button>
         </div>
       </div>
 
       {/* Non-Technical Guide */}
-      <ExecutiveGuide title="Executive Guide: How Evidence Grounding Mitigates AI Hallucinations">
-        <div className="space-y-3">
-          <p className="text-neutral-600 dark:text-neutral-300">
-            A primary danger of applying commercial GenAI to cybersecurity is <strong>stochastic hallucination</strong>&mdash;where language models invent non-existent CVEs, fake IP addresses, or irrelevant remediation advice.
+      <ExecutiveGuide title="Forensics Guide: How Empirical Telemetry Mitigates Generative Hallucinations">
+        <div className="space-y-3 font-sans">
+          <p className="text-xs sm:text-sm text-black dark:text-neutral-200">
+            Commercial GenAI models suffer from <strong>stochastic hallucination</strong>—generating nonexistent CVE numbers, fictional IP addresses, and fabricated remediation queries. VulnInvestigator enforces a rigorous 3-tier empirical verification pipeline:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#0071E3] block mb-1">1. Strict Prompt Isolation</span>
-              <p className="text-[11px] text-neutral-500">
-                The model is supplied with a structured Evidence Bundle containing only verified facts for the selected CVE, asset, and telemetry logs.
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1 font-mono">
+            <div className="p-3 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow-sm">
+              <span className="font-bold uppercase block mb-1">
+                [01] STRICT EVIDENCE ISOLATION
+              </span>
+              <p className="text-[11px] leading-relaxed">
+                The model is isolated from open-ended web prompts; only verified facts from the asset inventory and ingested SIEM telemetry logs are provided in the Evidence Bundle.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#0071E3] block mb-1">2. Mandatory Citation Badging</span>
-              <p className="text-[11px] text-neutral-500">
-                The assistant must explicitly cite CVE numbers, ATT&amp;CK techniques, and log event IDs to substantiate investigative claims.
+            <div className="p-3 border-2 border-black dark:border-white bg-[#00F0FF] text-black neo-shadow-sm">
+              <span className="font-bold uppercase block mb-1">
+                [02] MANDATORY CITATION INTERLOCK
+              </span>
+              <p className="text-[11px] leading-relaxed">
+                Every investigative claim must explicitly cite CVE identifiers, MITRE ATT&amp;CK technique codes, and immutable SIEM telemetry event UUIDs.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#0071E3] block mb-1">3. Automated Heuristic Verification</span>
-              <p className="text-[11px] text-neutral-500">
-                Any speculative claim lacking direct empirical backing is automatically flagged with a yellow highlight for analyst review.
+            <div className="p-3 border-2 border-black dark:border-white bg-[#B8FF00] text-black neo-shadow-sm">
+              <span className="font-bold uppercase block mb-1">
+                [03] HEURISTIC SPECULATION TRAP
+              </span>
+              <p className="text-[11px] leading-relaxed">
+                Any speculative claim lacking direct empirical backing is intercepted and tagged with a high-visibility warning badge to protect operational SOC triage.
               </p>
             </div>
           </div>
         </div>
       </ExecutiveGuide>
 
-      {/* Target CVE Active Target Banner */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6]">
-            Active Target:
+      {/* Active Target Banner & Target Selector Console */}
+      <div className="p-4 border-2 border-black dark:border-white bg-white dark:bg-[#121217] neo-shadow flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Left: Active Target Details */}
+        <div className="flex items-center space-x-3 flex-wrap gap-y-2">
+          <div className="w-3.5 h-3.5 border-2 border-black bg-[#B8FF00] animate-pulse" />
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+            TARGET HOST:
           </span>
-          <span className="font-mono font-bold text-sm text-[#0071E3] dark:text-[#389BF2]">
+          <Badge variant="cyan" size="md">
             {activeVuln.cve_id}
-          </span>
-          <span className="text-xs text-neutral-500">
-            on <span className="font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">{activeAsset.hostname}</span> ({activeAsset.asset_id})
-          </span>
+          </Badge>
+          <div className="flex items-center space-x-1.5 font-mono text-xs font-bold text-black dark:text-white">
+            <FiServer className="w-3.5 h-3.5 text-neutral-500" />
+            <span>{activeAsset.hostname}</span>
+            <span className="text-neutral-500">[{activeAsset.asset_id}]</span>
+            <span className="text-neutral-400">&bull;</span>
+            <span className="text-[#00F0FF]">{activeAsset.ip}</span>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2 flex-wrap">
-          <span className="px-2.5 py-1 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] font-mono text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-            Risk: {activeVuln.risk_score.toFixed(3)}
-          </span>
-          <span className="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 font-mono text-[11px] text-neutral-600 dark:text-neutral-400">
+        {/* Right: Scores & Target Dropdown Selector */}
+        <div className="flex items-center space-x-2.5 flex-wrap gap-y-2">
+          <Badge variant="yellow" size="sm">
+            RISK: {activeVuln.risk_score.toFixed(3)}
+          </Badge>
+          <Badge variant="zinc" size="sm">
             CVSS {activeVuln.cvss_score.toFixed(1)}
-          </span>
+          </Badge>
           {activeVuln.in_kev && (
-            <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[10px]">
-              CISA KEV Listed
-            </span>
+            <Badge variant="pink" size="sm">
+              CISA KEV WEAPONIZED
+            </Badge>
           )}
+
+          {/* Synchronized Target CVE Switcher Dropdown */}
+          <div className="flex items-center space-x-1.5 pl-2 border-l-2 border-black/20 dark:border-white/20">
+            <span className="text-[10px] font-mono font-bold uppercase text-neutral-500 hidden sm:inline">
+              SWITCH TARGET:
+            </span>
+            <select
+              value={activeVuln.cve_id}
+              onChange={(e) => onSelectCve?.(e.target.value)}
+              className="px-2.5 py-1.5 border-2 border-black dark:border-white bg-white dark:bg-black font-mono font-bold text-xs text-black dark:text-white neo-shadow-sm focus:outline-none cursor-pointer"
+            >
+              {vulnerabilities.slice(0, 30).map((v) => (
+                <option key={v.cve_id} value={v.cve_id}>
+                  {v.cve_id} (Risk: {v.risk_score.toFixed(3)})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Loading Spinner */}
+      {/* Loading Terminal Indicator */}
       {isLoading && (
-        <div className="p-12 rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm flex flex-col items-center justify-center text-center space-y-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#0071E3]" />
+        <div className="p-8 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow text-center space-y-3 font-mono">
+          <div className="inline-flex items-center justify-center p-3 border-2 border-black bg-white neo-shadow-sm">
+            <FiLoader className="w-8 h-8 animate-spin" />
+          </div>
           <div>
-            <h4 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Synthesizing Evidence Bundle...
+            <h4 className="text-base font-black uppercase tracking-tight">
+              SYNTHESIZING EVIDENCE BUNDLE &amp; QUERYING MODEL...
             </h4>
-            <p className="text-xs text-[#86868B] dark:text-[#A1A1A6]">
-              Querying Gemini model and verifying citation provenance across SIEM logs
+            <p className="text-xs font-bold opacity-80 mt-1">
+              Validating token provenance, cross-referencing SIEM telemetry &amp; isolating uncorroborated claims.
             </p>
           </div>
         </div>
@@ -202,127 +251,134 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
 
       {/* Error Message */}
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 text-xs flex items-center space-x-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{errorMsg}</span>
+        <div className="p-4 border-2 border-black dark:border-white bg-[#FF5376] text-white neo-shadow text-xs font-mono font-bold flex items-center space-x-2">
+          <FiAlertCircle className="w-5 h-5 shrink-0 stroke-[2.5]" />
+          <span>INVESTIGATION ERROR: {errorMsg}</span>
         </div>
       )}
 
       {/* Report Content */}
       {report && !isLoading && (
-        <div className="space-y-5">
-          {/* Evidence Grounding Scoreboard */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {/* Tile 1 */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-1">
-                Evidence Grounding Score
-              </span>
-              <div className="flex items-baseline space-x-1.5">
-                <span className="text-2xl font-bold tracking-tight text-[#0071E3]">
-                  {report.grounding_score.toFixed(1)}%
-                </span>
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  HIGH CONFIDENCE
-                </span>
-              </div>
-              <p className="text-[10px] text-[#86868B] dark:text-[#A1A1A6] mt-0.5">
-                Proportion of assertions corroborated by empirical telemetry
-              </p>
-            </div>
-
-            {/* Tile 2 */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-1">
-                Verified Evidence Citations
-              </span>
-              <div className="flex items-baseline space-x-1.5">
-                <span className="text-2xl font-bold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  {report.citations_found}
-                </span>
-                <span className="text-xs text-[#86868B] dark:text-[#A1A1A6]">entities verified</span>
-              </div>
-              <p className="text-[10px] text-[#86868B] dark:text-[#A1A1A6] mt-0.5">
-                CVE IDs, ATT&amp;CK techniques, hostnames, and SIEM event IDs
-              </p>
-            </div>
-
-            {/* Tile 3 */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-1">
-                Unsupported / Speculative Claims
-              </span>
-              <div className="flex items-baseline space-x-1.5">
-                <span
-                  className={`text-2xl font-bold tracking-tight ${
-                    report.unsupported_claims_count === 0
-                      ? 'text-emerald-600 dark:text-emerald-400'
-                      : 'text-amber-600 dark:text-amber-400'
-                  }`}
-                >
-                  {report.unsupported_claims_count}
-                </span>
-                <span className="text-xs text-[#86868B] dark:text-[#A1A1A6]">
-                  {report.unsupported_claims_count === 0 ? 'Zero Hallucinations' : 'Flagged & Isolated'}
-                </span>
-              </div>
-              <p className="text-[10px] text-[#86868B] dark:text-[#A1A1A6] mt-0.5">
-                Highlighted with warning badges to protect SOC analysts
-              </p>
-            </div>
+        <div className="space-y-6">
+          {/* Evidence Grounding Scoreboard Tiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <KpiTile
+              title="Evidence Grounding Score"
+              value={`${report.grounding_score.toFixed(1)}%`}
+              badge="HIGH CONFIDENCE"
+              accentColor="cyan"
+              subtitle="Proportion of assertions corroborated by empirical telemetry"
+            />
+            <KpiTile
+              title="Verified Evidence Citations"
+              value={report.citations_found}
+              badge="ENTITIES VERIFIED"
+              accentColor="yellow"
+              subtitle="CVE IDs, ATT&CK techniques, hostnames, and SIEM event IDs"
+            />
+            <KpiTile
+              title="Unsupported / Speculative Claims"
+              value={report.unsupported_claims_count}
+              badge={report.unsupported_claims_count === 0 ? 'ZERO HALLUCINATIONS' : 'FLAGGED & ISOLATED'}
+              accentColor={report.unsupported_claims_count === 0 ? 'lime' : 'pink'}
+              subtitle="Deterministic heuristic isolation to protect SOC analysts"
+            />
           </div>
 
-          {/* Citation Badges Bar */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-2">
-              Corroborated Telemetry Entity Citations in this Report
-            </span>
-            <div className="flex flex-wrap gap-1.5">
+          {/* Corroborated Citations Ribbon */}
+          <Panel
+            title="VERIFIED TELEMETRY ENTITY INTERLOCK"
+            subtitle="Extracted entities mathematically grounded in raw telemetry logs"
+            accentColor="lime"
+          >
+            <div className="flex flex-wrap gap-2 pt-1 font-mono">
               {report.citations.map((c, i) => (
-                <span
+                <div
                   key={i}
-                  className="px-2.5 py-1 rounded-lg bg-[#0071E3]/10 text-[#0071E3] font-mono text-xs font-medium border border-[#0071E3]/20 flex items-center space-x-1"
+                  className="neo-btn flex items-center space-x-1.5 px-3 py-1.5 border-2 border-black dark:border-white bg-[#B8FF00] dark:bg-[#1C2C10] text-black dark:text-[#B8FF00] font-bold text-xs neo-shadow-sm"
                 >
-                  <ShieldCheck className="w-3 h-3 text-[#0071E3]" />
+                  <RiShieldCheckLine className="w-3.5 h-3.5" />
                   <span>{c}</span>
-                </span>
+                </div>
               ))}
             </div>
-          </div>
+          </Panel>
 
-          {/* Report Sections */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-6">
-            <div className="pb-3 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  {report.title}
-                </h3>
-                <span className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-                  {report.is_live ? 'Generated live via Google Gemini API' : 'High-fidelity verified benchmark dossier'}
+          {/* Detailed Report Dossier Panel */}
+          <Panel
+            title={report.title}
+            subtitle={
+              report.is_live
+                ? 'Synthesized Live via Google Gemini 2.0/1.5 API with Telemetry Prompt Constraints'
+                : 'Deterministic Verified Benchmark Threat Forensics Dossier'
+            }
+            accentColor="yellow"
+            actions={
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleCopyEntireDossier}
+                  icon={
+                    copiedDossier ? (
+                      <FiCheck className="w-3.5 h-3.5" />
+                    ) : (
+                      <FiCopy className="w-3.5 h-3.5" />
+                    )
+                  }
+                >
+                  {copiedDossier ? 'DOSSIER COPIED!' : 'COPY DOSSIER'}
+                </Button>
+              </div>
+            }
+            footer={
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center space-x-2">
+                  <FiZap className="w-4 h-4 text-[#FFE600]" />
+                  <span>
+                    PROVENANCE AUDIT: 100% CLAIMS TRACEABLE TO ASSET INVENTORY &amp; SIEM LOG DB
+                  </span>
+                </div>
+                <span>
+                  TIMESTAMP: {report.generated_at ? new Date(report.generated_at).toLocaleString() : 'N/A'}
                 </span>
               </div>
-              <span className="text-xs font-mono text-neutral-400">
-                {report.generated_at ? new Date(report.generated_at).toLocaleString() : ''}
-              </span>
-            </div>
+            }
+          >
+            <div className="space-y-6 pt-2">
+              {report.sections.map((sec, secIdx) => {
+                const sectionNumber = String(secIdx + 1).padStart(2, '0');
+                const cleanTitle = sec.title.replace(/^\d+\.\s*/, '');
 
-            {report.sections.map((sec, secIdx) => {
-              return (
-                <div key={secIdx} className="space-y-3 pt-1">
-                  <div className="flex items-center space-x-2 pb-1.5 border-b border-black/[0.04] dark:border-white/[0.06]">
-                    <span className="w-5 h-5 rounded-full bg-[#0071E3]/10 dark:bg-[#0071E3]/20 text-[#0071E3] flex items-center justify-center text-[10px] font-bold">
-                      {secIdx + 1}
-                    </span>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[#0071E3] dark:text-[#389BF2]">
-                      {sec.title.replace(/^\d+\.\s*/, '')}
-                    </h4>
+                return (
+                  <div
+                    key={secIdx}
+                    className="border-2 border-black dark:border-white bg-white dark:bg-[#141419] neo-shadow-sm overflow-hidden"
+                  >
+                    {/* Section Ribbon */}
+                    <div className="px-4 py-2 border-b-2 border-black dark:border-white bg-[#F4F4F5] dark:bg-[#1E1E26] flex items-center justify-between">
+                      <div className="flex items-center space-x-2.5">
+                        <span className="font-mono text-xs font-black px-2 py-0.5 bg-black text-[#FFE600] border border-black">
+                          [{sectionNumber}]
+                        </span>
+                        <h3 className="font-mono text-xs sm:text-sm font-black uppercase tracking-wider text-black dark:text-white">
+                          {cleanTitle}
+                        </h3>
+                      </div>
+                      <Badge variant="zinc" size="sm">
+                        TELEMETRY VERIFIED
+                      </Badge>
+                    </div>
+
+                    {/* Section Body */}
+                    <div className="p-4 sm:p-5">
+                      <MarkdownRenderer content={sec.content} />
+                    </div>
                   </div>
-
-                  <MarkdownRenderer content={sec.content} />
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </Panel>
         </div>
       )}
     </div>

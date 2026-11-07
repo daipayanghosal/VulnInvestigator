@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import {
-  AlertCircle,
-  Check,
-  CheckCircle2,
-  Database,
-  Globe,
-  Info,
-  Loader2,
-  Plus,
-  Server,
-  ShieldAlert,
-  X,
-} from 'lucide-react';
+  FiCheckCircle,
+  FiExternalLink,
+  FiGlobe,
+  FiInfo,
+  FiLoader,
+  FiPlus,
+  FiSearch,
+  FiServer,
+  FiShield,
+  FiX,
+} from 'react-icons/fi';
 import { Asset, RiskBand, Severity, Vulnerability } from '../types';
 import { calculateFactorBreakdown, getRiskBand } from '../utils/scoring';
+import { Badge } from './common/Badge';
+import { Button } from './common/Button';
 
 interface CustomCveModalProps {
   isOpen: boolean;
@@ -51,10 +52,9 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
     }
 
     setIsFetchingNvd(true);
-    setNvdStatus('Querying NIST NVD API...');
+    setNvdStatus('Querying NIST NVD API 2.0...');
 
     try {
-      // Use corsproxy or public NVD endpoint with fallback
       const formattedCve = cveId.trim().toUpperCase();
       const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${formattedCve}`);
       if (!res.ok) throw new Error(`NVD returned HTTP ${res.status}`);
@@ -74,7 +74,6 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
       setNvdStatus('Successfully imported NIST NVD technical parameters!');
     } catch (err: any) {
       console.warn('NVD live fetch fallback:', err);
-      // Fallback pre-fill so user experience is smooth
       setDescription(`Manual investigation profile created for ${cveId.toUpperCase()}. Software flaw requiring security verification.`);
       setNvdStatus('NVD live query timed out. Pre-filled standard baseline parameters for manual editing.');
     } finally {
@@ -98,9 +97,9 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
       rank_cvss: 1,
       rank_contextual: 1,
       rank_displacement: 0,
-      description: description.trim() || 'Custom vulnerability ingested for enterprise threat evaluation.',
-      affected_products: affectedProducts.trim() || (Array.isArray(currentAsset.software) ? currentAsset.software[0] : currentAsset.software),
-      published_date: new Date().toISOString().slice(0, 10),
+      description: description || `Ingested custom vulnerability ${cveId.trim().toUpperCase()}`,
+      affected_products: affectedProducts || 'Custom Enterprise Service',
+      published_date: new Date().toISOString().split('T')[0],
     };
 
     onAddCve(newVuln);
@@ -108,79 +107,68 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all">
-      <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#0071E3]/10 dark:bg-[#0071E3]/20 flex items-center justify-center text-[#0071E3]">
-              <Plus className="w-4 h-4" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-all overflow-y-auto">
+      <div className="w-full max-w-2xl border-3 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#141418] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100 my-8">
+        {/* Title Bar */}
+        <div className="px-4 py-3 bg-[#00F0FF] text-black border-b-2 border-black flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-black text-[#00F0FF] border border-black flex items-center justify-center neo-shadow-sm font-mono font-bold text-xs">
+              <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                Ingest Custom Vulnerability
-              </h3>
-              <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-                Enter unlisted CVE details or query live NIST NVD
-              </p>
-            </div>
+            <span className="font-mono font-black text-sm uppercase tracking-tight">
+              INGEST CUSTOM VULNERABILITY // RISK ENGINE
+            </span>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            className="neo-btn w-6 h-6 border-2 border-black bg-white text-black flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
           >
-            <X className="w-4 h-4" />
+            <FiX className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* CVE ID + Live NIST NVD Query */}
+        {/* Content Form */}
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 text-xs font-mono">
+          {/* CVE Input & NVD Fetch */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mb-1.5">
-              CVE Identifier
+            <label className="block font-bold uppercase text-black dark:text-white mb-1">
+              1. Vulnerability Identifier (CVE ID)
             </label>
-            <div className="flex space-x-2">
+            <div className="flex items-center space-x-2">
               <input
                 type="text"
                 value={cveId}
                 onChange={(e) => setCveId(e.target.value)}
                 placeholder="CVE-2024-XXXX"
+                className="flex-1 px-3 py-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white uppercase font-bold neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1C1C22]"
                 required
-                className="flex-1 px-3 py-2 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-[#0071E3]"
               />
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
+                icon={isFetchingNvd ? <FiLoader className="w-3.5 h-3.5 animate-spin" /> : <FiSearch className="w-3.5 h-3.5" />}
                 onClick={handleFetchNvd}
                 disabled={isFetchingNvd}
-                className="px-3 py-2 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-xs font-medium text-[#1D1D1F] dark:text-[#F5F5F7] flex items-center space-x-1 border border-black/10 dark:border-white/10 transition-colors"
               >
-                {isFetchingNvd ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Globe className="w-3.5 h-3.5 text-[#0071E3]" />
-                )}
-                <span>Fetch NVD</span>
-              </button>
+                {isFetchingNvd ? 'QUERYING...' : 'FETCH NVD'}
+              </Button>
             </div>
             {nvdStatus && (
-              <p className="mt-1.5 text-[11px] text-[#0071E3] flex items-center space-x-1">
-                <Info className="w-3 h-3" />
-                <span>{nvdStatus}</span>
+              <p className="mt-1.5 text-[11px] font-bold text-[#0071E3] dark:text-[#38BDF8]">
+                &gt; {nvdStatus}
               </p>
             )}
           </div>
 
-          {/* CVSS Score Slider + Severity */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Grid: CVSS Score & KEV Toggle */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t-2 border-black/10 dark:border-white/10">
             <div>
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="font-semibold text-[#86868B] dark:text-[#A1A1A6] uppercase tracking-wider text-[10px]">
-                  CVSS Base Score
-                </span>
-                <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  {cvssScore.toFixed(1)} / 10
-                </span>
+              <div className="flex items-center justify-between mb-1">
+                <label className="font-bold uppercase text-black dark:text-white">
+                  2. CVSS v3.1 Base Score: <span className="bg-[#FFE600] text-black px-1.5 py-0.2 border border-black">{cvssScore.toFixed(1)}</span>
+                </label>
               </div>
               <input
                 type="range"
@@ -188,108 +176,89 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
                 max="10.0"
                 step="0.1"
                 value={cvssScore}
-                onChange={(e) => setCvssScore(parseFloat(e.target.value))}
-                className="w-full accent-[#0071E3]"
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  setCvssScore(val);
+                  if (val >= 9.0) setSeverity('CRITICAL');
+                  else if (val >= 7.0) setSeverity('HIGH');
+                  else if (val >= 4.0) setSeverity('MEDIUM');
+                  else setSeverity('LOW');
+                }}
+                className="w-full accent-black dark:accent-white cursor-pointer"
               />
+              <div className="flex justify-between text-[10px] text-neutral-500 mt-1 font-bold">
+                <span>0.0 (NONE)</span>
+                <span>4.0 (MED)</span>
+                <span>7.0 (HIGH)</span>
+                <span>10.0 (CRIT)</span>
+              </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mb-1">
-                Severity Rating
+              <label className="block font-bold uppercase text-black dark:text-white mb-1">
+                3. Active CISA KEV Weaponization
               </label>
-              <select
-                value={severity}
-                onChange={(e) => setSeverity(e.target.value as Severity)}
-                className="w-full px-2.5 py-1.5 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none"
-              >
-                <option value="CRITICAL">Critical</option>
-                <option value="HIGH">High</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="LOW">Low</option>
-              </select>
-            </div>
-          </div>
-
-          {/* CISA KEV Checkbox */}
-          <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 flex items-center justify-between">
-            <div>
-              <div className="text-xs font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                CISA KEV Wild Exploitation
-              </div>
-              <div className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-                Threat actors actively weaponizing this flaw
+              <div className="flex items-center space-x-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setInKev(!inKev)}
+                  className={`neo-btn flex-1 py-2 px-3 border-2 border-black dark:border-white font-bold flex items-center justify-center space-x-2 ${
+                    inKev
+                      ? 'bg-[#FF5376] text-white neo-shadow-sm'
+                      : 'bg-white dark:bg-black text-black dark:text-white hover:bg-neutral-100'
+                  }`}
+                >
+                  <FiShield className="w-3.5 h-3.5" />
+                  <span>{inKev ? 'WEAPONIZED IN WILD (+0.30)' : 'NO EXPLOIT OBSERVED (0.0)'}</span>
+                </button>
               </div>
             </div>
-            <input
-              type="checkbox"
-              checked={inKev}
-              onChange={(e) => setInKev(e.target.checked)}
-              className="w-4 h-4 rounded text-[#0071E3] accent-[#0071E3]"
-            />
           </div>
 
           {/* Target Asset Assignment */}
-          <div>
-            <label className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mb-1">
-              Target Enterprise Asset
+          <div className="pt-2 border-t-2 border-black/10 dark:border-white/10">
+            <label className="block font-bold uppercase text-black dark:text-white mb-1">
+              4. Target Enterprise Asset Node
             </label>
             <select
               value={selectedAssetId}
               onChange={(e) => setSelectedAssetId(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none"
+              className="w-full px-3 py-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold neo-shadow-sm focus:outline-none"
             >
               {assets.map((a) => (
                 <option key={a.asset_id} value={a.asset_id}>
-                  {a.asset_id} &mdash; {a.hostname} ({a.criticality.toUpperCase()}, {a.exposure})
+                  {a.hostname} [{a.asset_id}] &bull; Tier {a.criticality.toUpperCase()} &bull; Zone: {a.exposure.toUpperCase()}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mb-1">
-              Technical Description
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe flaw mechanics, affected service, or payload behavior..."
-              rows={2}
-              className="w-full px-3 py-2 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-[#0071E3]"
-            />
-          </div>
-
-          {/* Real-time Calculated Score Preview */}
-          <div className="p-3.5 rounded-xl bg-[#0071E3]/5 dark:bg-[#0071E3]/10 border border-[#0071E3]/20 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#0071E3]">
-                Calculated Contextual Risk
+          {/* Live Contextual Math Calculation Preview Strip */}
+          <div className="p-3 border-2 border-black dark:border-white bg-[#FFE600] text-black neo-shadow-sm space-y-1">
+            <div className="flex items-center justify-between font-bold">
+              <span>REAL-TIME VULNINVESTIGATOR SCORE:</span>
+              <span className="text-base font-black px-2 py-0.5 bg-black text-[#FFE600] border border-black">
+                {breakdown.total_score.toFixed(3)} [{calculatedBand.toUpperCase()}]
               </span>
-              <div className="text-xl font-semibold tracking-tight text-[#0071E3]">
-                {breakdown.total_score.toFixed(3)} / 1.000
-              </div>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#0071E3] text-white">
-              Band: {calculatedBand}
-            </span>
+            <p className="text-[11px] text-black/80 font-medium">
+              S_ctx = (0.35 &times; {breakdown.cvss_val.toFixed(1)}/10) + (0.30 &times; {inKev ? '1.0' : '0.0'}) + (0.20 &times; {breakdown.crit_score.toFixed(2)}) + (0.15 &times; {breakdown.expo_score.toFixed(2)})
+            </p>
           </div>
 
-          {/* Footer Action */}
-          <div className="pt-2 flex items-center justify-end space-x-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-xs font-medium rounded-xl text-[#86868B] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
+          {/* Form Actions */}
+          <div className="flex items-center justify-end space-x-2 pt-3 border-t-2 border-black dark:border-white">
+            <Button type="button" variant="secondary" size="md" onClick={onClose}>
+              CANCEL
+            </Button>
+            <Button
               type="submit"
-              className="px-5 py-2 text-xs font-medium rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-sm transition-colors"
+              variant="primary"
+              size="md"
+              icon={<FiCheckCircle className="w-4 h-4" />}
             >
-              Ingest &amp; Calculate
-            </button>
+              INJECT INTO ACTIVE QUEUE
+            </Button>
           </div>
         </form>
       </div>

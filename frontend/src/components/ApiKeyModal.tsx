@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Check, ExternalLink, Key, ShieldCheck, X } from 'lucide-react';
+import { FiCheck, FiExternalLink, FiKey, FiTrash2, FiX } from 'react-icons/fi';
 import { getStoredApiKey, setStoredApiKey } from '../utils/gemini';
+import { Button } from './common/Button';
 
 interface ApiKeyModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
     setTimeout(() => {
       setIsSaved(false);
       onClose();
-    }, 800);
+    }, 700);
   };
 
   const handleClear = () => {
@@ -37,85 +38,82 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all">
-      <div className="w-full max-w-md rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/10 dark:border-white/10 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        <div className="px-6 py-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#0071E3]/10 dark:bg-[#0071E3]/20 flex items-center justify-center text-[#0071E3]">
-              <Key className="w-4 h-4" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-all">
+      <div className="w-full max-w-md border-3 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#141418] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100">
+        {/* Title Bar */}
+        <div className="px-4 py-3 bg-[#FFE600] text-black border-b-2 border-black flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-black text-[#FFE600] border border-black flex items-center justify-center neo-shadow-sm">
+              <FiKey className="w-3.5 h-3.5" />
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                Google Gemini API Key
-              </h3>
-              <p className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-                Configure live LLM evidence-grounded threat synthesis
-              </p>
-            </div>
+            <span className="font-mono font-black text-sm uppercase tracking-tight">
+              GEMINI API CONFIGURATION
+            </span>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            className="neo-btn w-6 h-6 border-2 border-black bg-white text-black flex items-center justify-center font-mono font-bold text-xs hover:bg-[#FF5376] hover:text-white"
           >
-            <X className="w-4 h-4" />
+            <FiX className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <form onSubmit={handleSave} className="p-6 space-y-4">
+        {/* Content Form */}
+        <form onSubmit={handleSave} className="p-4 sm:p-5 space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mb-1.5">
-              API Key
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black dark:text-white mb-1.5">
+              Google Gemini API Key
             </label>
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full px-3 py-2 text-xs rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-[#1D1D1F] dark:text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-[#0071E3]"
+              className="w-full px-3 py-2 text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1C1C22]"
             />
-            <p className="mt-1.5 text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-              Your key is stored only in your local browser storage (<code className="text-[10px]">localStorage</code>) and is sent directly to Google&rsquo;s API endpoint. It is never logged or transmitted elsewhere.
+            <p className="mt-2 text-[11px] font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              Stored 100% locally in your browser (<code className="text-black dark:text-white font-bold">localStorage</code>). Sent directly to Google&rsquo;s official API endpoint; zero server storage.
             </p>
           </div>
 
-          <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700/50 text-[11px] text-neutral-600 dark:text-neutral-400 space-y-1">
-            <div className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Offline / Demo Mode Supported</span>
-            </div>
-            <p>
-              Don&rsquo;t have a key? Leave this empty. The platform automatically uses pre-generated high-fidelity benchmark reports so you can evaluate the AI Assistant and grounding validator instantly.
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between pt-2">
+          <div className="p-3 border-2 border-dashed border-black dark:border-white bg-neutral-100 dark:bg-[#1C1C22] text-xs font-mono">
+            <span className="font-bold text-black dark:text-white block mb-1">
+              Need a free API key?
+            </span>
             <a
               href="https://aistudio.google.com/app/apikey"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#0071E3] hover:underline flex items-center space-x-1"
+              className="text-[#0071E3] dark:text-[#38BDF8] font-bold underline inline-flex items-center space-x-1 hover:text-black dark:hover:text-white"
             >
-              <span>Get a free key at Google AI Studio</span>
-              <ExternalLink className="w-3 h-3" />
+              <span>Get key from Google AI Studio</span>
+              <FiExternalLink className="w-3 h-3 ml-1" />
             </a>
+          </div>
 
+          <div className="flex items-center justify-between pt-2 border-t-2 border-black dark:border-white">
+            <Button
+              type="button"
+              variant="danger"
+              size="sm"
+              icon={<FiTrash2 className="w-3 h-3" />}
+              onClick={handleClear}
+            >
+              CLEAR
+            </Button>
             <div className="flex items-center space-x-2">
-              {apiKey && (
-                <button
-                  type="button"
-                  onClick={handleClear}
-                  className="px-3 py-1.5 text-xs font-medium text-neutral-500 hover:text-red-500 transition-colors"
-                >
-                  Clear Key
-                </button>
-              )}
-              <button
+              <Button type="button" variant="secondary" size="sm" onClick={onClose}>
+                CANCEL
+              </Button>
+              <Button
                 type="submit"
-                className="px-4 py-1.5 text-xs font-medium rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white transition-colors flex items-center space-x-1"
+                variant="primary"
+                size="sm"
+                icon={isSaved ? <FiCheck className="w-3.5 h-3.5" /> : undefined}
               >
-                {isSaved ? <Check className="w-3.5 h-3.5" /> : null}
-                <span>{isSaved ? 'Saved' : 'Save Key'}</span>
-              </button>
+                {isSaved ? 'SAVED!' : 'SAVE KEY'}
+              </Button>
             </div>
           </div>
         </form>

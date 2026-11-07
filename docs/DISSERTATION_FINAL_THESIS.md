@@ -105,7 +105,7 @@ Simultaneously, while Generative Artificial Intelligence (GenAI) powered by Larg
 
 To address this dual challenge, this dissertation presents **VulnInvestigator**, a novel, evidence-grounded framework that strictly bifurcates deterministic contextual risk prioritization from generative investigative reasoning. The system integrates a deterministic multi-factor scoring engine that mathematically incorporates four contextual dimensions: normalized CVSS baseline severity ($w_1 = 0.35$), real-world threat actor weaponization via the CISA Known Exploited Vulnerabilities (KEV) catalog ($w_2 = 0.30$), enterprise business asset criticality ($w_3 = 0.20$), and perimeter network exposure ($w_4 = 0.15$). Selected high-priority vulnerabilities are dynamically correlated with the MITRE ATT&CK Matrix and enterprise Security Information and Event Management (SIEM) log telemetry. To interpret these correlated bundles, a constrained GenAI assistant powered by Google Gemini (gemini-3.5-flash) is deployed with strict prompt-boundary constraints and automated citation validation algorithms that extract explicit entity tokens (CVEs, ATT&CK techniques, log hashes) and flag unsupported claims.
 
-The prototype was implemented in Python 3.12, persisted via an ACID-compliant SQLite schema, and evaluated across a comprehensive real-world dataset of **8,328 CVEs** (including 1,768 CISA KEV entries), **12 enterprise assets**, and correlated security logs. Experimental evaluation against the CVSS-only baseline demonstrated significant, non-random rank reshuffling with **Kendall's rank correlation coefficient $\tau = 0.5791$** ($p < 0.001$), **nDCG@10 = 0.4657**, and **Spearman's $\rho = 0.7539$**, confirming that generic severity alone fails to reflect true enterprise risk. In AI evidence-grounding benchmarks, the citation verification validator achieved an **Evidence Citation Rate of 100.0%**, a **Claim Support Rate of 82.7%**, and controlled speculative hallucinations to 20.0% with automatic yellow-highlight flagging. Automated failure-mode testing demonstrated 100% pass rates across missing data, unmapped assets, contradictory logs, and adversarial deception inputs. The platform was successfully packaged, open-sourced, and deployed to Streamlit Community Cloud (`https://vulninvestigator.streamlit.app`).
+The prototype was implemented in Python 3.12, persisted via an ACID-compliant SQLite schema, and evaluated across a comprehensive real-world dataset of **8,328 CVEs** (including 1,768 CISA KEV entries), **12 enterprise assets**, and correlated security logs. Experimental evaluation against the CVSS-only baseline demonstrated significant, non-random rank reshuffling with **Kendall's rank correlation coefficient $\tau = 0.5791$** ($p < 0.001$), **nDCG@10 = 0.4657**, and **Spearman's $\rho = 0.7539$**, confirming that generic severity alone fails to reflect true enterprise risk. In AI evidence-grounding benchmarks, the citation verification validator achieved an **Evidence Citation Rate of 100.0%**, a **Claim Support Rate of 82.7%**, and controlled speculative hallucinations to 20.0% with automatic yellow-highlight flagging. Automated failure-mode testing demonstrated 100% pass rates across missing data, unmapped assets, contradictory logs, and adversarial deception inputs. The platform was successfully packaged, open-sourced, and deployed to GitHub Pages (`https://daipayanghosal.github.io/VulnInvestigator/`).
 
 **Keywords**: Vulnerability Management, CVSS, CISA KEV, Contextual Risk Scoring, Threat Correlation, MITRE ATT&CK, Evidence-Grounded GenAI, Large Language Models, Hallucination Mitigation, Cybersecurity.
 
@@ -319,7 +319,7 @@ To validate these hypotheses, this dissertation accomplishes five formal technic
 2. **Contextual Risk Engine**: Formulate and implement a transparent, deterministic risk scoring formula that balances technical severity ($w_1 = 0.35$), wild exploitation ($w_2 = 0.30$), asset business criticality ($w_3 = 0.20$), and perimeter network exposure ($w_4 = 0.15$).
 3. **Telemetry & Attack Correlator**: Build a threat correlation engine and synthetic enterprise SIEM log simulator mapped to 12 realistic organizational assets, pairing vulnerability profiles with MITRE ATT&CK techniques and security telemetry.
 4. **Evidence-Grounded GenAI Assistant**: Deploy an LLM client (Google Gemini via `google-genai` SDK) governed by strict prompt engineering and an automated heuristic output validator that extracts citations, annotates claim support, and highlights speculative statements.
-5. **Empirical Evaluation & Cloud Deployment**: Benchmark the complete framework against CVSS-only baselines across 8,328 CVEs using Kendall's $\tau$, nDCG@10, and Spearman's $\rho$; execute automated failure-mode testing; and deliver a fully functional, public cloud dashboard deployed on Streamlit Community Cloud.
+5. **Empirical Evaluation & Cloud Deployment**: Benchmark the complete framework against CVSS-only baselines across 8,328 CVEs using Kendall's $\tau$, nDCG@10, and Spearman's $\rho$; execute automated failure-mode testing; and deliver a fully functional, public cloud dashboard deployed on GitHub Pages (`https://daipayanghosal.github.io/VulnInvestigator/`).
 
 ## 1.5 Scope of Work and Boundaries
 
@@ -344,7 +344,7 @@ The primary contributions of this dissertation are:
 1. **A Bifurcated Cybersecurity Architecture**: A clean separation of concerns wherein all numerical prioritization is handled by a deterministic mathematical engine, and generative AI is restricted entirely to explaining evidence and drafting defensive queries.
 2. **A Validated Multi-Factor Contextual Scoring Model**: A mathematically formulated scoring engine that incorporates environmental exposure and CISA KEV data, proven empirically on 8,328 vulnerabilities to significantly disrupt the CVSS queue (Kendall's $\tau = 0.5791$, nDCG@10 = $0.4657$).
 3. **An Evidence-Grounded Citation Verification Engine**: A heuristic validator that audits LLM outputs sentence-by-sentence, extracting technical citations, calculating grounding confidence scores, and highlighting unsupported claims in yellow.
-4. **A Production-Grade, Open-Source Prototype**: A complete, fully tested software implementation (81 unit tests) featuring on-demand live NVD ingestion, dynamic evaluation re-computation, executive non-technical explainability interfaces, and public cloud deployment on Streamlit Cloud (`https://vulninvestigator.streamlit.app`).
+4. **A Production-Grade, Open-Source Prototype**: A complete, fully tested software implementation (81 unit tests) featuring on-demand live NVD ingestion, dynamic evaluation re-computation, executive non-technical explainability interfaces, and public cloud deployment on GitHub Pages (`https://daipayanghosal.github.io/VulnInvestigator/`).
 
 ## 1.7 Thesis Organization
 
@@ -489,7 +489,7 @@ This bifurcation ensures that:
 └───────────────────────────────────┬────────────────────────────────────────────────┘
                                     │
 ┌───────────────────────────────────▼────────────────────────────────────────────────┐
-│               INTERACTIVE STREAMLIT WEB DASHBOARD                                  │
+│            INTERACTIVE REACT WEB DASHBOARD (GITHUB PAGES)                          │
 │   Overview  │  Rankings  │  Investigation  │  AI Assistant  │  Evaluation          │
 └────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -698,10 +698,10 @@ VulnInvestigator is engineered entirely in **Python 3.12**, leveraging modern ty
 * **Database & Storage**: SQLite 3 (ACID-compliant, Write-Ahead Logging mode enabled).
 * **Data Processing**: Pandas 2.2.x, NumPy 1.26.x.
 * **Visualization & Analytics**: Plotly Express 5.24.x, Plotly Graph Objects.
-* **Web User Interface**: Streamlit 1.40.x (Multipage Architecture).
+* **Web User Interface**: Modern Single-Page Application (SPA) built with React 19, TypeScript, Tailwind CSS, and Vite.
 * **Generative AI Backend**: Google Gemini API via official `google-genai` SDK (v2.34.0), utilizing `gemini-3.5-flash`.
 * **Testing & Quality Assurance**: Pytest 9.2.0 (81 automated unit tests).
-* **Deployment Platform**: Streamlit Community Cloud (`https://vulninvestigator.streamlit.app`) integrated with GitHub version control.
+* **Deployment Platform**: GitHub Pages (`https://daipayanghosal.github.io/VulnInvestigator/`) with automated CI/CD static bundle compilation and deployment.
 
 ## 4.2 Data Collection and Normalization Pipeline
 
@@ -796,23 +796,23 @@ The **Log Simulator** (`src/logs/simulator.py`) generates structured log events 
 The generative AI client (`src/genai/llm_client.py`) interfaces with Google Gemini using the modern `google-genai` SDK (v2.34.0).
 * **Model Selection**: Defaulted to `gemini-3.5-flash`, which offers optimal latency (< 2.5s) and superior structural compliance over deprecated versions (`gemini-2.0-flash` / `gemini-2.5-flash` returned HTTP 404 in 2026).
 * **Resilience Engineering**: Built with exponential back-off retrying up to 3 times on transient HTTP 503 capacity spikes.
-* **Dual Secret Injection**: Automatically bridges Streamlit Community Cloud encrypted secrets (`st.secrets["GEMINI_API_KEY"]`) into runtime environment variables, while providing an on-page sidebar override field for live evaluator testing.
+* **Client-Side API Key & Secret Management**: Supports seamless Gemini API configuration directly within the web application interface with local encrypted browser persistence, as well as runtime environment overrides for evaluator testing.
 
 ## 4.6 Verification Engine: Citation Extraction and Claim Annotation
 
 The heuristic validator (`src/genai/output_validator.py`) inspects LLM responses across three stages:
 1. **Entity Citation Parsing**: Regular expressions identify valid CVE IDs (`CVE-\d{4}-\d{4,7}`), MITRE technique IDs (`T\d{4}`), asset hostnames, and numeric scores.
 2. **Claim Support Auditing**: Each sentence is evaluated against the evidence bundle. If a sentence makes assertions regarding unauthorized access or malware execution without matching keywords in the correlated log telemetry, it is marked as *unsupported*.
-3. **HTML Annotation**: Unsupported sentences are wrapped in `<mark style="background:#fff3cd;">` yellow highlight tags in the Streamlit UI, accompanied by an explicit warning expander.
+3. **HTML Annotation**: Unsupported sentences are wrapped in `<mark style="background:#fff3cd;">` yellow highlight tags in the interactive web UI, accompanied by an explicit warning badge and expandable verification details.
 
-## 4.7 Interactive Dashboard & Multipage Architecture
+## 4.7 Interactive Dashboard & Single-Page Application Architecture
 
-The dashboard is structured into five cohesive pages:
-1. **Overview (`pages/overview.py`)**: High-level dataset metrics, CISA KEV breakdown, and top-10 risk charts.
-2. **Vulnerability Rankings (`pages/rankings.py`)**: Side-by-side comparative tables (CVSS Baseline vs. Contextual Risk) and interactive rank displacement graphs.
-3. **Threat Investigation (`pages/investigation.py`)**: Detailed CVE inspection, Hero Scoreboard, Executive Justification Box, ATT&CK correlation, and SIEM log evidence.
-4. **AI Assistant (`pages/ai_assistant.py`)**: GenAI investigation report generator with citation badging, grounding scores, and unsupported claim detection.
-5. **Evaluation (`pages/evaluation.py`)**: On-demand quantitative pipeline execution, Kendall's $\tau$ gauge charts, nDCG metrics, and automated failure-mode taxonomy logs.
+The dashboard is engineered as a responsive, modern single-page application (SPA) structured into five cohesive functional views:
+1. **Overview View**: High-level dataset metrics, CISA KEV breakdown, and top-10 risk charts.
+2. **Vulnerability Rankings View**: Side-by-side comparative tables (CVSS Baseline vs. Contextual Risk) and interactive rank displacement graphs.
+3. **Threat Investigation View**: Detailed CVE inspection, Hero Scoreboard, Executive Justification Box, ATT&CK correlation, and SIEM log evidence.
+4. **AI Assistant View**: GenAI investigation report generator with citation badging, grounding scores, and unsupported claim detection.
+5. **Evaluation View**: On-demand quantitative pipeline execution, Kendall's $\tau$ gauge charts, nDCG metrics, and automated failure-mode taxonomy logs.
 
 <div style="page-break-after: always;"></div>
 
@@ -967,7 +967,7 @@ The research demonstrated that:
 1. Prioritizing software vulnerabilities using static CVSS scores alone introduces severe operational failures, flooding enterprise SOCs with false-alarm emergencies while overlooking actively weaponized perimeter flaws.
 2. A deterministic multi-factor formula integrating CVSS severity (35%), CISA KEV active exploitation (30%), asset criticality (20%), and network exposure (15%) achieves a statistically significant re-ordering of remediation priorities (**Kendall's $\tau = 0.5791$**, **nDCG@10 = 0.4657**), saving up to 40% of remediation effort.
 3. Generative AI can be safely and effectively utilized in defensive cybersecurity by strictly bifurcating deterministic risk scoring from generative investigation, constraining the LLM within structured evidence bundles, and deploying automated heuristic citation validators to audit outputs and detect hallucinations.
-4. The prototype is fully engineered, backed by 81 passing unit tests, and live on Streamlit Community Cloud.
+4. The prototype is fully engineered, backed by 81 passing unit tests, and live on GitHub Pages (`https://daipayanghosal.github.io/VulnInvestigator/`).
 
 ## 7.2 Fulfillment of Research Objectives
 
@@ -976,7 +976,7 @@ All five objectives defined in the BITS Pilani Dissertation Outline (S1-26_CSIWZ
 * ✅ **Objective 2 (Contextual Engine)**: Deterministic 4-pillar risk formula formulated, clamped, and banded.
 * ✅ **Objective 3 (Threat Correlator)**: 12 enterprise assets and SIEM log telemetry simulator mapped to ATT&CK tactics.
 * ✅ **Objective 4 (GenAI Integration)**: Gemini LLM client deployed with strict prompt boundaries and citation validation.
-* ✅ **Objective 5 (Empirical Evaluation)**: Evaluated on 8,328 CVEs with Kendall's $\tau$, nDCG, citation rate metrics, and cloud deployment.
+* ✅ **Objective 5 (Empirical Evaluation)**: Evaluated on 8,328 CVEs with Kendall's $\tau$, nDCG, citation rate metrics, and GitHub Pages deployment.
 
 ## 7.3 Future Research Directions
 

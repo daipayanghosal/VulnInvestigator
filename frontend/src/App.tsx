@@ -126,7 +126,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] dark:bg-[#000000] text-[#1D1D1F] dark:text-[#F5F5F7] font-sans antialiased transition-colors flex flex-col selection:bg-[#0071E3]/20 selection:text-[#0071E3]">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0a0a0f] text-black dark:text-neutral-100 font-sans antialiased transition-colors flex flex-col selection:bg-[#FFE600] selection:text-black">
       <Navbar
         activePage={activePage}
         onPageChange={(page) => {
@@ -141,7 +141,7 @@ export const App: React.FC = () => {
         hasApiKey={hasApiKey}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-6">
         {activePage === 'overview' && (
           <OverviewPage
             vulnerabilities={vulnerabilities}
@@ -189,15 +189,25 @@ export const App: React.FC = () => {
         {activePage === 'evaluation' && <EvaluationPage />}
       </main>
 
-      <footer className="mt-auto border-t border-black/5 dark:border-white/10 bg-white/50 dark:bg-[#1C1C1E]/50 backdrop-blur-md py-6 text-xs text-[#86868B] dark:text-[#A1A1A6]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <div>
-            <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">VulnInvestigator</span>
-            <span className="mx-2">&bull;</span>
-            <span>Contextual Threat Intelligence &amp; Prioritization</span>
+      <footer className="mt-auto border-t-4 border-black dark:border-white bg-[#FFE600] text-black font-mono py-4 px-4 sm:px-8">
+        <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-xs font-bold">
+          <div className="flex items-center space-x-2 flex-wrap justify-center sm:justify-start">
+            <span className="px-1.5 py-0.5 bg-black text-white border border-black">[VI]</span>
+            <span className="uppercase tracking-wider">VulnInvestigator</span>
+            <span>&bull;</span>
+            <span className="text-black/80">Contextual Threat Prioritization &amp; Verifiable Telemetry</span>
           </div>
-          <div>
-            <span>Developed by Daipayan Ghosal</span>
+          <div className="flex items-center space-x-3 text-[11px]">
+            <span>ENGINEERED BY <strong className="underline">DAIPAYAN GHOSAL</strong></span>
+            <span>&bull;</span>
+            <a
+              href="https://daipayanghosal.github.io/VulnInvestigator/"
+              target="_blank"
+              rel="noreferrer"
+              className="neo-btn px-2 py-0.5 border-2 border-black bg-white text-black hover:bg-neutral-100 uppercase"
+            >
+              GitHub Live Demo
+            </a>
           </div>
         </div>
       </footer>

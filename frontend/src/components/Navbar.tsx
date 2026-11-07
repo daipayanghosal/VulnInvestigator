@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Activity,
-  BarChart3,
-  Key,
-  LayoutDashboard,
-  Monitor,
-  Moon,
-  Plus,
-  Search,
-  Sparkles,
-  Sun,
-} from 'lucide-react';
+  RiBarChartBoxLine,
+  RiDashboardLine,
+  RiGithubFill,
+  RiPulseLine,
+  RiSearchEyeLine,
+  RiShieldFlashLine,
+  RiTerminalBoxLine,
+} from 'react-icons/ri';
+import {
+  FiCheck,
+  FiKey,
+  FiMenu,
+  FiMonitor,
+  FiMoon,
+  FiPlus,
+  FiSun,
+  FiX,
+} from 'react-icons/fi';
+import { Badge } from './common/Badge';
 
 export type ActivePage = 'overview' | 'rankings' | 'investigation' | 'ai_assistant' | 'evaluation';
 export type ThemeMode = 'light' | 'dark' | 'system';
@@ -36,176 +44,226 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCustomCveModal,
   hasApiKey,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const navItems = [
-    { id: 'overview' as ActivePage, label: 'Overview', icon: LayoutDashboard },
-    { id: 'rankings' as ActivePage, label: 'Rankings', icon: BarChart3 },
-    { id: 'investigation' as ActivePage, label: 'Investigation', icon: Search },
-    { id: 'ai_assistant' as ActivePage, label: 'AI Assistant', icon: Sparkles },
-    { id: 'evaluation' as ActivePage, label: 'Evaluation', icon: Activity },
+    { id: 'overview' as ActivePage, label: 'Overview', icon: RiDashboardLine, accent: 'bg-[#FFE600]' },
+    { id: 'rankings' as ActivePage, label: 'Rankings', icon: RiBarChartBoxLine, accent: 'bg-[#00F0FF]' },
+    { id: 'investigation' as ActivePage, label: 'Investigation', icon: RiSearchEyeLine, accent: 'bg-[#B8FF00]' },
+    { id: 'ai_assistant' as ActivePage, label: 'Telemetry Forensics', icon: RiTerminalBoxLine, accent: 'bg-[#A78BFA]' },
+    { id: 'evaluation' as ActivePage, label: 'Evaluation', icon: RiPulseLine, accent: 'bg-[#FF5376]' },
   ];
 
+  const handleNavClick = (page: ActivePage) => {
+    onPageChange(page);
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/75 dark:bg-[#1c1c1e]/75 border-b border-black/5 dark:border-white/10 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        {/* Brand / Logo */}
+    <header className="sticky top-0 z-50 w-full bg-[#F7F6F2] dark:bg-[#0E0E11] border-b-2 sm:border-b-[3px] border-black dark:border-white transition-colors">
+      {/* Top Banner Ribbon */}
+      <div className="bg-[#FFE600] text-black border-b-2 border-black px-4 py-1 text-[11px] font-mono font-bold flex items-center justify-between overflow-x-auto whitespace-nowrap">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0071E3] to-[#0051A8] flex items-center justify-center text-white shadow-sm">
-            <Search className="w-4 h-4" />
+          <span className="bg-black text-[#FFE600] px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
+            EVIDENCE-GROUNDED CTI
+          </span>
+          <span className="hidden sm:inline">
+            DISSERTATION DEFENSE WORKBENCH // CSIW ZG628T // BITS PILANI &amp; WIPRO
+          </span>
+          <span className="sm:hidden">BITS PILANI // WIPRO</span>
+        </div>
+        <div className="flex items-center space-x-3 text-[10px]">
+          <span className="hidden md:inline">8,328 CVES INGESTED</span>
+          <span>•</span>
+          <span className="text-rose-900 font-extrabold">1,350 CISA KEVS</span>
+          <span>•</span>
+          <span className="text-emerald-900 font-extrabold">94.0% GROUNDED</span>
+        </div>
+      </div>
+
+      {/* Main Nav Bar */}
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+        {/* Brand / Logo */}
+        <div
+          onClick={() => handleNavClick('overview')}
+          className="flex items-center space-x-2.5 cursor-pointer select-none group"
+        >
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#FFE600] border-2 border-black dark:border-white flex items-center justify-center font-mono font-black text-black text-base neo-shadow-sm group-hover:-translate-y-0.5 transition-transform">
+            VI
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-semibold text-sm tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
+              <span className="font-mono font-extrabold text-sm sm:text-base tracking-tight text-black dark:text-white uppercase">
                 VulnInvestigator
               </span>
-              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-neutral-600 dark:text-neutral-300 tracking-wider">
-                Evidence AI
+              <span className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono font-extrabold bg-[#B8FF00] text-black border border-black uppercase tracking-wider">
+                PROD
               </span>
             </div>
-            <span className="hidden sm:block text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-              Contextual Risk &amp; Threat Intelligence
-            </span>
+            <div className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400 hidden sm:block tracking-wide">
+              Contextual Risk &amp; Threat Telemetry
+            </div>
           </div>
         </div>
 
-        {/* Apple-style Segmented Navigation Pills */}
-        <nav className="hidden md:flex items-center p-1 rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.04] dark:border-white/[0.06]">
+        {/* Desktop Navigation Segmented Buttons */}
+        <nav className="hidden lg:flex items-center p-1 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] neo-shadow-sm gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePage === item.id;
             return (
               <button
                 key={item.id}
-                onClick={() => onPageChange(item.id)}
-                className={`flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                type="button"
+                onClick={() => handleNavClick(item.id)}
+                className={`neo-btn flex items-center space-x-1.5 px-3 py-1.5 text-xs font-mono font-bold tracking-tight select-none border-2 transition-all ${
                   isActive
-                    ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-sm'
-                    : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+                    ? `border-black dark:border-white ${item.accent} text-black neo-shadow-sm`
+                    : 'border-transparent text-neutral-700 dark:text-neutral-300 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#0071E3]' : ''}`} />
+                <Icon className="w-3.5 h-3.5 shrink-0" />
                 <span>{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Right Action Icons & Controls */}
-        <div className="flex items-center space-x-2">
-          {/* Custom CVE Ingest Action */}
+        {/* Right Action Controls */}
+        <div className="flex items-center space-x-1.5 sm:space-x-2">
+          {/* Custom CVE Ingest Action Button */}
           <button
+            type="button"
             onClick={onOpenCustomCveModal}
-            className="flex items-center space-x-1 px-2.5 py-1 text-xs font-medium rounded-full bg-black/[0.04] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-[#1D1D1F] dark:text-[#F5F5F7] border border-black/[0.04] dark:border-white/[0.06] transition-colors"
-            title="Ingest custom or unlisted CVE"
+            className="neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold bg-[#00F0FF] text-black border-2 border-black dark:border-white neo-shadow-sm hover:bg-[#38F4FF]"
+            title="Ingest custom or unlisted CVE into risk engine"
           >
-            <Plus className="w-3.5 h-3.5 text-[#0071E3]" />
-            <span className="hidden lg:inline">Add CVE</span>
+            <FiPlus className="w-3.5 h-3.5 stroke-[3]" />
+            <span className="hidden sm:inline">INGEST CVE</span>
+            <span className="sm:hidden">CVE</span>
           </button>
 
-          {/* Gemini API Key Indicator */}
+          {/* Gemini API Key Status Button */}
           <button
+            type="button"
             onClick={onOpenKeyModal}
-            className={`flex items-center space-x-1 px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
+            className={`neo-btn flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 text-xs font-mono font-bold border-2 border-black dark:border-white neo-shadow-sm ${
               hasApiKey
-                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/15'
-                : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/15'
+                ? 'bg-[#B8FF00] text-black hover:bg-[#C9FF38]'
+                : 'bg-white dark:bg-[#1C1C21] text-black dark:text-white hover:bg-neutral-100'
             }`}
-            title="Configure Google Gemini API Key"
+            title={hasApiKey ? 'Gemini API Key Configured' : 'Configure Gemini API Key'}
           >
-            <Key className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">
-              {hasApiKey ? 'Gemini Ready' : 'Set Gemini Key'}
+            <FiKey className="w-3 h-3 stroke-[2.5]" />
+            <span className="hidden md:inline">
+              {hasApiKey ? 'API READY' : 'SET KEY'}
             </span>
+            {hasApiKey && (
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 inline-block animate-pulse" />
+            )}
           </button>
 
-          {/* 3-State Theme Toggle (Light / Dark / System) */}
-          <div
-            className="flex items-center p-0.5 rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/10 dark:border-white/10"
-            role="group"
-            aria-label="Theme appearance switcher"
-          >
+          {/* 3-Way Theme Toggle: Light, Dark, System */}
+          <div className="flex items-center border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] p-0.5 neo-shadow-sm">
             <button
+              type="button"
               onClick={() => onThemeModeChange('light')}
-              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+              className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'light'
-                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
-                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
-              title="Force Light Theme"
-              aria-pressed={themeMode === 'light'}
+              title="Light Mode"
             >
-              <Sun className={`w-3.5 h-3.5 ${themeMode === 'light' ? 'text-amber-500' : ''}`} />
-              <span className="hidden sm:inline text-[11px]">Light</span>
+              <FiSun className="w-3.5 h-3.5" />
             </button>
-
             <button
+              type="button"
               onClick={() => onThemeModeChange('dark')}
-              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+              className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'dark'
-                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
-                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
-              title="Force Dark Theme"
-              aria-pressed={themeMode === 'dark'}
+              title="Dark Mode"
             >
-              <Moon className={`w-3.5 h-3.5 ${themeMode === 'dark' ? 'text-[#0071E3]' : ''}`} />
-              <span className="hidden sm:inline text-[11px]">Dark</span>
+              <FiMoon className="w-3.5 h-3.5" />
             </button>
-
             <button
+              type="button"
               onClick={() => onThemeModeChange('system')}
-              className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+              className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'system'
-                  ? 'bg-white dark:bg-[#2C2C2E] text-[#1D1D1F] dark:text-[#F5F5F7] shadow-xs font-semibold'
-                  : 'text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
+                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
-              title={`Match System Appearance (${isDark ? 'Dark' : 'Light'})`}
-              aria-pressed={themeMode === 'system'}
+              title="System Theme"
             >
-              <Monitor className={`w-3.5 h-3.5 ${themeMode === 'system' ? 'text-emerald-500 dark:text-emerald-400' : ''}`} />
-              <span className="hidden sm:inline text-[11px]">System</span>
+              <FiMonitor className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* GitHub Repo */}
+          {/* GitHub Link */}
           <a
             href="https://github.com/daipayanghosal/VulnInvestigator"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#86868B] dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7] hover:bg-black/[0.04] dark:hover:bg-white/[0.08] transition-colors"
-            aria-label="GitHub Repository"
+            className="neo-btn p-1.5 sm:p-2 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] text-black dark:text-white neo-shadow-sm hover:bg-neutral-100 hidden sm:flex items-center justify-center"
+            title="View Source on GitHub"
           >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-              />
-            </svg>
+            <RiGithubFill className="w-4 h-4" />
           </a>
+
+          {/* Mobile Menu Hamburger */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden neo-btn p-1.5 border-2 border-black dark:border-white bg-white dark:bg-[#1A1A20] text-black dark:text-white neo-shadow-sm"
+            aria-label="Toggle Navigation"
+          >
+            {mobileMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Bar */}
-      <div className="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-black/[0.04] dark:border-white/[0.06] bg-black/[0.01] dark:bg-white/[0.02]">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activePage === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onPageChange(item.id)}
-              className={`flex flex-col items-center py-1 px-2 text-[10px] font-medium transition-colors ${
-                isActive
-                  ? 'text-[#0071E3]'
-                  : 'text-[#86868B] dark:text-[#A1A1A6]'
-              }`}
+      {/* Mobile Navigation Dropdown Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t-2 border-black dark:border-white bg-[#F7F6F2] dark:bg-[#0E0E11] p-3 space-y-2 animate-in slide-in-from-top-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activePage === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleNavClick(item.id)}
+                  className={`neo-btn flex items-center space-x-2 px-3 py-2 text-xs font-mono font-bold tracking-tight border-2 border-black dark:border-white ${
+                    isActive
+                      ? `${item.accent} text-black neo-shadow-sm`
+                      : 'bg-white dark:bg-[#1A1A20] text-black dark:text-white'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="pt-2 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono">
+            <span className="text-neutral-600 dark:text-neutral-400">GitHub Source Code</span>
+            <a
+              href="https://github.com/daipayanghosal/VulnInvestigator"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold underline text-black dark:text-white flex items-center space-x-1"
             >
-              <Icon className="w-4 h-4 mb-0.5" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
+              <span>Repo</span>
+              <RiGithubFill className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

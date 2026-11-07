@@ -1,34 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  AlertCircle,
-  AlertTriangle,
-  ArrowRight,
-  Check,
-  CheckCircle2,
-  Code2,
-  Compass,
-  Crosshair,
-  Database,
-  ExternalLink,
-  FileText,
-  Flame,
-  Globe,
-  Layers,
-  Loader2,
-  Plus,
-  RefreshCw,
-  Search,
-  Server,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  Terminal,
-} from 'lucide-react';
-import { HeroScoreboard } from '../components/HeroScoreboard';
+  FiAlertCircle,
+  FiArrowRight,
+  FiCheckCircle,
+  FiCrosshair,
+  FiDatabase,
+  FiFileText,
+  FiGlobe,
+  FiLayers,
+  FiLoader,
+  FiPlus,
+  FiSearch,
+  FiServer,
+  FiShield,
+  FiSliders,
+  FiTerminal,
+} from 'react-icons/fi';
+import { RiShieldFlashLine, RiTerminalBoxLine } from 'react-icons/ri';
+import { Badge } from '../components/common/Badge';
+import { Button } from '../components/common/Button';
+import { Panel } from '../components/common/Panel';
 import { ExecutiveGuide } from '../components/ExecutiveGuide';
+import { HeroScoreboard } from '../components/HeroScoreboard';
 import { VulnerabilityPropagationMap } from '../components/VulnerabilityPropagationMap';
 import { Asset, RiskBand, SecurityLog, Severity, Technique, Vulnerability } from '../types';
 import { calculateFactorBreakdown, getRiskBand } from '../utils/scoring';
@@ -48,10 +41,10 @@ interface InvestigationPageProps {
 const PRESET_BENCHMARKS = [
   { id: 'CVE-2021-44228', name: 'Log4Shell', cvss: 10.0, assetId: 'SRV-WEB-001', kev: true },
   { id: 'CVE-2023-4966', name: 'Citrix Bleed', cvss: 9.4, assetId: 'SRV-VPN-001', kev: true },
-  { id: 'CVE-2024-3400', name: 'PAN-OS Command Injection', cvss: 10.0, assetId: 'SRV-VPN-001', kev: true },
+  { id: 'CVE-2024-3400', name: 'PAN-OS Injection', cvss: 10.0, assetId: 'SRV-VPN-001', kev: true },
   { id: 'CVE-2023-3519', name: 'Citrix ADC RCE', cvss: 9.8, assetId: 'SRV-VPN-001', kev: true },
   { id: 'CVE-2020-1938', name: 'Tomcat Ghostcat', cvss: 9.8, assetId: 'SRV-WEB-001', kev: true },
-  { id: 'CVE-2024-21762', name: 'Fortinet Out-of-Bounds', cvss: 9.8, assetId: 'SRV-VPN-001', kev: true },
+  { id: 'CVE-2024-21762', name: 'Fortinet OOB', cvss: 9.8, assetId: 'SRV-VPN-001', kev: true },
 ];
 
 export const InvestigationPage: React.FC<InvestigationPageProps> = ({
@@ -108,7 +101,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
     );
   }, [vulnerabilities, selectedCveId]);
 
-  // Find matched asset (prioritizing user override, then vuln's matched asset, then default)
+  // Find matched asset
   const activeAsset = useMemo(() => {
     const targetId = selectedAssetOverride || activeVuln.matched_asset_id;
     return (
@@ -119,7 +112,6 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   }, [assets, activeVuln, selectedAssetOverride]);
 
   useEffect(() => {
-    // Synchronize fine-tuning drawer and reset any manual override when a new CVE is chosen
     setSelectedAssetOverride(null);
     setOverrideCvss(activeVuln.cvss_score);
     setOverrideInKev(activeVuln.in_kev);
@@ -164,7 +156,6 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       setSelectedAssetOverride(explicitAssetId);
     }
 
-    // 1. Check if already present in loaded corpus
     const existing = vulnerabilities.find((v) => v.cve_id === formattedCve);
     if (existing) {
       if (explicitAssetId) {
@@ -185,7 +176,6 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       return;
     }
 
-    // 2. Custom CVE not in local list -> Ingest on the fly
     setIsAnalyzing(true);
     setStatusFeedback({
       type: 'info',
@@ -198,7 +188,6 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       let fetchedDesc = `Custom security investigation target for ${formattedCve}. Requires immediate triage and telemetry correlation.`;
       let fetchedProducts = 'Enterprise Network Software';
 
-      // Live NIST NVD API v2 attempt
       try {
         const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${formattedCve}`);
         if (res.ok) {
@@ -220,7 +209,6 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
         console.warn('NVD live query fallback:', nvdErr);
       }
 
-      // Auto-correlate with asset based on keywords
       let targetAssetId = explicitAssetId || overrideAssetId;
       if (!explicitAssetId) {
         const descLower = (fetchedDesc + ' ' + fetchedProducts).toLowerCase();
@@ -289,266 +277,267 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-in fade-in duration-150 font-mono">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
-          Threat Investigation &amp; Evidence Correlation
-        </h1>
-        <p className="text-xs sm:text-sm text-[#86868B] dark:text-[#A1A1A6] mt-1">
-          Input any CVE to synthesize vulnerability mechanics with organizational coordinates, 2D plotted attack vectors, and SIEM security logs.
-        </p>
+      <div className="border-b-2 sm:border-b-[3px] border-black dark:border-white pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
+        <div>
+          <div className="flex items-center space-x-2 flex-wrap gap-y-1 mb-1">
+            <span className="font-bold text-xs uppercase bg-[#B8FF00] text-black px-2 py-0.5 border border-black neo-shadow-sm">
+              FORENSICS WORKBENCH
+            </span>
+            <span className="text-xs text-neutral-500">// VULNERABILITY TO THREAT INVESTIGATION</span>
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-black dark:text-white uppercase">
+            Threat Investigation &amp; Telemetry Correlation
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
+            Synthesize vulnerability mechanics with organizational coordinates, 2D plotted attack vectors, and SIEM security logs.
+          </p>
+        </div>
+
+        <Button
+          variant="primary"
+          size="md"
+          icon={<RiTerminalBoxLine className="w-4 h-4" />}
+          onClick={() => onRunAiInvestigation(activeVuln.cve_id)}
+        >
+          GENERATE EVIDENCE DOSSIER
+        </Button>
       </div>
 
       {/* Non-Technical Guide */}
-      <ExecutiveGuide title="Executive Guide: How Threat Investigation &amp; Evidence Correlation Works">
-        <div className="space-y-3">
-          <p className="text-neutral-600 dark:text-neutral-300">
-            Traditional vulnerability reports present isolated CVE numbers. This module reconstructs a <strong>complete digital threat scenario</strong> by integrating four indispensable puzzle pieces:
+      <ExecutiveGuide title="Evaluator Guide: Understanding Full-Chain Threat Investigation">
+        <div className="space-y-3 font-sans">
+          <p className="text-neutral-700 dark:text-neutral-300">
+            Traditional vulnerability reports present isolated CVE numbers. This workbench reconstructs a <strong>complete digital threat scenario</strong> by fusing four indispensable data streams:
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">1. Flaw Profile</span>
-              <p className="text-[11px] text-neutral-500 mt-1">
-                Vendor-rated technical vulnerability mechanics and affected libraries.
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
+            <div className="p-3 border-2 border-black dark:border-white bg-[#FFFBEB] dark:bg-[#1E1B13] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-white block uppercase">1. Flaw Profile</span>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
+                Vendor-rated technical vulnerability mechanics, CVSS vector &amp; affected CPE libraries.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">2. Target System</span>
-              <p className="text-[11px] text-neutral-500 mt-1">
-                Specific enterprise machine hosting that component, its network IP, and perimeter exposure.
+            <div className="p-3 border-2 border-black dark:border-white bg-[#EFF6FF] dark:bg-[#111928] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-white block uppercase">2. Target Host</span>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
+                Specific enterprise node hosting the service, network IP, and perimeter exposure tier.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">3. MITRE ATT&amp;CK</span>
-              <p className="text-[11px] text-neutral-500 mt-1">
-                Standard adversary tactics and techniques used to weaponize this weakness.
+            <div className="p-3 border-2 border-black dark:border-white bg-[#FEF2F2] dark:bg-[#221516] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-white block uppercase">3. MITRE ATT&amp;CK</span>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
+                Standard adversary tactics and techniques used to weaponize this weakness in campaigns.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">4. SIEM Telemetry</span>
-              <p className="text-[11px] text-neutral-500 mt-1">
-                Security log events showing whether suspicious traffic has touched the host.
+            <div className="p-3 border-2 border-black dark:border-white bg-[#ECFDF5] dark:bg-[#102319] neo-shadow-sm">
+              <span className="font-bold text-black dark:text-white block uppercase">4. SIEM Telemetry</span>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
+                Live security log events confirming whether suspicious probes or exploits touched the host.
               </p>
             </div>
           </div>
         </div>
       </ExecutiveGuide>
 
-      {/* ───────────────────────────────────────────────────────────── */}
-      {/* CORE CVE INVESTIGATION & CUSTOM INGESTION ENGINE               */}
-      {/* ───────────────────────────────────────────────────────────── */}
-      <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center space-x-2">
-            <Crosshair className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Investigate Target CVE
-            </h3>
+      {/* Target Command Center & Ingestion Toolbar */}
+      <Panel
+        title="Target Investigation Command Center"
+        subtitle="Input any CVE ID or select curated corporate benchmark"
+        icon={<FiCrosshair className="w-4 h-4 text-black" />}
+        accent="yellow"
+      >
+        <div className="space-y-4">
+          {/* Command Input Bar */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAnalyzeCve();
+            }}
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
+          >
+            <div className="relative flex-1">
+              <FiSearch className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={cveInput}
+                onChange={(e) => setCveInput(e.target.value.toUpperCase())}
+                placeholder="ENTER CVE ID (e.g. CVE-2024-3400, CVE-2023-3519, CVE-2021-44228)..."
+                className="w-full pl-9 pr-3 py-2.5 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#1A1A22]"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Button
+                type="submit"
+                variant="primary"
+                size="md"
+                disabled={isAnalyzing}
+                isLoading={isAnalyzing}
+                icon={<FiSearch className="w-3.5 h-3.5 stroke-[3]" />}
+              >
+                ANALYZE &amp; CORRELATE
+              </Button>
+
+              <button
+                type="button"
+                onClick={() => setShowTuning(!showTuning)}
+                className={`neo-btn p-2.5 border-2 border-black dark:border-white font-bold text-xs ${
+                  showTuning
+                    ? 'bg-[#FFE600] text-black neo-shadow-sm'
+                    : 'bg-white dark:bg-black text-black dark:text-white hover:bg-neutral-100'
+                }`}
+                title="Fine-Tune Context &amp; Simulation Parameters"
+              >
+                <FiSliders className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
+
+          {/* Context & Parameter Fine-Tuning Drawer */}
+          {showTuning && (
+            <div className="p-3.5 sm:p-4 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs neo-shadow-sm">
+              <div>
+                <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
+                  Target Enterprise Host Override
+                </label>
+                <select
+                  value={activeAsset.asset_id}
+                  onChange={(e) => {
+                    setOverrideAssetId(e.target.value);
+                    setSelectedAssetOverride(e.target.value);
+                  }}
+                  className="w-full px-2.5 py-1.5 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold"
+                >
+                  {assets.map((a) => (
+                    <option key={a.asset_id} value={a.asset_id}>
+                      {a.hostname} [{a.asset_id}] &bull; Tier {a.criticality.toUpperCase()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
+                  CVSS v3.1 Base Score: <span className="bg-[#FFE600] text-black px-1.5 py-0.2 border border-black">{overrideCvss.toFixed(1)}</span>
+                </label>
+                <input
+                  type="range"
+                  min="1.0"
+                  max="10.0"
+                  step="0.1"
+                  value={overrideCvss}
+                  onChange={(e) => setOverrideCvss(parseFloat(e.target.value))}
+                  className="w-full accent-black dark:accent-white cursor-pointer mt-1"
+                />
+              </div>
+
+              <div className="flex flex-col justify-center">
+                <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
+                  CISA KEV Wild Exploitation Flag
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setOverrideInKev(!overrideInKev)}
+                  className={`neo-btn py-1.5 px-3 border-2 border-black dark:border-white font-bold text-xs ${
+                    overrideInKev
+                      ? 'bg-[#FF5376] text-white neo-shadow-sm'
+                      : 'bg-white dark:bg-black text-black dark:text-white'
+                  }`}
+                >
+                  {overrideInKev ? 'WEAPONIZED IN WILD (+0.30)' : 'NO EXPLOIT IN WILD (0.0)'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Benchmark Presets Row */}
+          <div className="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 mr-1">
+              Curated Benchmarks:
+            </span>
+            {PRESET_BENCHMARKS.map((preset) => {
+              const isActive = activeVuln.cve_id === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => handleAnalyzeCve(preset.id, preset.assetId)}
+                  className={`neo-btn px-2.5 py-1 border-2 border-black dark:border-white text-xs font-bold transition-all ${
+                    isActive
+                      ? 'bg-[#FFE600] text-black neo-shadow-sm'
+                      : 'bg-white dark:bg-black text-black dark:text-white hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26]'
+                  }`}
+                >
+                  <span>{preset.name}</span>
+                  <span className="text-[10px] opacity-75 ml-1">({preset.id})</span>
+                </button>
+              );
+            })}
           </div>
-          <span className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            Enter any CVE ID &bull; Instant multi-factor risk synthesis &amp; architecture plotting
-          </span>
-        </div>
 
-        {/* Apple-style Command Input Bar */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleAnalyzeCve();
-          }}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
-        >
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={cveInput}
-              onChange={(e) => setCveInput(e.target.value.toUpperCase())}
-              placeholder="Enter CVE ID to investigate (e.g. CVE-2024-3400, CVE-2023-3519, CVE-2021-44228)..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/10 dark:border-white/10 text-xs font-mono font-medium text-[#1D1D1F] dark:text-[#F5F5F7] placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0071E3] transition-all"
-            />
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-2">
-            <button
-              type="submit"
-              disabled={isAnalyzing}
-              className="px-5 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-xs flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-50 shrink-0"
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Analyzing...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Analyze &amp; Investigate</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowTuning(!showTuning)}
-              className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                showTuning
-                  ? 'bg-black/10 dark:bg-white/15 border-black/20 dark:border-white/20 text-[#0071E3]'
-                  : 'bg-black/[0.04] dark:bg-white/[0.08] border-black/10 dark:border-white/10 text-neutral-600 dark:text-neutral-300 hover:bg-black/[0.08] dark:hover:bg-white/[0.12]'
+          {/* Feedback Banner */}
+          {statusFeedback && (
+            <div
+              className={`p-3 border-2 border-black text-xs font-bold flex items-center space-x-2 neo-shadow-sm ${
+                statusFeedback.type === 'success'
+                  ? 'bg-[#B8FF00] text-black'
+                  : statusFeedback.type === 'info'
+                  ? 'bg-[#00F0FF] text-black'
+                  : 'bg-[#FF5376] text-white'
               }`}
-              title="Fine-Tune Context & Asset Mapping"
             >
-              <Sliders className="w-4 h-4" />
-            </button>
-          </div>
-        </form>
+              {statusFeedback.type === 'success' ? (
+                <FiCheckCircle className="w-4 h-4 shrink-0" />
+              ) : statusFeedback.type === 'info' ? (
+                <FiLoader className="w-4 h-4 shrink-0 animate-spin" />
+              ) : (
+                <FiAlertCircle className="w-4 h-4 shrink-0" />
+              )}
+              <span>{statusFeedback.text}</span>
+            </div>
+          )}
 
-        {/* Collapsible Context & Parameter Fine-Tuning Drawer */}
-        {showTuning && (
-          <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/8 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div>
-              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
-                Target Enterprise Asset
-              </label>
+          {/* Active Target Banner */}
+          <div className="p-3 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs neo-shadow-sm">
+            <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+              <span className="font-bold text-neutral-500 uppercase">
+                Active Target:
+              </span>
+              <span className="font-black text-black dark:text-white px-2 py-0.5 bg-[#FFE600] text-black border border-black text-sm">
+                {activeVuln.cve_id}
+              </span>
+              <Badge color="yellow" size="xs">
+                Score: {breakdown.total_score.toFixed(3)}
+              </Badge>
+              {activeVuln.in_kev && (
+                <Badge color="pink" size="xs" dot>
+                  CISA KEV ACTIVE
+                </Badge>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <FiServer className="w-3.5 h-3.5 text-black dark:text-white shrink-0" />
+              <span className="font-bold text-neutral-600 dark:text-neutral-400 shrink-0">
+                Target Host:
+              </span>
               <select
                 value={activeAsset.asset_id}
-                onChange={(e) => {
-                  setOverrideAssetId(e.target.value);
-                  setSelectedAssetOverride(e.target.value);
-                }}
-                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/10 text-xs font-mono font-semibold"
+                onChange={(e) => setSelectedAssetOverride(e.target.value)}
+                className="px-2.5 py-1 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white text-xs font-bold neo-shadow-sm focus:outline-none cursor-pointer"
+                title="Switch target enterprise host to test contextual risk impact"
               >
                 {assets.map((a) => (
                   <option key={a.asset_id} value={a.asset_id}>
-                    {a.hostname} ({a.asset_id} - {a.criticality.toUpperCase()})
+                    {a.hostname} [{a.asset_id}] &bull; Tier {a.criticality.toUpperCase()} &bull; Zone: {a.exposure.toUpperCase()}
                   </option>
                 ))}
               </select>
             </div>
-
-            <div>
-              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
-                CVSS v3.1 Baseline Score ({overrideCvss})
-              </label>
-              <input
-                type="range"
-                min="1.0"
-                max="10.0"
-                step="0.1"
-                value={overrideCvss}
-                onChange={(e) => setOverrideCvss(parseFloat(e.target.value))}
-                className="w-full accent-[#0071E3]"
-              />
-            </div>
-
-            <div className="flex flex-col justify-center">
-              <label className="text-[10px] font-semibold uppercase text-neutral-500 block mb-1">
-                CISA KEV Wild Exploitation
-              </label>
-              <label className="flex items-center space-x-2 cursor-pointer mt-1">
-                <input
-                  type="checkbox"
-                  checked={overrideInKev}
-                  onChange={(e) => setOverrideInKev(e.target.checked)}
-                  className="rounded text-[#0071E3] focus:ring-0"
-                />
-                <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                  Actively Exploited (KEV Listed)
-                </span>
-              </label>
-            </div>
-          </div>
-        )}
-
-        {/* Quick Benchmark Presets Row */}
-        <div className="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] mr-1">
-            Quick Benchmarks:
-          </span>
-          {PRESET_BENCHMARKS.map((preset) => {
-            const isActive = activeVuln.cve_id === preset.id;
-            return (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() => handleAnalyzeCve(preset.id, preset.assetId)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center space-x-1 border ${
-                  isActive
-                    ? 'bg-[#0071E3] text-white border-[#0071E3] shadow-xs'
-                    : 'bg-black/[0.03] dark:bg-white/[0.05] hover:bg-black/[0.07] dark:hover:bg-white/[0.1] text-neutral-700 dark:text-neutral-300 border-black/5 dark:border-white/10'
-                }`}
-              >
-                <span>{preset.name}</span>
-                <span className="font-mono text-[10px] opacity-75">({preset.id})</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Feedback / Notification Banner */}
-        {statusFeedback && (
-          <div
-            className={`p-3 rounded-xl border text-xs flex items-center space-x-2 ${
-              statusFeedback.type === 'success'
-                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                : statusFeedback.type === 'info'
-                ? 'bg-blue-500/10 border-blue-500/20 text-blue-800 dark:text-blue-300'
-                : 'bg-red-500/10 border-red-500/20 text-red-800 dark:text-red-300'
-            }`}
-          >
-            {statusFeedback.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-            ) : statusFeedback.type === 'info' ? (
-              <Loader2 className="w-4 h-4 shrink-0 animate-spin text-[#0071E3]" />
-            ) : (
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
-            )}
-            <span>{statusFeedback.text}</span>
-          </div>
-        )}
-
-        {/* Active Target Banner — Shows Active CVE and interactive Host Switcher */}
-        <div className="p-4 rounded-2xl bg-[#0071E3]/5 dark:bg-[#0071E3]/10 border border-[#0071E3]/20 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-neutral-500 dark:text-neutral-400">
-              Active Investigation:
-            </span>
-            <span className="font-mono font-bold text-sm text-[#0071E3] dark:text-[#389BF2]">
-              {activeVuln.cve_id}
-            </span>
-            <span className="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 font-mono text-[11px] font-semibold text-neutral-700 dark:text-neutral-300">
-              Risk: {breakdown.total_score.toFixed(3)} ({getRiskBand(breakdown.total_score)})
-            </span>
-            {activeVuln.in_kev && (
-              <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[10px]">
-                CISA KEV Listed
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Server className="w-3.5 h-3.5 text-[#0071E3] shrink-0" />
-            <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 shrink-0">
-              Target Host:
-            </span>
-            <select
-              value={activeAsset.asset_id}
-              onChange={(e) => setSelectedAssetOverride(e.target.value)}
-              className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/15 text-xs font-mono font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#0071E3] cursor-pointer"
-              title="Switch target enterprise host to test contextual risk impact"
-            >
-              {assets.map((a) => (
-                <option key={a.asset_id} value={a.asset_id}>
-                  {a.hostname} ({a.asset_id} • {a.criticality.toUpperCase()} • {a.exposure.replace('_', ' ').toUpperCase()})
-                </option>
-              ))}
-            </select>
           </div>
         </div>
-      </div>
+      </Panel>
 
       {/* Hero Scoreboard Component */}
       <HeroScoreboard vuln={activeVuln} asset={activeAsset} breakdown={breakdown} />
@@ -562,207 +551,184 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       />
 
       {/* Two-Column Details: Vulnerability Mechanics vs. Target Asset Coordinates */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Left Card: Vulnerability Profile */}
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-3">
-          <div className="flex items-center space-x-2 pb-2 border-b border-black/5 dark:border-white/5">
-            <FileText className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Vulnerability Details &amp; Mechanics
-            </h3>
-          </div>
-
-          <div className="space-y-2 text-xs">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* Left Panel: Vulnerability Profile */}
+        <Panel
+          title="Vulnerability Technical Profile"
+          subtitle="NIST NVD specifications &amp; CVSS vector breakdown"
+          icon={<FiFileText className="w-4 h-4 text-black dark:text-white" />}
+          accent="zinc"
+        >
+          <div className="space-y-3 text-xs">
             <div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-0.5">
-                Description
+              <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
+                Description &amp; Weakness Mechanism
               </span>
-              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed bg-black/[0.02] dark:bg-white/[0.02] p-3 rounded-xl border border-black/5 dark:border-white/5">
+              <div className="p-3 border-2 border-black dark:border-white bg-[#FDFBF7] dark:bg-[#18181E] text-neutral-800 dark:text-neutral-200 leading-relaxed font-sans neo-shadow-sm">
                 {activeVuln.description || 'No description recorded in database.'}
-              </p>
+              </div>
             </div>
 
             {activeVuln.cvss_vector && (
               <div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-0.5">
+                <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
                   CVSS v3.1 Vector String
                 </span>
-                <code className="text-[11px] font-mono px-2 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 block overflow-x-auto">
+                <div className="p-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold overflow-x-auto text-[11px] neo-shadow-sm">
                   {activeVuln.cvss_vector}
-                </code>
+                </div>
               </div>
             )}
 
             {activeVuln.affected_products && (
               <div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] block mb-0.5">
-                  Affected Products / CPE Match
+                <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
+                  Affected Products / CPE Identifier
                 </span>
-                <code className="text-[11px] font-mono px-2 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 block truncate">
+                <div className="p-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold truncate text-[11px] neo-shadow-sm">
                   {activeVuln.affected_products}
-                </code>
+                </div>
               </div>
             )}
           </div>
-        </div>
+        </Panel>
 
-        {/* Right Card: Target Asset Environment */}
-        <div className="p-5 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-3">
-          <div className="flex items-center space-x-2 pb-2 border-b border-black/5 dark:border-white/5">
-            <Server className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Target Enterprise Asset Coordinates
-            </h3>
-          </div>
-
+        {/* Right Panel: Target Asset Coordinates */}
+        <Panel
+          title="Target Enterprise Node Coordinates"
+          subtitle="Hardware inventory, business tier &amp; perimeter zoning"
+          icon={<FiServer className="w-4 h-4 text-black dark:text-white" />}
+          accent="zinc"
+        >
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="text-[10px] uppercase font-semibold text-[#86868B] dark:text-[#A1A1A6] block">
+            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+              <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Hostname
               </span>
-              <span className="font-mono font-semibold text-sm text-[#1D1D1F] dark:text-[#F5F5F7]">
+              <span className="font-bold text-black dark:text-white text-sm">
                 {activeAsset.hostname}
               </span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="text-[10px] uppercase font-semibold text-[#86868B] dark:text-[#A1A1A6] block">
+            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+              <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Asset ID / IP
               </span>
-              <span className="font-mono font-semibold text-sm text-[#0071E3]">
+              <span className="font-bold text-black dark:text-white text-sm">
                 {activeAsset.asset_id} ({activeAsset.ip})
               </span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="text-[10px] uppercase font-semibold text-[#86868B] dark:text-[#A1A1A6] block">
+            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+              <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Criticality Tier
               </span>
-              <span className="font-semibold text-xs capitalize text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {activeAsset.criticality}
+              <span className="font-bold text-xs uppercase text-black dark:text-white">
+                Tier: {activeAsset.criticality}
               </span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
-              <span className="text-[10px] uppercase font-semibold text-[#86868B] dark:text-[#A1A1A6] block">
+            <div className="p-2.5 border-2 border-black dark:border-white bg-white dark:bg-black neo-shadow-sm">
+              <span className="uppercase font-bold text-neutral-500 block text-[10px]">
                 Network Exposure
               </span>
-              <span className="font-semibold text-xs capitalize text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {activeAsset.exposure.replace('_', '-')}
+              <span className="font-bold text-xs uppercase text-black dark:text-white">
+                Zone: {activeAsset.exposure.replace('_', '-')}
               </span>
             </div>
           </div>
 
-          <div className="text-xs space-y-1 pt-1">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868B] dark:text-[#A1A1A6] block">
+          <div className="text-xs space-y-1.5 pt-3 border-t-2 border-black/10 dark:border-white/10 mt-3">
+            <span className="font-bold uppercase text-neutral-600 dark:text-neutral-400 block">
               Operational Role &amp; Software Stack
             </span>
-            <p className="text-[11px] text-neutral-600 dark:text-neutral-400">
+            <p className="text-[11px] text-neutral-700 dark:text-neutral-300 font-sans">
               {activeAsset.notes || 'Enterprise production server system.'}
             </p>
-            <div className="flex flex-wrap gap-1 pt-1">
+            <div className="flex flex-wrap gap-1.5 pt-1">
               {Array.isArray(activeAsset.software) ? (
                 activeAsset.software.map((sw, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-[10px] font-mono text-neutral-700 dark:text-neutral-300"
-                  >
+                  <Badge key={i} color="zinc" size="xs">
                     {sw}
-                  </span>
+                  </Badge>
                 ))
               ) : (
-                <span className="text-[11px] font-mono text-neutral-600">{activeAsset.software}</span>
+                <span className="font-bold">{activeAsset.software}</span>
               )}
             </div>
           </div>
-        </div>
+        </Panel>
       </div>
 
-      {/* Correlated MITRE ATT&CK Techniques */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-3">
-        <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/5">
-          <div className="flex items-center space-x-2">
-            <Crosshair className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Correlated MITRE ATT&amp;CK Techniques
-            </h3>
-          </div>
-          <span className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            Adversary TTPs mapped to target software component
-          </span>
-        </div>
-
+      {/* Correlated MITRE ATT&CK Techniques Panel */}
+      <Panel
+        title="Correlated MITRE ATT&CK Techniques"
+        subtitle="Adversary tactics and techniques mapped to vulnerable service"
+        icon={<FiCrosshair className="w-4 h-4 text-black" />}
+        accent="cyan"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {techniques.slice(0, 4).map((tech) => (
             <div
               key={tech.id}
-              className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 space-y-1.5"
+              className="p-3 border-2 border-black dark:border-white bg-white dark:bg-[#18181E] neo-shadow-sm space-y-1.5"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono font-semibold text-xs text-[#0071E3]">
+                <span className="font-bold text-xs bg-[#00F0FF] text-black px-1.5 py-0.2 border border-black">
                   {tech.id}
                 </span>
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                <span className="text-[10px] uppercase font-bold text-neutral-500">
                   {tech.tactics}
                 </span>
               </div>
-              <h4 className="text-xs font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
+              <h4 className="font-bold text-xs text-black dark:text-white">
                 {tech.name}
               </h4>
-              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              <p className="text-[11px] text-neutral-700 dark:text-neutral-300 font-sans leading-relaxed">
                 {tech.description}
               </p>
             </div>
           ))}
         </div>
-      </div>
+      </Panel>
 
-      {/* Correlated SIEM Security Logs */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/8 dark:border-white/10 shadow-sm space-y-3">
-        <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/5">
-          <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Correlated SIEM Security Telemetry
-            </h3>
-          </div>
-          <span className="text-[11px] text-[#86868B] dark:text-[#A1A1A6]">
-            {signalLogs.length} suspicious attack events &bull; {noiseLogs.length} benign noise probes
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+      {/* Correlated SIEM Security Telemetry Terminal */}
+      <Panel
+        title="Correlated SIEM Security Telemetry Logs"
+        subtitle={`${signalLogs.length} attack events &bull; ${noiseLogs.length} benign noise probes`}
+        icon={<FiTerminal className="w-4 h-4 text-black" />}
+        accent="lime"
+        noPadding
+      >
+        <div className="overflow-x-auto bg-black text-emerald-400 p-2 font-mono text-xs">
+          <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-black/5 dark:border-white/5 text-[10px] uppercase text-[#86868B] dark:text-[#A1A1A6]">
-                <th className="py-2 px-2">Event ID</th>
-                <th className="py-2 px-2">Timestamp</th>
-                <th className="py-2 px-2">Source IP</th>
-                <th className="py-2 px-2">Technique</th>
-                <th className="py-2 px-2">Raw Payload / Event Log</th>
+              <tr className="border-b border-zinc-800 text-[10px] uppercase text-zinc-400">
+                <th className="py-2 px-3">Event ID</th>
+                <th className="py-2 px-3">Timestamp</th>
+                <th className="py-2 px-3">Source IP</th>
+                <th className="py-2 px-3">Technique</th>
+                <th className="py-2 px-3">Raw Log Event</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/[0.03] dark:divide-white/[0.03]">
+            <tbody className="divide-y divide-zinc-900">
               {signalLogs.map((log) => (
-                <tr
-                  key={log.event_id}
-                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
-                >
-                  <td className="py-2.5 px-2 font-mono font-medium text-[#0071E3]">
+                <tr key={log.event_id} className="hover:bg-zinc-900/60 transition-colors">
+                  <td className="py-2 px-3 text-[#00F0FF] font-bold">
                     {log.event_id}
                   </td>
-                  <td className="py-2.5 px-2 font-mono text-[11px] text-neutral-500">
+                  <td className="py-2 px-3 text-zinc-400 text-[11px]">
                     {log.timestamp.slice(0, 19).replace('T', ' ')}
                   </td>
-                  <td className="py-2.5 px-2 font-mono text-[11px] text-neutral-700 dark:text-neutral-300">
+                  <td className="py-2 px-3 text-yellow-300">
                     {log.source_ip}
                   </td>
-                  <td className="py-2.5 px-2">
-                    <span className="px-1.5 py-0.5 rounded bg-[#0071E3]/10 text-[#0071E3] font-mono text-[10px]">
+                  <td className="py-2 px-3">
+                    <span className="px-1.5 py-0.2 bg-[#00F0FF] text-black text-[10px] font-bold">
                       {log.technique_id}
                     </span>
                   </td>
-                  <td className="py-2.5 px-2 font-mono text-[11px] text-neutral-600 dark:text-neutral-400 max-w-md truncate">
+                  <td className="py-2 px-3 text-zinc-300 text-[11px] max-w-md truncate">
                     {log.raw_log}
                   </td>
                 </tr>
@@ -770,29 +736,31 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
             </tbody>
           </table>
         </div>
-      </div>
+      </Panel>
 
-      {/* Action Footer: Run AI Investigation with Gemini */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0071E3]/10 via-[#5856D6]/10 to-transparent border border-[#0071E3]/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {/* Action Footer: Generate Evidence Dossier */}
+      <div className="p-4 sm:p-5 border-2 sm:border-[2.5px] border-black dark:border-white bg-[#FFE600] text-black neo-shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-[#0071E3]" />
-            <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Synthesize Evidence with Constrained GenAI Assistant
+            <RiTerminalBoxLine className="w-5 h-5" />
+            <h3 className="font-mono font-black text-sm sm:text-base uppercase tracking-tight">
+              Evidence-Grounded Threat Dossier &amp; SIEM Hunting Queries
             </h3>
           </div>
-          <p className="text-xs text-[#86868B] dark:text-[#A1A1A6] mt-0.5">
-            Formulate evidence-grounded investigation hypotheses, defensive SIEM query blocks, and validated remediation playbooks.
+          <p className="text-xs font-mono text-black/80 mt-0.5">
+            Execute constrained Gemini synthesis to generate verified hypotheses, signal discrimination &amp; Splunk/Elastic verification code.
           </p>
         </div>
 
-        <button
+        <Button
+          variant="dark"
+          size="lg"
+          icon={<RiShieldFlashLine className="w-4 h-4 text-[#FFE600]" />}
           onClick={() => onRunAiInvestigation(activeVuln.cve_id)}
-          className="px-5 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-md flex items-center space-x-2 transition-all duration-150 whitespace-nowrap cursor-pointer"
+          className="whitespace-nowrap"
         >
-          <Sparkles className="w-4 h-4" />
-          <span>Run AI Investigation with Gemini</span>
-        </button>
+          OPEN TELEMETRY FORENSICS
+        </Button>
       </div>
     </div>
   );
