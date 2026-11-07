@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   AlertCircle,
   AlertTriangle,
@@ -72,6 +72,9 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
     text: string;
   } | null>(null);
 
+  // User-selected enterprise asset override
+  const [selectedAssetOverride, setSelectedAssetOverride] = useState<string | null>(null);
+
   // Fine-tuning drawer controls
   const [showTuning, setShowTuning] = useState(false);
   const [overrideAssetId, setOverrideAssetId] = useState<string>(assets[0]?.asset_id || 'SRV-WEB-001');
@@ -105,28 +108,32 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
     );
   }, [vulnerabilities, selectedCveId]);
 
-  // Find matched asset
+  // Find matched asset (prioritizing user override, then vuln's matched asset, then default)
   const activeAsset = useMemo(() => {
+    const targetId = selectedAssetOverride || activeVuln.matched_asset_id;
     return (
+      assets.find((a) => a.asset_id === targetId) ||
       assets.find((a) => a.asset_id === activeVuln.matched_asset_id) ||
-      assets[0] || {
-        asset_id: 'SRV-WEB-001',
-        hostname: 'web-proxy-01',
-        ip: '203.0.113.10',
-        type: 'server',
-        os: 'Ubuntu 22.04 LTS',
-        software: ['Apache HTTP Server 2.4.58', 'OpenSSL 3.1.4'],
-        criticality: 'critical',
-        exposure: 'internet_facing',
-        notes: 'Public-facing reverse proxy serving main corporate website and API gateway',
-      }
+      assets[0]
     );
-  }, [assets, activeVuln]);
+  }, [assets, activeVuln, selectedAssetOverride]);
 
-  // Calculate factor breakdown
+  useEffect(() => {
+    // Synchronize fine-tuning drawer and reset any manual override when a new CVE is chosen
+    setSelectedAssetOverride(null);
+    setOverrideCvss(activeVuln.cvss_score);
+    setOverrideInKev(activeVuln.in_kev);
+    setOverrideAssetId(activeVuln.matched_asset_id);
+  }, [activeVuln.cve_id]);
+
+  // Calculate factor breakdown dynamically
   const breakdown = useMemo(() => {
-    return calculateFactorBreakdown(activeVuln.cvss_score, activeVuln.in_kev, activeAsset);
-  }, [activeVuln, activeAsset]);
+    return calculateFactorBreakdown(
+      showTuning ? overrideCvss : activeVuln.cvss_score,
+      showTuning ? overrideInKev : activeVuln.in_kev,
+      activeAsset
+    );
+  }, [activeVuln, activeAsset, showTuning, overrideCvss, overrideInKev]);
 
   // Correlate relevant logs
   const relevantLogs = useMemo(() => {
@@ -141,7 +148,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
   const noiseLogs = relevantLogs.filter((l) => Boolean(l.is_noise));
 
   // Core handler: Input any CVE -> Analyze and ingest
-  const handleAnalyzeCve = async (rawTarget?: string) => {
+  const handleAnalyzeCve = async (rawTarget?: string, explicitAssetId?: string) => {
     const query = (rawTarget || cveInput).trim().toUpperCase();
 
     if (!query) {
@@ -153,18 +160,27 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
     }
 
     const formattedCve = query.startsWith('CVE-') ? query : `CVE-${query}`;
+    if (explicitAssetId) {
+      setSelectedAssetOverride(explicitAssetId);
+    }
 
     // 1. Check if already present in loaded corpus
     const existing = vulnerabilities.find((v) => v.cve_id === formattedCve);
     if (existing) {
+      if (explicitAssetId) {
+        existing.matched_asset_id = explicitAssetId;
+        setSelectedAssetOverride(explicitAssetId);
+      }
       onSelectCve(existing.cve_id);
       if (!investigatedHistory.includes(existing.cve_id)) {
         setInvestigatedHistory((prev) => [existing.cve_id, ...prev.slice(0, 6)]);
       }
       setCveInput('');
+      const targetAid = explicitAssetId || existing.matched_asset_id;
+      const matchedHost = assets.find((a) => a.asset_id === targetAid)?.hostname || 'enterprise host';
       setStatusFeedback({
         type: 'success',
-        text: `Loaded ${existing.cve_id} from database. Correlated with ${activeAsset.hostname} (Risk: ${existing.risk_score.toFixed(3)}).`,
+        text: `Loaded ${existing.cve_id}. Correlated with target host ${matchedHost} (${targetAid}).`,
       });
       return;
     }
@@ -205,14 +221,28 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       }
 
       // Auto-correlate with asset based on keywords
-      let targetAssetId = overrideAssetId;
-      const descLower = fetchedDesc.toLowerCase();
-      if (descLower.includes('vpn') || descLower.includes('gateway') || descLower.includes('citrix') || descLower.includes('palo alto')) {
-        targetAssetId = 'SRV-VPN-001';
-      } else if (descLower.includes('database') || descLower.includes('sql') || descLower.includes('oracle') || descLower.includes('postgres')) {
-        targetAssetId = 'SRV-DB-001';
-      } else if (descLower.includes('web') || descLower.includes('apache') || descLower.includes('nginx') || descLower.includes('http')) {
-        targetAssetId = 'SRV-WEB-001';
+      let targetAssetId = explicitAssetId || overrideAssetId;
+      if (!explicitAssetId) {
+        const descLower = (fetchedDesc + ' ' + fetchedProducts).toLowerCase();
+        if (descLower.includes('vpn') || descLower.includes('gateway') || descLower.includes('citrix') || descLower.includes('palo alto') || descLower.includes('fortinet')) {
+          targetAssetId = 'SRV-VPN-001';
+        } else if (descLower.includes('database') || descLower.includes('sql') || descLower.includes('oracle') || descLower.includes('postgres') || descLower.includes('mysql')) {
+          targetAssetId = 'SRV-DB-001';
+        } else if (descLower.includes('active directory') || descLower.includes('kerberos') || descLower.includes('domain controller') || descLower.includes('windows server')) {
+          targetAssetId = 'SRV-DC-001';
+        } else if (descLower.includes('mail') || descLower.includes('smtp') || descLower.includes('exchange') || descLower.includes('postfix')) {
+          targetAssetId = 'SRV-MAIL-001';
+        } else if (descLower.includes('kubernetes') || descLower.includes('k8s') || descLower.includes('terraform') || descLower.includes('docker') || descLower.includes('cloud')) {
+          targetAssetId = 'SRV-CLOUD-MGT-001';
+        } else if (descLower.includes('siemens') || descLower.includes('simatic') || descLower.includes('scada') || descLower.includes('plc') || descLower.includes('ics')) {
+          targetAssetId = 'SRV-ICS-001';
+        } else if (descLower.includes('office') || descLower.includes('word') || descLower.includes('excel') || descLower.includes('acrobat') || descLower.includes('chrome')) {
+          targetAssetId = 'WS-HR-001';
+        } else if (descLower.includes('python') || descLower.includes('git') || descLower.includes('macos')) {
+          targetAssetId = 'WS-DEV-012';
+        } else {
+          targetAssetId = 'SRV-WEB-001';
+        }
       }
 
       const assignedAsset = assets.find((a) => a.asset_id === targetAssetId) || assets[0];
@@ -383,13 +413,16 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 Target Enterprise Asset
               </label>
               <select
-                value={overrideAssetId}
-                onChange={(e) => setOverrideAssetId(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/10 text-xs font-mono"
+                value={activeAsset.asset_id}
+                onChange={(e) => {
+                  setOverrideAssetId(e.target.value);
+                  setSelectedAssetOverride(e.target.value);
+                }}
+                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/10 text-xs font-mono font-semibold"
               >
                 {assets.map((a) => (
                   <option key={a.asset_id} value={a.asset_id}>
-                    {a.hostname} ({a.asset_id} - {a.criticality})
+                    {a.hostname} ({a.asset_id} - {a.criticality.toUpperCase()})
                   </option>
                 ))}
               </select>
@@ -440,7 +473,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               <button
                 key={preset.id}
                 type="button"
-                onClick={() => handleAnalyzeCve(preset.id)}
+                onClick={() => handleAnalyzeCve(preset.id, preset.assetId)}
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center space-x-1 border ${
                   isActive
                     ? 'bg-[#0071E3] text-white border-[#0071E3] shadow-xs'
@@ -476,31 +509,43 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
           </div>
         )}
 
-        {/* Active Target Banner — Only showing the single investigated CVE */}
-        <div className="p-3.5 rounded-2xl bg-[#0071E3]/5 dark:bg-[#0071E3]/10 border border-[#0071E3]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        {/* Active Target Banner — Shows Active CVE and interactive Host Switcher */}
+        <div className="p-4 rounded-2xl bg-[#0071E3]/5 dark:bg-[#0071E3]/10 border border-[#0071E3]/20 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-neutral-500 dark:text-neutral-400">
               Active Investigation:
             </span>
             <span className="font-mono font-bold text-sm text-[#0071E3] dark:text-[#389BF2]">
               {activeVuln.cve_id}
             </span>
-            <span className="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 font-mono text-[10px] text-neutral-600 dark:text-neutral-300">
-              Risk: {activeVuln.risk_score.toFixed(3)} ({activeVuln.risk_band})
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-2 text-[11px] text-neutral-600 dark:text-neutral-400">
-            <span>Target Host:</span>
-            <span className="font-mono font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              {activeAsset.hostname} ({activeAsset.ip})
+            <span className="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 font-mono text-[11px] font-semibold text-neutral-700 dark:text-neutral-300">
+              Risk: {breakdown.total_score.toFixed(3)} ({getRiskBand(breakdown.total_score)})
             </span>
             {activeVuln.in_kev && (
-              <span className="px-1.5 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[9px]">
-                KEV
+              <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-[10px]">
+                CISA KEV Listed
               </span>
             )}
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Server className="w-3.5 h-3.5 text-[#0071E3] shrink-0" />
+            <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 shrink-0">
+              Target Host:
+            </span>
+            <select
+              value={activeAsset.asset_id}
+              onChange={(e) => setSelectedAssetOverride(e.target.value)}
+              className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-[#2C2C2E] border border-black/10 dark:border-white/15 text-xs font-mono font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#0071E3] cursor-pointer"
+              title="Switch target enterprise host to test contextual risk impact"
+            >
+              {assets.map((a) => (
+                <option key={a.asset_id} value={a.asset_id}>
+                  {a.hostname} ({a.asset_id} • {a.criticality.toUpperCase()} • {a.exposure.replace('_', ' ').toUpperCase()})
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

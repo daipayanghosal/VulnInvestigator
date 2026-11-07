@@ -2,10 +2,10 @@
   "summary": {
     "total_cves": 8328,
     "in_kev": 1768,
-    "critical_risk": 46,
-    "high_risk": 3437,
-    "medium_risk": 1880,
-    "low_risk": 2965,
+    "critical_risk": 1633,
+    "high_risk": 2348,
+    "medium_risk": 2649,
+    "low_risk": 1698,
     "has_cvss": 6762
   },
   "ranking_metrics": {
@@ -13,289 +13,289 @@
     "spearman_rho": 0.7539,
     "ndcg_at_10": 0.4657,
     "ndcg_at_20": 0.5066,
-    "min_displacement": -4712,
-    "max_displacement": 4942,
-    "mean_abs_displacement": 1457.2
+    "min_displacement": -5601,
+    "max_displacement": 4872,
+    "mean_abs_displacement": 1044.0
   },
   "histogram_bins": [
     {
-      "bin_start": -4712,
-      "bin_end": -4470,
-      "bin_label": "-4712 to -4470",
-      "count": 280,
+      "bin_start": -5601,
+      "bin_end": -5339,
+      "bin_label": "-5601 to -5339",
+      "count": 87,
       "is_positive": false
     },
     {
-      "bin_start": -4470,
-      "bin_end": -4229,
-      "bin_label": "-4470 to -4229",
-      "count": 91,
+      "bin_start": -5339,
+      "bin_end": -5077,
+      "bin_label": "-5339 to -5077",
+      "count": 22,
       "is_positive": false
     },
     {
-      "bin_start": -4229,
-      "bin_end": -3987,
-      "bin_label": "-4229 to -3987",
-      "count": 244,
+      "bin_start": -5077,
+      "bin_end": -4815,
+      "bin_label": "-5077 to -4815",
+      "count": 26,
       "is_positive": false
     },
     {
-      "bin_start": -3987,
-      "bin_end": -3746,
-      "bin_label": "-3987 to -3746",
-      "count": 9,
+      "bin_start": -4815,
+      "bin_end": -4553,
+      "bin_label": "-4815 to -4553",
+      "count": 3,
       "is_positive": false
     },
     {
-      "bin_start": -3746,
-      "bin_end": -3505,
-      "bin_label": "-3746 to -3505",
-      "count": 0,
+      "bin_start": -4553,
+      "bin_end": -4291,
+      "bin_label": "-4553 to -4291",
+      "count": 38,
       "is_positive": false
     },
     {
-      "bin_start": -3505,
-      "bin_end": -3263,
-      "bin_label": "-3505 to -3263",
-      "count": 15,
+      "bin_start": -4291,
+      "bin_end": -4030,
+      "bin_label": "-4291 to -4030",
+      "count": 18,
       "is_positive": false
     },
     {
-      "bin_start": -3263,
-      "bin_end": -3022,
-      "bin_label": "-3263 to -3022",
+      "bin_start": -4030,
+      "bin_end": -3768,
+      "bin_label": "-4030 to -3768",
+      "count": 6,
+      "is_positive": false
+    },
+    {
+      "bin_start": -3768,
+      "bin_end": -3506,
+      "bin_label": "-3768 to -3506",
       "count": 1,
       "is_positive": false
     },
     {
-      "bin_start": -3022,
-      "bin_end": -2781,
-      "bin_label": "-3022 to -2781",
+      "bin_start": -3506,
+      "bin_end": -3244,
+      "bin_label": "-3506 to -3244",
       "count": 0,
       "is_positive": false
     },
     {
-      "bin_start": -2781,
-      "bin_end": -2539,
-      "bin_label": "-2781 to -2539",
-      "count": 10,
+      "bin_start": -3244,
+      "bin_end": -2982,
+      "bin_label": "-3244 to -2982",
+      "count": 182,
       "is_positive": false
     },
     {
-      "bin_start": -2539,
-      "bin_end": -2298,
-      "bin_label": "-2539 to -2298",
-      "count": 39,
+      "bin_start": -2982,
+      "bin_end": -2720,
+      "bin_label": "-2982 to -2720",
+      "count": 213,
       "is_positive": false
     },
     {
-      "bin_start": -2298,
-      "bin_end": -2057,
-      "bin_label": "-2298 to -2057",
-      "count": 127,
+      "bin_start": -2720,
+      "bin_end": -2459,
+      "bin_label": "-2720 to -2459",
+      "count": 81,
       "is_positive": false
     },
     {
-      "bin_start": -2057,
-      "bin_end": -1815,
-      "bin_label": "-2057 to -1815",
-      "count": 505,
+      "bin_start": -2459,
+      "bin_end": -2197,
+      "bin_label": "-2459 to -2197",
+      "count": 65,
       "is_positive": false
     },
     {
-      "bin_start": -1815,
-      "bin_end": -1574,
-      "bin_label": "-1815 to -1574",
-      "count": 631,
+      "bin_start": -2197,
+      "bin_end": -1935,
+      "bin_label": "-2197 to -1935",
+      "count": 1,
       "is_positive": false
     },
     {
-      "bin_start": -1574,
-      "bin_end": -1333,
-      "bin_label": "-1574 to -1333",
-      "count": 269,
+      "bin_start": -1935,
+      "bin_end": -1673,
+      "bin_label": "-1935 to -1673",
+      "count": 479,
       "is_positive": false
     },
     {
-      "bin_start": -1333,
-      "bin_end": -1091,
-      "bin_label": "-1333 to -1091",
-      "count": 456,
+      "bin_start": -1673,
+      "bin_end": -1411,
+      "bin_label": "-1673 to -1411",
+      "count": 526,
       "is_positive": false
     },
     {
-      "bin_start": -1091,
-      "bin_end": -850,
-      "bin_label": "-1091 to -850",
-      "count": 160,
+      "bin_start": -1411,
+      "bin_end": -1149,
+      "bin_label": "-1411 to -1149",
+      "count": 428,
       "is_positive": false
     },
     {
-      "bin_start": -850,
-      "bin_end": -609,
-      "bin_label": "-850 to -609",
-      "count": 826,
+      "bin_start": -1149,
+      "bin_end": -888,
+      "bin_label": "-1149 to -888",
+      "count": 461,
       "is_positive": false
     },
     {
-      "bin_start": -609,
-      "bin_end": -367,
-      "bin_label": "-609 to -367",
-      "count": 103,
+      "bin_start": -888,
+      "bin_end": -626,
+      "bin_label": "-888 to -626",
+      "count": 297,
       "is_positive": false
     },
     {
-      "bin_start": -367,
-      "bin_end": -126,
-      "bin_label": "-367 to -126",
-      "count": 0,
+      "bin_start": -626,
+      "bin_end": -364,
+      "bin_label": "-626 to -364",
+      "count": 336,
       "is_positive": false
     },
     {
-      "bin_start": -126,
-      "bin_end": 115,
-      "bin_label": "-126 to 115",
-      "count": 55,
+      "bin_start": -364,
+      "bin_end": -102,
+      "bin_label": "-364 to -102",
+      "count": 194,
       "is_positive": false
     },
     {
-      "bin_start": 115,
-      "bin_end": 356,
-      "bin_label": "115 to 356",
-      "count": 22,
+      "bin_start": -102,
+      "bin_end": 159,
+      "bin_label": "-102 to 159",
+      "count": 1169,
+      "is_positive": false
+    },
+    {
+      "bin_start": 159,
+      "bin_end": 420,
+      "bin_label": "159 to 420",
+      "count": 24,
       "is_positive": true
     },
     {
-      "bin_start": 356,
-      "bin_end": 597,
-      "bin_label": "356 to 597",
-      "count": 16,
+      "bin_start": 420,
+      "bin_end": 682,
+      "bin_label": "420 to 682",
+      "count": 1118,
       "is_positive": true
     },
     {
-      "bin_start": 597,
-      "bin_end": 839,
-      "bin_label": "597 to 839",
-      "count": 891,
+      "bin_start": 682,
+      "bin_end": 944,
+      "bin_label": "682 to 944",
+      "count": 1267,
       "is_positive": true
     },
     {
-      "bin_start": 839,
-      "bin_end": 1080,
-      "bin_label": "839 to 1080",
-      "count": 2384,
+      "bin_start": 944,
+      "bin_end": 1206,
+      "bin_label": "944 to 1206",
+      "count": 1264,
       "is_positive": true
     },
     {
-      "bin_start": 1080,
-      "bin_end": 1321,
-      "bin_label": "1080 to 1321",
-      "count": 90,
-      "is_positive": true
-    },
-    {
-      "bin_start": 1321,
-      "bin_end": 1563,
-      "bin_label": "1321 to 1563",
-      "count": 342,
-      "is_positive": true
-    },
-    {
-      "bin_start": 1563,
-      "bin_end": 1804,
-      "bin_label": "1563 to 1804",
-      "count": 335,
-      "is_positive": true
-    },
-    {
-      "bin_start": 1804,
-      "bin_end": 2045,
-      "bin_label": "1804 to 2045",
-      "count": 408,
-      "is_positive": true
-    },
-    {
-      "bin_start": 2045,
-      "bin_end": 2287,
-      "bin_label": "2045 to 2287",
-      "count": 2,
-      "is_positive": true
-    },
-    {
-      "bin_start": 2287,
-      "bin_end": 2528,
-      "bin_label": "2287 to 2528",
-      "count": 3,
-      "is_positive": true
-    },
-    {
-      "bin_start": 2528,
-      "bin_end": 2769,
-      "bin_label": "2528 to 2769",
+      "bin_start": 1206,
+      "bin_end": 1468,
+      "bin_label": "1206 to 1468",
       "count": 0,
       "is_positive": true
     },
     {
-      "bin_start": 2769,
-      "bin_end": 3011,
-      "bin_label": "2769 to 3011",
-      "count": 0,
+      "bin_start": 1468,
+      "bin_end": 1730,
+      "bin_label": "1468 to 1730",
+      "count": 4,
       "is_positive": true
     },
     {
-      "bin_start": 3011,
-      "bin_end": 3252,
-      "bin_label": "3011 to 3252",
-      "count": 0,
+      "bin_start": 1730,
+      "bin_end": 1991,
+      "bin_label": "1730 to 1991",
+      "count": 4,
       "is_positive": true
     },
     {
-      "bin_start": 3252,
-      "bin_end": 3493,
-      "bin_label": "3252 to 3493",
+      "bin_start": 1991,
+      "bin_end": 2253,
+      "bin_label": "1991 to 2253",
+      "count": 1,
+      "is_positive": true
+    },
+    {
+      "bin_start": 2253,
+      "bin_end": 2515,
+      "bin_label": "2253 to 2515",
       "count": 6,
       "is_positive": true
     },
     {
-      "bin_start": 3493,
-      "bin_end": 3735,
-      "bin_label": "3493 to 3735",
-      "count": 6,
-      "is_positive": true
-    },
-    {
-      "bin_start": 3735,
-      "bin_end": 3976,
-      "bin_label": "3735 to 3976",
+      "bin_start": 2515,
+      "bin_end": 2777,
+      "bin_label": "2515 to 2777",
       "count": 0,
       "is_positive": true
     },
     {
-      "bin_start": 3976,
-      "bin_end": 4217,
-      "bin_label": "3976 to 4217",
+      "bin_start": 2777,
+      "bin_end": 3039,
+      "bin_label": "2777 to 3039",
       "count": 0,
       "is_positive": true
     },
     {
-      "bin_start": 4217,
-      "bin_end": 4459,
-      "bin_label": "4217 to 4459",
-      "count": 0,
+      "bin_start": 3039,
+      "bin_end": 3301,
+      "bin_label": "3039 to 3301",
+      "count": 1,
       "is_positive": true
     },
     {
-      "bin_start": 4459,
-      "bin_end": 4700,
-      "bin_label": "4459 to 4700",
-      "count": 0,
-      "is_positive": true
-    },
-    {
-      "bin_start": 4700,
-      "bin_end": 4942,
-      "bin_label": "4700 to 4942",
+      "bin_start": 3301,
+      "bin_end": 3562,
+      "bin_label": "3301 to 3562",
       "count": 2,
+      "is_positive": true
+    },
+    {
+      "bin_start": 3562,
+      "bin_end": 3824,
+      "bin_label": "3562 to 3824",
+      "count": 2,
+      "is_positive": true
+    },
+    {
+      "bin_start": 3824,
+      "bin_end": 4086,
+      "bin_label": "3824 to 4086",
+      "count": 0,
+      "is_positive": true
+    },
+    {
+      "bin_start": 4086,
+      "bin_end": 4348,
+      "bin_label": "4086 to 4348",
+      "count": 1,
+      "is_positive": true
+    },
+    {
+      "bin_start": 4348,
+      "bin_end": 4610,
+      "bin_label": "4348 to 4610",
+      "count": 0,
+      "is_positive": true
+    },
+    {
+      "bin_start": 4610,
+      "bin_end": 4872,
+      "bin_label": "4610 to 4872",
+      "count": 1,
       "is_positive": true
     }
   ],
