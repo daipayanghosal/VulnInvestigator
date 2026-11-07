@@ -509,7 +509,12 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       <HeroScoreboard vuln={activeVuln} asset={activeAsset} breakdown={breakdown} />
 
       {/* Vulnerability Mechanics & Plotted Attack Architecture Map */}
-      <VulnerabilityPropagationMap vuln={activeVuln} asset={activeAsset} allAssets={assets} />
+      <VulnerabilityPropagationMap
+        vuln={activeVuln}
+        asset={activeAsset}
+        allAssets={assets}
+        sourceIp={signalLogs[0]?.source_ip || '198.51.100.44'}
+      />
 
       {/* Two-Column Details: Vulnerability Mechanics vs. Target Asset Coordinates */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

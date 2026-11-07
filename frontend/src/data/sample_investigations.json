@@ -70,11 +70,130 @@
       },
       {
         "title": "4. Actionable Remediation Plan",
-        "content": "1. Deploy official Citrix security patch build immediately.\n2. Inspect filesystem for unauthorized `.php` or `.sh` files in `/var/vpn/netscaler/`.\n3. Terminate active administrative sessions and force multi-factor re-authentication."
+        "content": "1. **Patch Deployment**: Deploy official Citrix security patch build immediately.\n2. **Web Shell Inspection**: Inspect filesystem for unauthorized `.php` or `.sh` files in `/var/vpn/netscaler/`.\n3. **Session Revocation**: Terminate active administrative sessions and force multi-factor re-authentication."
       },
       {
         "title": "5. Grounding Confidence",
         "content": "Confidence: **HIGH (95.0%)**. 100% of claims are substantiated by CISA KEV advisory and SIEM event `ev-201`."
+      }
+    ],
+    "unsupported_claims": []
+  },
+  "CVE-2024-3400": {
+    "cve_id": "CVE-2024-3400",
+    "title": "Palo Alto Networks PAN-OS GlobalProtect Command Injection",
+    "grounding_score": 96.0,
+    "citations_found": 8,
+    "unsupported_claims_count": 0,
+    "citations": [
+      "CVE-2024-3400",
+      "T1190",
+      "T1059.004",
+      "SRV-VPN-001",
+      "vpn-gateway-01",
+      "203.0.113.5",
+      "ev-201",
+      "198.51.100.44"
+    ],
+    "sections": [
+      {
+        "title": "1. Threat Hypothesis & Initial Attack Vector",
+        "content": "Threat actors are weaponizing `CVE-2024-3400` against perimeter firewall gateway `SRV-VPN-001` (`vpn-gateway-01`, `203.0.113.5`). The vulnerability is an unauthenticated OS command injection in PAN-OS GlobalProtect feature when Device Telemetry is enabled. Inbound HTTP requests containing crafted SESSID cookie values allow arbitrary shell commands to run with root privileges."
+      },
+      {
+        "title": "2. Telemetry Evidence Analysis & Signal Discrimination",
+        "content": "Telemetry corroborates inbound HTTPS traffic on port 443 with abnormal directory traversal tokens in HTTP headers (`T1190`). Local filesystem auditing flags unexpected file creation in `/opt/panlogs/tmp/device_telemetry/hour/` followed by subshell execution (`T1059.004`). Benign keep-alive probes on secondary interfaces have been distinguished and filtered."
+      },
+      {
+        "title": "3. Defensive SIEM Log Verification Queries",
+        "content": "```spl\nindex=firewall host=\"vpn-gateway-01\" sourcetype=pan:os\n| regex _raw=\"(?i)device_telemetry|globalprotect.*(cookie|sessid)\"\n| table _time, src_ip, action, url, status\n```\n```elasticsearch\nGET /logs-firewall-*/_search\n{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        { \"term\": { \"asset_id\": \"SRV-VPN-001\" } },\n        { \"query_string\": { \"query\": \"*CVE-2024-3400* OR *telemetry*\" } }\n      ]\n    }\n  }\n}\n```"
+      },
+      {
+        "title": "4. Actionable Remediation & Containment Plan",
+        "content": "1. **Emergency Telemetry Disabling**: Disable PAN-OS Device Telemetry immediately via Device -> Setup -> Telemetry.\n2. **Firmware Hotfix**: Upgrade PAN-OS to patched maintenance release (`10.2.9-h1`, `11.0.4-h1`, or `11.1.2-h3`).\n3. **Root Audit**: Run Palo Alto Networks remediation verification scripts to ensure no rogue cron entries or reverse shells persist in the underlying OS."
+      },
+      {
+        "title": "5. Evidence-Grounding Confidence Assessment",
+        "content": "Confidence: **HIGH (96.0%)**. All assertions corroborated by CISA KEV listing and firewall telemetry logs for `SRV-VPN-001`."
+      }
+    ],
+    "unsupported_claims": []
+  },
+  "CVE-2023-4966": {
+    "cve_id": "CVE-2023-4966",
+    "title": "Citrix NetScaler ADC & Gateway Sensitive Information Disclosure (Citrix Bleed)",
+    "grounding_score": 97.0,
+    "citations_found": 8,
+    "unsupported_claims_count": 0,
+    "citations": [
+      "CVE-2023-4966",
+      "T1190",
+      "T1552.001",
+      "SRV-VPN-001",
+      "vpn-gateway-01",
+      "203.0.113.5",
+      "ev-201",
+      "198.51.100.44"
+    ],
+    "sections": [
+      {
+        "title": "1. Threat Hypothesis & Initial Attack Vector",
+        "content": "Adversaries are actively exploiting `CVE-2023-4966` (Citrix Bleed) targeting perimeter gateway `SRV-VPN-001` (`vpn-gateway-01`, `203.0.113.5`). The vulnerability permits an unauthenticated buffer overread via crafted HTTP GET requests to `/oauth/idp/.well-known/openid-configuration`, causing the system to leak session cookies (`NSC_AAAC`) from memory without requiring credentials or MFA."
+      },
+      {
+        "title": "2. Telemetry Evidence Analysis & Signal Discrimination",
+        "content": "Web server access logs demonstrate requests with oversized HTTP Host headers originating from external IP `198.51.100.44`. Replay of the captured authentication tokens facilitates immediate unauthorized VPN session establishment without generating authentication failure events."
+      },
+      {
+        "title": "3. Defensive SIEM Log Verification Queries",
+        "content": "```spl\nindex=vpn sourcetype=citrix:netscaler host=\"vpn-gateway-01\"\n| regex _raw=\"GET /oauth/idp/\\.well-known/openid-configuration\"\n| eval host_header_len=len(host_header)\n| where host_header_len > 1024\n| table _time, src_ip, host_header_len, status\n```\n```elasticsearch\nGET /logs-vpn-*/_search\n{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        { \"term\": { \"asset_id\": \"SRV-VPN-001\" } },\n        { \"query_string\": { \"query\": \"*openid-configuration*\" } }\n      ]\n    }\n  }\n}\n```"
+      },
+      {
+        "title": "4. Actionable Remediation & Containment Plan",
+        "content": "1. **Firmware Upgrade**: Apply Citrix security update (`13.1-49.15` / `14.1-8.50`) immediately.\n2. **Session Termination**: Execute CLI directive `kill aaa session -all` to revoke all potentially compromised session tokens.\n3. **MFA Re-authentication**: Force organization-wide credential renewal and multi-factor re-registration."
+      },
+      {
+        "title": "5. Evidence-Grounding Confidence Assessment",
+        "content": "Confidence: **HIGH (97.0%)**. Confirmed via CISA KEV advisory and NetScaler memory overread traffic signatures."
+      }
+    ],
+    "unsupported_claims": []
+  },
+  "CVE-2020-1938": {
+    "cve_id": "CVE-2020-1938",
+    "title": "Apache Tomcat AJP Connector Arbitrary File Read / Inclusion (Ghostcat)",
+    "grounding_score": 93.0,
+    "citations_found": 7,
+    "unsupported_claims_count": 0,
+    "citations": [
+      "CVE-2020-1938",
+      "T1046",
+      "T1190",
+      "SRV-WEB-001",
+      "web-proxy-01",
+      "203.0.113.10",
+      "ev-101"
+    ],
+    "sections": [
+      {
+        "title": "1. Threat Hypothesis & Initial Attack Vector",
+        "content": "Adversaries are scanning for exposed Apache JServ Protocol (AJP) listeners on port `8009` affecting asset `SRV-WEB-001` (`web-proxy-01`, `203.0.113.10`). Weaponization of `CVE-2020-1938` enables unauthenticated attackers to read arbitrary files from the web application root (such as `WEB-INF/web.xml`) and achieve remote code execution if file uploads are supported."
+      },
+      {
+        "title": "2. Telemetry Evidence Analysis & Signal Discrimination",
+        "content": "Perimeter network capture exhibits binary AJP 1.3 packets directed to port 8009 with manipulated `javax.servlet.include.request_uri` attributes. Background keep-alive timeouts on port 80/443 have been segregated from the targeted port 8009 exploitation attempts."
+      },
+      {
+        "title": "3. Defensive SIEM Log Verification Queries",
+        "content": "```spl\nindex=network host=\"web-proxy-01\" dest_port=8009\n| stats count by src_ip, dest_port, protocol\n| sort - count\n```\n```elasticsearch\nGET /logs-network-*/_search\n{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        { \"term\": { \"asset_id\": \"SRV-WEB-001\" } },\n        { \"query_string\": { \"query\": \"*dest_port: 8009*\" } }\n      ]\n    }\n  }\n}\n```"
+      },
+      {
+        "title": "4. Actionable Remediation & Containment Plan",
+        "content": "1. **Connector Configuration**: Comment out `<Connector port=\"8009\" protocol=\"AJP/1.3\" />` in `conf/server.xml` if AJP is unused.\n2. **Secret Enforcement**: If AJP is mandatory, configure `requiredSecret` attribute and upgrade Tomcat to version `9.0.31+` or `8.5.51+`.\n3. **Firewall Isolation**: Drop inbound TCP 8009 packets at perimeter and intermediate firewalls."
+      },
+      {
+        "title": "5. Evidence-Grounding Confidence Assessment",
+        "content": "Confidence: **HIGH (93.0%)**. Corroborated by AJP connection attempts recorded in firewall flow logs and CISA KEV listing."
       }
     ],
     "unsupported_claims": []
