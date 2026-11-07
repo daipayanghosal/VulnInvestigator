@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { HeroScoreboard } from '../components/HeroScoreboard';
 import { ExecutiveGuide } from '../components/ExecutiveGuide';
+import { VulnerabilityPropagationMap } from '../components/VulnerabilityPropagationMap';
 import { Asset, SecurityLog, Technique, Vulnerability } from '../types';
 import { calculateFactorBreakdown } from '../utils/scoring';
 
@@ -191,6 +192,9 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
 
       {/* Hero Scoreboard Component */}
       <HeroScoreboard vuln={activeVuln} asset={activeAsset} breakdown={breakdown} />
+
+      {/* Vulnerability Mechanics & Attack Propagation Map (Dual Executive & Technical Perspectives) */}
+      <VulnerabilityPropagationMap vuln={activeVuln} asset={activeAsset} />
 
       {/* Two-Column Details: Vulnerability Mechanics vs. Target Asset Coordinates */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
