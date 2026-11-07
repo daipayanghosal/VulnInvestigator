@@ -194,7 +194,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       <HeroScoreboard vuln={activeVuln} asset={activeAsset} breakdown={breakdown} />
 
       {/* Vulnerability Mechanics & Attack Propagation Map (Dual Executive & Technical Perspectives) */}
-      <VulnerabilityPropagationMap vuln={activeVuln} asset={activeAsset} />
+      <VulnerabilityPropagationMap vuln={activeVuln} asset={activeAsset} allAssets={assets} />
 
       {/* Two-Column Details: Vulnerability Mechanics vs. Target Asset Coordinates */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
