@@ -1,0 +1,32 @@
+[
+  {
+    "id": "T1190",
+    "name": "Exploit Public-Facing Application",
+    "tactics": "Initial Access",
+    "description": "Adversaries may attempt to take advantage of a weakness in an Internet-facing computer or program using software, system, or service bugs to cause unintended or unauthorized behavior."
+  },
+  {
+    "id": "T1059",
+    "name": "Command and Scripting Interpreter",
+    "tactics": "Execution",
+    "description": "Adversaries may abuse command and script interpreters to execute commands, scripts, or binaries across web servers and database gateways."
+  },
+  {
+    "id": "T1068",
+    "name": "Exploitation for Privilege Escalation",
+    "tactics": "Privilege Escalation",
+    "description": "Adversaries may exploit software vulnerabilities in an elevated service or kernel component to elevate privileges and bypass access controls."
+  },
+  {
+    "id": "T1078",
+    "name": "Valid Accounts",
+    "tactics": "Defense Evasion, Persistence, Initial Access",
+    "description": "Adversaries may obtain and abuse credentials of existing accounts to compromise systems without triggering anomaly detections."
+  },
+  {
+    "id": "T1505.003",
+    "name": "Server Software Component: Web Shell",
+    "tactics": "Persistence",
+    "description": "Adversaries may backdoor web servers by writing web shells to execute commands via HTTP requests following successful exploit execution."
+  }
+]

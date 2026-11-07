@@ -70,3 +70,8 @@ data/logs/*.jsonl
 # ── Microsoft Office Binaries ────────────────────────────────────────────────
 *.docx
 *.doc
+
+# ── Node / Frontend ──────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.cache/

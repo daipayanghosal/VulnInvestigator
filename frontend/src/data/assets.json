@@ -1,0 +1,269 @@
+[
+  {
+    "asset_id": "SRV-WEB-001",
+    "hostname": "web-proxy-01",
+    "ip": "203.0.113.10",
+    "type": "server",
+    "os": "Ubuntu 22.04 LTS",
+    "software": [
+      "Apache HTTP Server 2.4.58",
+      "OpenSSL 3.1.4",
+      "mod_security 2.9.7"
+    ],
+    "criticality": "critical",
+    "exposure": "internet_facing",
+    "owner": "Infrastructure",
+    "tags": [
+      "web",
+      "proxy",
+      "dmz",
+      "public"
+    ],
+    "notes": "Public-facing reverse proxy serving main corporate website and API gateway"
+  },
+  {
+    "asset_id": "SRV-DB-001",
+    "hostname": "db-primary-01",
+    "ip": "10.10.1.20",
+    "type": "server",
+    "os": "Ubuntu 20.04 LTS",
+    "software": [
+      "PostgreSQL 15.4",
+      "pgBouncer 1.21.0"
+    ],
+    "criticality": "critical",
+    "exposure": "internal",
+    "owner": "Database Team",
+    "tags": [
+      "database",
+      "postgresql",
+      "primary",
+      "pii"
+    ],
+    "notes": "Primary production database \u2014 stores customer PII and financial records"
+  },
+  {
+    "asset_id": "WS-HR-001",
+    "hostname": "hr-workstation-03",
+    "ip": "10.20.5.43",
+    "type": "workstation",
+    "os": "Windows 11 Pro 23H2",
+    "software": [
+      "Microsoft Office 365 (2024)",
+      "Google Chrome 124",
+      "Adobe Acrobat Reader DC 2024"
+    ],
+    "criticality": "high",
+    "exposure": "internal",
+    "owner": "HR Department",
+    "tags": [
+      "workstation",
+      "hr",
+      "pii"
+    ],
+    "notes": "HR analyst workstation with access to employee records and payroll system"
+  },
+  {
+    "asset_id": "WS-DEV-012",
+    "hostname": "dev-laptop-012",
+    "ip": "10.30.2.112",
+    "type": "laptop",
+    "os": "macOS 14 Sonoma",
+    "software": [
+      "Python 3.12",
+      "Docker Desktop 4.29",
+      "VS Code 1.89",
+      "Git 2.44",
+      "OpenSSH 9.6"
+    ],
+    "criticality": "medium",
+    "exposure": "internal",
+    "owner": "Engineering",
+    "tags": [
+      "laptop",
+      "developer",
+      "source-code"
+    ],
+    "notes": "Developer laptop \u2014 has access to source code repositories and staging environment"
+  },
+  {
+    "asset_id": "SRV-DC-001",
+    "hostname": "dc-primary-01",
+    "ip": "10.10.0.5",
+    "type": "server",
+    "os": "Windows Server 2022 Datacenter",
+    "software": [
+      "Active Directory Domain Services",
+      "DNS Server",
+      "DHCP Server",
+      "Windows Server Update Services 10.0"
+    ],
+    "criticality": "critical",
+    "exposure": "internal",
+    "owner": "IT Operations",
+    "tags": [
+      "domain-controller",
+      "active-directory",
+      "infrastructure"
+    ],
+    "notes": "Primary Windows domain controller \u2014 compromise would affect entire AD forest"
+  },
+  {
+    "asset_id": "SRV-FILE-001",
+    "hostname": "fileserver-01",
+    "ip": "10.10.3.30",
+    "type": "server",
+    "os": "Windows Server 2019 Standard",
+    "software": [
+      "SMB Server",
+      "Windows Backup 10.0",
+      "ClamAV 1.3.0"
+    ],
+    "criticality": "high",
+    "exposure": "internal",
+    "owner": "IT Operations",
+    "tags": [
+      "file-server",
+      "smb",
+      "shares"
+    ],
+    "notes": "Internal file server hosting departmental shared drives and project files"
+  },
+  {
+    "asset_id": "SRV-CLOUD-MGT-001",
+    "hostname": "cloud-mgmt-console",
+    "ip": "10.10.5.50",
+    "type": "server",
+    "os": "Ubuntu 22.04 LTS",
+    "software": [
+      "Terraform 1.8.0",
+      "AWS CLI 2.15.0",
+      "kubectl 1.30",
+      "Helm 3.14"
+    ],
+    "criticality": "critical",
+    "exposure": "restricted",
+    "owner": "Cloud Platform Team",
+    "tags": [
+      "cloud",
+      "aws",
+      "kubernetes",
+      "iac"
+    ],
+    "notes": "Cloud management bastion \u2014 controls AWS infrastructure via IaC; jump-host for K8s clusters"
+  },
+  {
+    "asset_id": "SRV-VPN-001",
+    "hostname": "vpn-gateway-01",
+    "ip": "203.0.113.5",
+    "type": "server",
+    "os": "Ubuntu 22.04 LTS",
+    "software": [
+      "OpenVPN 2.6.9",
+      "StrongSwan 5.9.13",
+      "OpenSSL 3.1.4",
+      "fail2ban 1.0.2"
+    ],
+    "criticality": "critical",
+    "exposure": "internet_facing",
+    "owner": "Infrastructure",
+    "tags": [
+      "vpn",
+      "gateway",
+      "remote-access",
+      "dmz"
+    ],
+    "notes": "Corporate VPN gateway \u2014 entry point for all remote employee access"
+  },
+  {
+    "asset_id": "SRV-MAIL-001",
+    "hostname": "mail-server-01",
+    "ip": "203.0.113.25",
+    "type": "server",
+    "os": "Ubuntu 22.04 LTS",
+    "software": [
+      "Postfix 3.8.4",
+      "Dovecot 2.3.21",
+      "SpamAssassin 4.0.0",
+      "ClamAV 1.3.0"
+    ],
+    "criticality": "high",
+    "exposure": "internet_facing",
+    "owner": "IT Operations",
+    "tags": [
+      "mail",
+      "smtp",
+      "imap",
+      "dmz"
+    ],
+    "notes": "Corporate mail server \u2014 handles inbound and outbound email for all staff"
+  },
+  {
+    "asset_id": "WS-FIN-001",
+    "hostname": "finance-ws-001",
+    "ip": "10.40.1.10",
+    "type": "workstation",
+    "os": "Windows 11 Enterprise 23H2",
+    "software": [
+      "SAP GUI 7.70",
+      "Microsoft Office 365 (2024)",
+      "Google Chrome 124",
+      "Adobe Acrobat Reader DC 2024"
+    ],
+    "criticality": "high",
+    "exposure": "restricted",
+    "owner": "Finance Department",
+    "tags": [
+      "workstation",
+      "finance",
+      "sap",
+      "restricted"
+    ],
+    "notes": "Finance workstation with access to SAP ERP and banking systems; network-isolated"
+  },
+  {
+    "asset_id": "SRV-MON-001",
+    "hostname": "monitoring-server-01",
+    "ip": "10.10.6.60",
+    "type": "server",
+    "os": "Ubuntu 22.04 LTS",
+    "software": [
+      "Prometheus 2.51.0",
+      "Grafana 10.4.0",
+      "Alertmanager 0.27.0",
+      "Node Exporter 1.7.0"
+    ],
+    "criticality": "medium",
+    "exposure": "internal",
+    "owner": "Platform Engineering",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "grafana",
+      "observability"
+    ],
+    "notes": "Centralised monitoring stack \u2014 has read access to metrics from all production servers"
+  },
+  {
+    "asset_id": "SRV-ICS-001",
+    "hostname": "ics-controller-01",
+    "ip": "192.168.100.10",
+    "type": "industrial-controller",
+    "os": "Windows Embedded Standard 7 SP1",
+    "software": [
+      "Siemens SIMATIC WinCC 7.5 SP2",
+      "STEP 7 v5.6"
+    ],
+    "criticality": "critical",
+    "exposure": "air_gapped",
+    "owner": "Facilities Management",
+    "tags": [
+      "ics",
+      "scada",
+      "air-gapped",
+      "industrial",
+      "ot"
+    ],
+    "notes": "Air-gapped industrial control system managing HVAC and building access \u2014 legacy OS, patching restricted"
+  }
+]
