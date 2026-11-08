@@ -28,10 +28,10 @@ export const ExecutiveGuide: React.FC<ExecutiveGuideProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 flex items-center justify-between text-left bg-neutral-100 dark:bg-[#181D2A] hover:bg-[#FFE600] dark:hover:bg-[#202738] transition-colors group cursor-pointer border-b-2 border-black dark:border-[#2D3448]"
+        className="w-full px-4 py-3 flex items-center justify-between text-left bg-neutral-100 dark:bg-[#181D2A] hover:bg-[#C4A1FF] dark:hover:bg-[#202738] transition-colors group cursor-pointer border-b-2 border-black dark:border-[#2D3448]"
       >
         <div className="flex items-center space-x-2.5 flex-wrap gap-y-1">
-          <div className="w-6 h-6 bg-[#FFE600] text-black border border-black flex items-center justify-center neo-shadow-sm font-mono font-bold text-xs">
+          <div className="w-6 h-6 bg-[#C4A1FF] text-black border border-black flex items-center justify-center neo-shadow-sm font-mono font-bold text-xs">
             <FiBookOpen className="w-3.5 h-3.5" />
           </div>
           <span className="font-mono font-bold text-xs sm:text-sm tracking-tight text-black dark:text-white uppercase">
@@ -72,9 +72,9 @@ export const OverviewExecutiveGuide: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFFBEB] dark:bg-[#1A1F2C] neo-shadow-sm">
+          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#F5EEFF] dark:bg-[#1A1F2C] neo-shadow-sm">
             <div className="flex items-center space-x-1.5 mb-1.5 text-black dark:text-white">
-              <div className="w-5 h-5 bg-[#FFE600] dark:bg-[#FACC15] border border-black flex items-center justify-center">
+              <div className="w-5 h-5 bg-[#C4A1FF] dark:bg-[#FACC15] border border-black flex items-center justify-center">
                 <FiTarget className="w-3 h-3 text-black" />
               </div>
               <span className="font-mono font-bold text-xs uppercase dark:text-[#FACC15]">1. Active Weaponization</span>

@@ -312,7 +312,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
             Traditional vulnerability reports present isolated CVE numbers. This workbench reconstructs a <strong>complete digital threat scenario</strong> by fusing four indispensable data streams:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFFBEB] dark:bg-[#141824] neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#F5EEFF] dark:bg-[#141824] neo-shadow-sm">
               <span className="font-bold text-black dark:text-[#FACC15] block uppercase">1. Flaw Profile</span>
               <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 font-sans">
                 Vendor-rated technical vulnerability mechanics, CVSS vector &amp; affected CPE libraries.
@@ -363,7 +363,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 value={cveInput}
                 onChange={(e) => setCveInput(e.target.value.toUpperCase())}
                 placeholder="ENTER CVE ID (e.g. CVE-2024-3400, CVE-2023-3519, CVE-2021-44228)..."
-                className="w-full pl-9 pr-3 py-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] text-xs font-bold uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
+                className="w-full pl-9 pr-3 py-2.5 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] text-xs font-bold uppercase neo-shadow-sm focus:outline-none focus:bg-[#F5EEFF] dark:focus:bg-[#181D29]"
               />
             </div>
 
@@ -384,7 +384,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                 onClick={() => setShowTuning(!showTuning)}
                 className={`neo-btn p-2.5 border-2 border-black dark:border-[#2D3448] font-bold text-xs ${
                   showTuning
-                    ? 'bg-[#FFE600] dark:bg-[#FACC15] text-black neo-shadow-sm'
+                    ? 'bg-[#C4A1FF] dark:bg-[#FACC15] text-black neo-shadow-sm'
                     : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#202737]'
                 }`}
                 title="Fine-Tune Context &amp; Simulation Parameters"
@@ -419,7 +419,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
 
               <div>
                 <label className="text-[10px] font-bold uppercase text-neutral-600 dark:text-neutral-400 block mb-1">
-                  CVSS v3.1 Base Score: <span className="bg-[#FFE600] dark:bg-[#FACC15] text-black px-1.5 py-0.2 border border-black">{overrideCvss.toFixed(1)}</span>
+                  CVSS v3.1 Base Score: <span className="bg-[#C4A1FF] dark:bg-[#FACC15] text-black px-1.5 py-0.2 border border-black">{overrideCvss.toFixed(1)}</span>
                 </label>
                 <input
                   type="range"
@@ -465,8 +465,8 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
                   onClick={() => handleAnalyzeCve(preset.id, preset.assetId)}
                   className={`neo-btn px-2.5 py-1 border-2 border-black dark:border-[#2D3448] text-xs font-bold transition-all ${
                     isActive
-                      ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] dark:border-[#38425C] neo-shadow-sm'
-                      : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-[#FFFBEB] dark:hover:bg-[#202737]'
+                      ? 'bg-[#C4A1FF] dark:bg-[#202738] text-black dark:text-[#FACC15] dark:border-[#38425C] neo-shadow-sm'
+                      : 'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-[#F5EEFF] dark:hover:bg-[#202737]'
                   }`}
                 >
                   <span>{preset.name}</span>
@@ -504,7 +504,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
               <span className="font-bold text-neutral-500 uppercase">
                 Active Target:
               </span>
-              <span className="font-black text-black dark:text-[#FFE600] px-2 py-0.5 bg-[#FFE600] dark:bg-[#FFE600]/20 border border-black dark:border-[#FFE600]/50 text-sm">
+              <span className="font-black text-black dark:text-[#C4A1FF] px-2 py-0.5 bg-[#C4A1FF] dark:bg-[#C4A1FF]/20 border border-black dark:border-[#C4A1FF]/50 text-sm">
                 {activeVuln.cve_id}
               </span>
               <Badge color="yellow" size="xs">
@@ -739,7 +739,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
       </Panel>
 
       {/* Action Footer: Generate Evidence Dossier */}
-      <div className="p-4 sm:p-5 border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] dark:border-t-8 dark:border-t-[#EAB308] bg-[#FFE600] dark:bg-[#141824] text-black dark:text-[#E2E8F0] neo-shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] dark:border-t-8 dark:border-t-[#EAB308] bg-[#C4A1FF] dark:bg-[#141824] text-black dark:text-[#E2E8F0] neo-shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
             <RiTerminalBoxLine className="w-5 h-5 text-black dark:text-[#EAB308]" />
@@ -755,7 +755,7 @@ export const InvestigationPage: React.FC<InvestigationPageProps> = ({
         <Button
           variant="dark"
           size="lg"
-          icon={<RiShieldFlashLine className="w-4 h-4 text-[#FFE600]" />}
+          icon={<RiShieldFlashLine className="w-4 h-4 text-[#C4A1FF]" />}
           onClick={() => onRunAiInvestigation(activeVuln.cve_id)}
           className="whitespace-nowrap"
         >

@@ -45,7 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:
-      'bg-[#FFE600] text-black hover:bg-[#FFF04D] active:bg-[#FFE600] dark:bg-[#FACC15] dark:text-black dark:hover:bg-[#FDE047]',
+      'bg-[#C4A1FF] text-black hover:bg-[#D4B8FF] active:bg-[#C4A1FF] dark:bg-[#FACC15] dark:text-black dark:hover:bg-[#FDE047]',
     secondary:
       'bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] hover:bg-neutral-100 dark:hover:bg-[#202737] dark:border-[#38415A]',
     accent:

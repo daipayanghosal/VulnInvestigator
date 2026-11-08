@@ -66,7 +66,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
             if (!isBlock) {
               return (
                 <code
-                  className="px-1.5 py-0.5 border border-black dark:border-[#2D3448] font-mono text-[11px] font-bold bg-[#FFE600] text-black dark:bg-[#1C2334] dark:text-[#FACC15] inline-block my-0.5"
+                  className="px-1.5 py-0.5 border border-black dark:border-[#2D3448] font-mono text-[11px] font-bold bg-[#C4A1FF] text-black dark:bg-[#1C2334] dark:text-[#FACC15] inline-block my-0.5"
                   {...props}
                 >
                   {children}
@@ -106,7 +106,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
 
                   <button
                     onClick={() => handleCopy(cleanCode, codeHash)}
-                    className="neo-btn flex items-center space-x-1 px-2.5 py-1 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#FACC15] text-black text-[10px] font-bold uppercase tracking-wider cursor-pointer"
+                    className="neo-btn flex items-center space-x-1 px-2.5 py-1 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#FACC15] text-black text-[10px] font-bold uppercase tracking-wider cursor-pointer"
                     title="Copy verifiable query to clipboard"
                   >
                     {copiedCodeId === codeHash ? (
@@ -163,7 +163,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
                 <div className="my-3 p-3 border-2 border-black dark:border-[#2D3448] bg-[#FF5376] dark:bg-[#3D141E] text-white dark:text-[#FDA4AF] neo-shadow-sm flex items-start space-x-2.5">
                   <FiAlertTriangle className="w-4 h-4 shrink-0 mt-0.5 stroke-[2.5]" />
                   <div className="text-xs">
-                    <span className="font-mono font-bold uppercase text-[10px] tracking-wider bg-black dark:bg-[#202738] text-[#FFE600] dark:text-[#FACC15] px-1.5 py-0.5 border border-black dark:border-[#38425C] inline-block mb-1">
+                    <span className="font-mono font-bold uppercase text-[10px] tracking-wider bg-black dark:bg-[#202738] text-[#C4A1FF] dark:text-[#FACC15] px-1.5 py-0.5 border border-black dark:border-[#38425C] inline-block mb-1">
                       [UNSUPPORTED CLAIM] - SPECULATIVE / UNCORROBORATED BY SIEM
                     </span>
                     <div className="font-semibold">{cleanedChildren}</div>

@@ -20,7 +20,7 @@ export const Top10BarChart: React.FC<Top10BarChartProps> = ({
   const bandColors: Record<RiskBand, string> = {
     Critical: '#FF5376', // Hot Coral Pink
     High: '#FB923C',     // Bright Orange
-    Medium: '#FFE600',   // Vibrant Yellow
+    Medium: '#C4A1FF',   // Lavender Accent
     Low: '#B8FF00',      // Acid Lime
   };
 
@@ -76,7 +76,7 @@ export const Top10BarChart: React.FC<Top10BarChartProps> = ({
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="font-extrabold text-xs px-2 py-0.5 bg-[#FFE600] text-black border border-black">
+                  <span className="font-extrabold text-xs px-2 py-0.5 bg-[#C4A1FF] text-black border border-black">
                     {v.risk_score.toFixed(3)}
                   </span>
                   <span className="text-[10px] text-neutral-500">
@@ -139,7 +139,7 @@ export const DisplacementHistogram: React.FC<DisplacementHistogramProps> = ({ hi
           const isNegative = item.bin.startsWith('-');
           const isZero = item.bin === '0';
           const barColor = isZero
-            ? '#FFE600' // Yellow
+            ? '#C4A1FF' // Lavender Accent
             : isNegative
             ? '#00F0FF' // Cyan
             : '#FF5376'; // Hot Pink
@@ -174,7 +174,7 @@ export const DisplacementHistogram: React.FC<DisplacementHistogramProps> = ({ hi
           <span>De-escalated (Air-Gapped / Benign)</span>
         </span>
         <span className="flex items-center space-x-1">
-          <span className="w-2.5 h-2.5 bg-[#FFE600] border border-black inline-block" />
+          <span className="w-2.5 h-2.5 bg-[#C4A1FF] border border-black inline-block" />
           <span>Zero Shift</span>
         </span>
         <span className="flex items-center space-x-1">
@@ -223,7 +223,7 @@ export const KendallTauGauge: React.FC<KendallTauGaugeProps> = ({ tau, value, p_
             <path
               d="M 20 100 A 80 80 0 0 1 180 100"
               fill="none"
-              stroke="#FFE600"
+              stroke="#C4A1FF"
               strokeWidth="20"
               strokeDasharray="251.2"
               strokeDashoffset={251.2 - (251.2 * (angle / 180))}

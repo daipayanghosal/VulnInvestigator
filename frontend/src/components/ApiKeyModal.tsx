@@ -41,9 +41,9 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-all">
       <div className="w-full max-w-md border-3 border-black dark:border-[#2D3448] bg-[#F7F6F2] dark:bg-[#141824] neo-shadow-xl overflow-hidden animate-in zoom-in-95 duration-100">
         {/* Title Bar */}
-        <div className="px-4 py-3 bg-[#FFE600] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#2D3448] flex items-center justify-between">
+        <div className="px-4 py-3 bg-[#C4A1FF] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#2D3448] flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-black dark:bg-[#FACC15] text-[#FFE600] dark:text-black border border-black flex items-center justify-center neo-shadow-sm">
+            <div className="w-6 h-6 bg-black dark:bg-[#FACC15] text-[#C4A1FF] dark:text-black border border-black flex items-center justify-center neo-shadow-sm">
               <FiKey className="w-3.5 h-3.5" />
             </div>
             <span className="font-mono font-black text-sm uppercase tracking-tight">
@@ -70,7 +70,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full px-3 py-2 text-xs font-mono border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
+              className="w-full px-3 py-2 text-xs font-mono border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] neo-shadow-sm focus:outline-none focus:bg-[#F5EEFF] dark:focus:bg-[#181D29]"
             />
             <p className="mt-2 text-[11px] font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
               Stored 100% locally in your browser (<code className="text-black dark:text-white font-bold">localStorage</code>). Sent directly to Google&rsquo;s official API endpoint; zero server storage.

@@ -38,7 +38,7 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const colorClasses: Record<BadgeColor, string> = {
-    yellow: 'bg-[#FFE600] text-black border-black dark:bg-[#EAB308]/20 dark:text-[#FDE047] dark:border-[#EAB308]/60',
+    yellow: 'bg-[#C4A1FF] text-black border-black dark:bg-[#EAB308]/20 dark:text-[#FDE047] dark:border-[#EAB308]/60',
     pink: 'bg-[#FF5376] text-white border-black dark:bg-[#E11D48]/25 dark:text-[#FDA4AF] dark:border-[#FB7185]/60',
     cyan: 'bg-[#00F0FF] text-black border-black dark:bg-[#0284C7]/25 dark:text-[#7DD3FC] dark:border-[#38BDF8]/60',
     lime: 'bg-[#B8FF00] text-black border-black dark:bg-[#65A30D]/25 dark:text-[#BEF264] dark:border-[#A3E635]/60',

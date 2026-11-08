@@ -154,7 +154,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="FILTER BY CVE ID, ASSET NAME, OR TECH KEYWORD..."
-            className="w-full pl-9 pr-3 py-2 text-xs font-bold border-2 border-black dark:border-[#2D3448] bg-neutral-50 dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
+            className="w-full pl-9 pr-3 py-2 text-xs font-bold border-2 border-black dark:border-[#2D3448] bg-neutral-50 dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase neo-shadow-sm focus:outline-none focus:bg-[#F5EEFF] dark:focus:bg-[#181D29]"
           />
         </div>
 
@@ -262,7 +262,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
                       <button
                         type="button"
                         onClick={() => onSelectCve(v.cve_id)}
-                        className="neo-btn px-2 py-0.5 text-[11px] font-bold bg-white text-black border border-black hover:bg-[#FFE600]"
+                        className="neo-btn px-2 py-0.5 text-[11px] font-bold bg-white text-black border border-black hover:bg-[#C4A1FF]"
                       >
                         SELECT
                       </button>
@@ -298,10 +298,10 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
                 {contextualTop20.map((v, i) => (
                   <tr
                     key={v.cve_id}
-                    className="hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26] transition-colors"
+                    className="hover:bg-[#F5EEFF] dark:hover:bg-[#1E1E26] transition-colors"
                   >
                     <td className="py-2.5 px-3 font-bold">
-                      <span className="px-1.5 py-0.2 bg-[#FFE600] text-black border border-black inline-block text-[10px]">
+                      <span className="px-1.5 py-0.2 bg-[#C4A1FF] text-black border border-black inline-block text-[10px]">
                         #{i + 1}
                       </span>
                     </td>
@@ -368,7 +368,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
                 return (
                   <tr
                     key={v.cve_id}
-                    className="hover:bg-[#FFFBEB] dark:hover:bg-[#1E1E26] transition-colors"
+                    className="hover:bg-[#F5EEFF] dark:hover:bg-[#1E1E26] transition-colors"
                   >
                     <td className="py-2.5 px-3 font-bold text-black dark:text-white">
                       {v.cve_id}
@@ -414,7 +414,7 @@ export const RankingsPage: React.FC<RankingsPageProps> = ({
                       <button
                         type="button"
                         onClick={() => onSelectCve(v.cve_id)}
-                        className="neo-btn px-2 py-0.5 text-[11px] font-bold bg-[#FFE600] text-black border border-black hover:bg-[#FFF04D]"
+                        className="neo-btn px-2 py-0.5 text-[11px] font-bold bg-[#C4A1FF] text-black border border-black hover:bg-[#D4B8FF]"
                       >
                         INVESTIGATE
                       </button>

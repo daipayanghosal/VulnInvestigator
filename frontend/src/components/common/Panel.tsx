@@ -55,7 +55,7 @@ export const Panel: React.FC<PanelProps> = ({
 
   const accentTopBorders: Record<PanelAccent, string> = {
     none: '',
-    yellow: 'border-t-8 border-t-[#FFE600] dark:border-t-[#EAB308]',
+    yellow: 'border-t-8 border-t-[#C4A1FF] dark:border-t-[#EAB308]',
     cyan: 'border-t-8 border-t-[#00F0FF] dark:border-t-[#0284C7]',
     pink: 'border-t-8 border-t-[#FF5376] dark:border-t-[#E11D48]',
     lime: 'border-t-8 border-t-[#B8FF00] dark:border-t-[#65A30D]',
@@ -67,7 +67,7 @@ export const Panel: React.FC<PanelProps> = ({
 
   const accentPills: Record<PanelAccent, string> = {
     none: 'bg-black text-white dark:bg-[#202636] dark:text-white',
-    yellow: 'bg-[#FFE600] text-black dark:bg-[#FACC15] dark:text-black',
+    yellow: 'bg-[#C4A1FF] text-black dark:bg-[#FACC15] dark:text-black',
     cyan: 'bg-[#00F0FF] text-black dark:bg-[#0284C7] dark:text-white',
     pink: 'bg-[#FF5376] text-white dark:bg-[#E11D48] dark:text-white',
     lime: 'bg-[#B8FF00] text-black dark:bg-[#65A30D] dark:text-white',

@@ -100,7 +100,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-[#2D3448] bg-[#00F0FF] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#0284C7] neo-shadow">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-mono text-xs font-bold uppercase bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black px-2 py-0.5 border border-black">
+            <span className="font-mono text-xs font-bold uppercase bg-black text-[#C4A1FF] dark:bg-[#FACC15] dark:text-black px-2 py-0.5 border border-black">
               EVIDENCE-GROUNDED FORENSICS
             </span>
             <Badge variant="pink" size="sm">
@@ -150,7 +150,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
             Commercial GenAI models suffer from <strong>stochastic hallucination</strong>—generating nonexistent CVE numbers, fictional IP addresses, and fabricated remediation queries. VulnInvestigator enforces a rigorous 3-tier empirical verification pipeline:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1 font-mono">
-            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">
                 [01] STRICT EVIDENCE ISOLATION
               </span>
@@ -234,7 +234,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
 
       {/* Loading Terminal Indicator */}
       {isLoading && (
-        <div className="p-8 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#181D29] text-black dark:text-[#FACC15] neo-shadow text-center space-y-3 font-mono">
+        <div className="p-8 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#181D29] text-black dark:text-[#FACC15] neo-shadow text-center space-y-3 font-mono">
           <div className="inline-flex items-center justify-center p-3 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#121622] neo-shadow-sm">
             <FiLoader className="w-8 h-8 animate-spin text-black dark:text-white" />
           </div>
@@ -334,7 +334,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
             footer={
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400">
                 <div className="flex items-center space-x-2">
-                  <FiZap className="w-4 h-4 text-[#FFE600] dark:text-[#FACC15]" />
+                  <FiZap className="w-4 h-4 text-[#C4A1FF] dark:text-[#FACC15]" />
                   <span>
                     PROVENANCE AUDIT: 100% CLAIMS TRACEABLE TO ASSET INVENTORY &amp; SIEM LOG DB
                   </span>
@@ -358,7 +358,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
                     {/* Section Ribbon */}
                     <div className="px-4 py-2 border-b-2 border-black dark:border-[#2D3448] bg-[#F4F4F5] dark:bg-[#181D2A] flex items-center justify-between">
                       <div className="flex items-center space-x-2.5">
-                        <span className="font-mono text-xs font-black px-2 py-0.5 bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black border border-black dark:border-transparent">
+                        <span className="font-mono text-xs font-black px-2 py-0.5 bg-black text-[#C4A1FF] dark:bg-[#FACC15] dark:text-black border border-black dark:border-transparent">
                           [{sectionNumber}]
                         </span>
                         <h3 className="font-mono text-xs sm:text-sm font-black uppercase tracking-wider text-black dark:text-white">

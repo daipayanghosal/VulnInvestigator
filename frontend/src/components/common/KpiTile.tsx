@@ -38,7 +38,7 @@ export const KpiTile: React.FC<KpiTileProps> = ({
   const activeAccent: KpiAccent = accentColor || accent || 'yellow';
 
   const accentBorderColors: Record<KpiAccent, string> = {
-    yellow: 'hover:border-[#FFE600] dark:hover:border-[#EAB308]',
+    yellow: 'hover:border-[#C4A1FF] dark:hover:border-[#EAB308]',
     pink: 'hover:border-[#FF5376] dark:hover:border-[#E11D48]',
     cyan: 'hover:border-[#00F0FF] dark:hover:border-[#0284C7]',
     lime: 'hover:border-[#B8FF00] dark:hover:border-[#65A30D]',
@@ -48,7 +48,7 @@ export const KpiTile: React.FC<KpiTileProps> = ({
   };
 
   const accentPillColors: Record<KpiAccent, string> = {
-    yellow: 'bg-[#FFE600] text-black dark:bg-[#FACC15] dark:text-black',
+    yellow: 'bg-[#C4A1FF] text-black dark:bg-[#FACC15] dark:text-black',
     pink: 'bg-[#FF5376] text-white dark:bg-[#E11D48] dark:text-white',
     cyan: 'bg-[#00F0FF] text-black dark:bg-[#0284C7] dark:text-white',
     lime: 'bg-[#B8FF00] text-black dark:bg-[#65A30D] dark:text-white',

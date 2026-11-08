@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'overview' as ActivePage, label: 'Overview', icon: RiDashboardLine, accent: 'bg-[#FFE600]' },
+    { id: 'overview' as ActivePage, label: 'Overview', icon: RiDashboardLine, accent: 'bg-[#C4A1FF]' },
     { id: 'rankings' as ActivePage, label: 'Rankings', icon: RiBarChartBoxLine, accent: 'bg-[#00F0FF]' },
     { id: 'investigation' as ActivePage, label: 'Investigation', icon: RiSearchEyeLine, accent: 'bg-[#B8FF00]' },
     { id: 'ai_assistant' as ActivePage, label: 'Telemetry Forensics', icon: RiTerminalBoxLine, accent: 'bg-[#A78BFA]' },
@@ -61,9 +61,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full bg-[#F7F6F2] dark:bg-[#0B0E14] border-b-2 sm:border-b-[3px] border-black dark:border-[#2D3448] transition-colors">
       {/* Top Banner Ribbon */}
-      <div className="bg-[#FFE600] text-black dark:bg-[#0E121B] dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#222838] px-4 py-1 text-[11px] font-mono font-bold flex items-center justify-between overflow-x-auto whitespace-nowrap">
+      <div className="bg-[#C4A1FF] text-black dark:bg-[#0E121B] dark:text-[#E2E8F0] border-b-2 border-black dark:border-[#222838] px-4 py-1 text-[11px] font-mono font-bold flex items-center justify-between overflow-x-auto whitespace-nowrap">
         <div className="flex items-center space-x-3">
-          <span className="bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
+          <span className="bg-black text-[#C4A1FF] dark:bg-[#FACC15] dark:text-black px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
             EVIDENCE-GROUNDED CTI
           </span>
           <span className="hidden sm:inline">
@@ -87,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => handleNavClick('overview')}
           className="flex items-center space-x-2.5 cursor-pointer select-none group"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#FFE600] dark:bg-[#FACC15] border-2 border-black dark:border-[#2D3448] flex items-center justify-center font-mono font-black text-black text-base neo-shadow-sm group-hover:-translate-y-0.5 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#C4A1FF] dark:bg-[#FACC15] border-2 border-black dark:border-[#2D3448] flex items-center justify-center font-mono font-black text-black text-base neo-shadow-sm group-hover:-translate-y-0.5 transition-transform">
             VI
           </div>
           <div>
@@ -169,7 +169,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onThemeModeChange('light')}
               className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'light'
-                  ? 'bg-[#FFE600] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
+                  ? 'bg-[#C4A1FF] text-black font-bold border border-black shadow-[1px_1px_0px_#000]'
                   : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               title="Light Mode"
@@ -181,7 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onThemeModeChange('dark')}
               className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'dark'
-                  ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
+                  ? 'bg-[#C4A1FF] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
                   : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               title="Dark Mode"
@@ -193,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onThemeModeChange('system')}
               className={`p-1.5 text-xs font-mono transition-colors ${
                 themeMode === 'system'
-                  ? 'bg-[#FFE600] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
+                  ? 'bg-[#C4A1FF] dark:bg-[#202738] text-black dark:text-[#FACC15] font-bold border border-black dark:border-[#38425C] shadow-[1px_1px_0px_#000] dark:shadow-none'
                   : 'text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               title="System Theme"

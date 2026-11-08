@@ -72,12 +72,12 @@ export const HeroScoreboard: React.FC<HeroScoreboardProps> = ({ vuln, asset, bre
         </div>
 
         {/* Metric 2: Contextual Risk Score */}
-        <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#EAB308] p-3.5 sm:p-4 neo-shadow flex flex-col justify-between">
+        <div className="border-2 sm:border-[2.5px] border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#EAB308] p-3.5 sm:p-4 neo-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between gap-1 mb-2">
             <span className="font-mono font-black text-[11px] uppercase tracking-wider text-black dark:text-[#FACC15]">
               Contextual Risk Score
             </span>
-            <div className="w-6 h-6 border border-black dark:border-[#2D3448] bg-black text-[#FFE600] dark:bg-[#FACC15] dark:text-black flex items-center justify-center neo-shadow-sm">
+            <div className="w-6 h-6 border border-black dark:border-[#2D3448] bg-black text-[#C4A1FF] dark:bg-[#FACC15] dark:text-black flex items-center justify-center neo-shadow-sm">
               <FiTarget className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -259,7 +259,7 @@ export const HeroScoreboard: React.FC<HeroScoreboardProps> = ({ vuln, asset, bre
                 </div>
                 <div className="w-full h-3 border border-black dark:border-[#2D3448] bg-neutral-200 dark:bg-[#11141D] my-1 overflow-hidden">
                   <div
-                    className="h-full bg-[#FFE600] dark:bg-[#FACC15] transition-all duration-300"
+                    className="h-full bg-[#C4A1FF] dark:bg-[#FACC15] transition-all duration-300"
                     style={{ width: `${Math.min(100, (breakdown.asset_contrib / 0.20) * 100)}%` }}
                   />
                 </div>
@@ -289,7 +289,7 @@ export const HeroScoreboard: React.FC<HeroScoreboardProps> = ({ vuln, asset, bre
             {/* Exact Algebraic Equation Strip */}
             <div className="mt-3 p-2.5 sm:p-3 border-2 border-black dark:border-[#2D3448] bg-neutral-100 dark:bg-[#121622] font-mono text-xs text-black dark:text-[#E2E8F0] flex items-center justify-between overflow-x-auto whitespace-nowrap neo-shadow-sm">
               <span>
-                S_ctx = (0.35 &times; {breakdown.cvss_val.toFixed(1)}/10) + (0.30 &times; {breakdown.in_kev ? '1.0' : '0.0'}) + (0.20 &times; {breakdown.crit_score.toFixed(2)}) + (0.15 &times; {breakdown.expo_score.toFixed(2)}) = <strong className="bg-[#FFE600] dark:bg-[#FACC15] text-black px-1.5 py-0.5 border border-black">{breakdown.total_score.toFixed(3)}</strong>
+                S_ctx = (0.35 &times; {breakdown.cvss_val.toFixed(1)}/10) + (0.30 &times; {breakdown.in_kev ? '1.0' : '0.0'}) + (0.20 &times; {breakdown.crit_score.toFixed(2)}) + (0.15 &times; {breakdown.expo_score.toFixed(2)}) = <strong className="bg-[#C4A1FF] dark:bg-[#FACC15] text-black px-1.5 py-0.5 border border-black">{breakdown.total_score.toFixed(3)}</strong>
               </span>
             </div>
           </div>

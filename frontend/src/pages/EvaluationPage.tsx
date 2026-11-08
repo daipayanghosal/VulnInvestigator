@@ -43,7 +43,7 @@ export const EvaluationPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#EAB308] neo-shadow">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#141824] text-black dark:text-[#E2E8F0] dark:border-t-8 dark:border-t-[#EAB308] neo-shadow">
         <div>
           <div className="flex items-center space-x-2">
             <span className="font-mono text-xs font-bold uppercase bg-black text-[#00F0FF] dark:bg-[#FACC15] dark:text-black px-2 py-0.5 border border-black">
@@ -83,7 +83,7 @@ export const EvaluationPage: React.FC = () => {
         <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#141824] neo-shadow space-y-2">
           <div className="flex items-center justify-between text-xs font-mono font-bold text-black dark:text-white">
             <span>Computing Kendall&rsquo;s &tau;, nDCG@10, and evidence citation compliance across 8,328 CVEs...</span>
-            <span className="bg-[#FFE600] dark:bg-[#FACC15] text-black px-2 py-0.5 border border-black">{progress}%</span>
+            <span className="bg-[#C4A1FF] dark:bg-[#FACC15] text-black px-2 py-0.5 border border-black">{progress}%</span>
           </div>
           <div className="w-full h-4 border-2 border-black dark:border-[#2D3448] bg-neutral-200 dark:bg-[#11141D] overflow-hidden">
             <div
@@ -101,7 +101,7 @@ export const EvaluationPage: React.FC = () => {
             The metrics below empirically validate that VulnInvestigator systematically outperforms traditional single-dimension scoring:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-1 font-mono">
-            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
+            <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] text-black dark:bg-[#1A1F2C] dark:text-[#FACC15] neo-shadow-sm">
               <span className="font-bold uppercase block mb-1">KENDALL&rsquo;S &tau; (0.5791)</span>
               <p className="text-[11px] leading-relaxed text-black/90 dark:text-neutral-300">
                 Values near 1.0 indicate identical rankings; 0 indicates total randomness. A score of 0.5791 proves significant, non-random restructuring (~42% discordant pairs).
@@ -226,7 +226,7 @@ export const EvaluationPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#1A1F2C] text-black dark:text-[#FACC15] neo-shadow-sm font-mono">
+          <div className="p-4 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#1A1F2C] text-black dark:text-[#FACC15] neo-shadow-sm font-mono">
             <span className="text-[10px] uppercase font-bold tracking-wider block mb-1 opacity-80">
               CONTROLLED SPECULATION RATE
             </span>

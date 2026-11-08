@@ -45,7 +45,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
       <div className="border-b-2 sm:border-b-[3px] border-black dark:border-white pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
           <div className="flex items-center space-x-2 flex-wrap gap-y-1 mb-1">
-            <span className="font-mono font-bold text-xs uppercase bg-[#FFE600] text-black px-2 py-0.5 border border-black neo-shadow-sm">
+            <span className="font-mono font-bold text-xs uppercase bg-[#C4A1FF] text-black px-2 py-0.5 border border-black neo-shadow-sm">
               TELEMETRY DASHBOARD
             </span>
             <span className="font-mono text-xs text-neutral-500">// GLOBAL VULNERABILITY STATE</span>
@@ -125,7 +125,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
               <button
                 type="button"
                 onClick={onNavigateToRankings}
-                className="neo-btn px-2.5 py-1 text-xs font-mono font-bold bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] border-2 border-black dark:border-[#2D3448] flex items-center space-x-1 hover:bg-[#FFE600] dark:hover:bg-[#202738]"
+                className="neo-btn px-2.5 py-1 text-xs font-mono font-bold bg-white dark:bg-[#181D29] text-black dark:text-[#E2E8F0] border-2 border-black dark:border-[#2D3448] flex items-center space-x-1 hover:bg-[#C4A1FF] dark:hover:bg-[#202738]"
               >
                 <span>VIEW ALL {totalCves.toLocaleString()}</span>
                 <FiArrowRight className="w-3 h-3 stroke-[3]" />
@@ -149,7 +149,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   {top5.map((v, i) => (
                     <tr
                       key={v.cve_id}
-                      className="hover:bg-[#FFFBEB] dark:hover:bg-[#181E2E] transition-colors"
+                      className="hover:bg-[#F5EEFF] dark:hover:bg-[#181E2E] transition-colors"
                     >
                       <td className="py-3 px-3 font-black text-neutral-500">
                         <span className="px-1.5 py-0.5 bg-black text-white dark:bg-[#1C2230] dark:text-[#E2E8F0] text-[10px] border border-black dark:border-[#2D3448] inline-block">
@@ -181,7 +181,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                       </td>
                       <td className="py-3 px-3">
                         <div className="font-black text-xs text-black dark:text-white">
-                          <span className="px-1.5 py-0.5 bg-[#FFE600] dark:bg-[#FACC15] text-black border border-black inline-block">
+                          <span className="px-1.5 py-0.5 bg-[#C4A1FF] dark:bg-[#FACC15] text-black border border-black inline-block">
                             {v.risk_score.toFixed(3)}
                           </span>
                         </div>

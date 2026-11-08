@@ -80,10 +80,10 @@
 
 /* Colored Neobrutalist Shadows (Daylight vs. Night Deck) */
 .neo-shadow-yellow {
-  box-shadow: 4px 4px 0px 0px #FFE600;
+  box-shadow: 4px 4px 0px 0px #C4A1FF;
 }
 .dark .neo-shadow-yellow {
-  box-shadow: 3px 3px 0px 0px #CA8A04;
+  box-shadow: 3px 3px 0px 0px #7C3AED;
 }
 
 .neo-shadow-cyan {
@@ -161,7 +161,7 @@
 }
 ::-webkit-scrollbar-thumb {
   background: #000000;
-  border: 1px solid #FFE600;
+  border: 1px solid #C4A1FF;
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #2D3448;

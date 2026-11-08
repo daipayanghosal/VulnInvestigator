@@ -141,7 +141,7 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
                 value={cveId}
                 onChange={(e) => setCveId(e.target.value)}
                 placeholder="CVE-2024-XXXX"
-                className="flex-1 px-3 py-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase font-bold neo-shadow-sm focus:outline-none focus:bg-[#FFFBEB] dark:focus:bg-[#181D29]"
+                className="flex-1 px-3 py-2 border-2 border-black dark:border-[#2D3448] bg-white dark:bg-[#11141D] text-black dark:text-[#E2E8F0] uppercase font-bold neo-shadow-sm focus:outline-none focus:bg-[#F5EEFF] dark:focus:bg-[#181D29]"
                 required
               />
               <Button
@@ -167,7 +167,7 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="font-bold uppercase text-black dark:text-white">
-                  2. CVSS v3.1 Base Score: <span className="bg-[#FFE600] text-black px-1.5 py-0.2 border border-black">{cvssScore.toFixed(1)}</span>
+                  2. CVSS v3.1 Base Score: <span className="bg-[#C4A1FF] text-black px-1.5 py-0.2 border border-black">{cvssScore.toFixed(1)}</span>
                 </label>
               </div>
               <input
@@ -234,10 +234,10 @@ export const CustomCveModal: React.FC<CustomCveModalProps> = ({
           </div>
 
           {/* Live Contextual Math Calculation Preview Strip */}
-          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#FFE600] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] neo-shadow-sm space-y-1">
+          <div className="p-3 border-2 border-black dark:border-[#2D3448] bg-[#C4A1FF] dark:bg-[#181D2A] text-black dark:text-[#E2E8F0] neo-shadow-sm space-y-1">
             <div className="flex items-center justify-between font-bold">
               <span>REAL-TIME VULNINVESTIGATOR SCORE:</span>
-              <span className="text-base font-black px-2 py-0.5 bg-black dark:bg-[#FACC15] text-[#FFE600] dark:text-black border border-black">
+              <span className="text-base font-black px-2 py-0.5 bg-black dark:bg-[#FACC15] text-[#C4A1FF] dark:text-black border border-black">
                 {breakdown.total_score.toFixed(3)} [{calculatedBand.toUpperCase()}]
               </span>
             </div>

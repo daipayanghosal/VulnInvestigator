@@ -26,7 +26,7 @@ export function Tabs<T extends string>({
 }: TabsProps<T>) {
   const accentActiveClasses = {
     yellow:
-      'bg-[#FFE600] text-black shadow-[2px_2px_0px_#000] dark:bg-[#202738] dark:text-[#FACC15] dark:border-[#38425C]',
+      'bg-[#C4A1FF] text-black shadow-[2px_2px_0px_#000] dark:bg-[#202738] dark:text-[#FACC15] dark:border-[#38425C]',
     cyan:
       'bg-[#00F0FF] text-black shadow-[2px_2px_0px_#000] dark:bg-[#1A2638] dark:text-[#38BDF8] dark:border-[#234E70]',
     pink:
