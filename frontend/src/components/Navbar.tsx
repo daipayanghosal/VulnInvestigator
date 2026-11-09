@@ -66,10 +66,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="bg-black text-[#C4A1FF] dark:bg-[#FACC15] dark:text-black px-1.5 py-0.2 border border-black uppercase tracking-wider text-[10px]">
             EVIDENCE-GROUNDED CTI
           </span>
-          <span className="hidden sm:inline">
-            DISSERTATION DEFENSE WORKBENCH // CSIW ZG628T // BITS PILANI &amp; WIPRO
+          <span>
+            DISSERTATION DEFENSE WORKBENCH
           </span>
-          <span className="sm:hidden">BITS PILANI // WIPRO</span>
         </div>
         <div className="flex items-center space-x-3 text-[10px]">
           <span className="hidden md:inline">8,328 CVES INGESTED</span>
